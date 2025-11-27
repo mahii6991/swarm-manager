@@ -1,0 +1,55 @@
+[package]
+name = "drone-swarm-system"
+version = "0.1.0"
+edition = "2021"
+authors = ["Drone Swarm Team"]
+description = "Ultra-secure drone swarm communication system with federated learning"
+
+[dependencies]
+# Core embedded support
+embedded-hal = "1.0"
+cortex-m = "0.7"
+cortex-m-rt = "0.7"
+panic-halt = "0.2"
+
+# Networking
+smoltcp = { version = "0.11", default-features = false, features = ["proto-ipv4", "proto-ipv6", "socket-udp", "socket-tcp"] }
+heapless = "0.8"
+
+# Cryptography - Post-quantum ready
+chacha20poly1305 = { version = "0.10", default-features = false, features = ["heapless"] }
+ed25519-dalek = { version = "2.1", default-features = false, features = ["u32_backend"] }
+sha3 = { version = "0.10", default-features = false }
+blake3 = { version = "1.5", default-features = false }
+x25519-dalek = { version = "2.0", default-features = false, features = ["u32_backend", "static_secrets"] }
+
+# Random number generation (TRNG support)
+rand_core = { version = "0.6", default-features = false }
+getrandom = { version = "0.2", default-features = false }
+
+# Serialization
+postcard = { version = "1.0", default-features = false, features = ["heapless"] }
+serde = { version = "1.0", default-features = false, features = ["derive"] }
+
+# Time and scheduling
+fugit = "0.3"
+
+# Optional logging for debugging
+defmt = "0.3"
+
+[profile.release]
+opt-level = "z"      # Optimize for size
+lto = true           # Link-time optimization
+codegen-units = 1    # Better optimization
+strip = true         # Strip symbols
+panic = "abort"      # Smaller binary
+
+[profile.dev]
+opt-level = 1        # Some optimization for testing
+
+[features]
+default = ["std"]
+std = []
+no_std = []
+hardware-crypto = []  # Enable hardware crypto accelerators
+post-quantum = []     # Enable post-quantum cryptography
