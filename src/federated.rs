@@ -83,7 +83,7 @@ pub struct FederatedCoordinator {
     /// Byzantine fault tolerance (BFT) enabled
     bft_enabled: bool,
     /// Update history for verification
-    update_history: FnvIndexMap<u64, Vec<Round, 100>, 100>,
+    update_history: FnvIndexMap<u64, Vec<Round, 100>, 128>,
     /// Key store for signature verification (BUG-005 FIX)
     key_store: KeyStore,
 }
@@ -375,7 +375,7 @@ pub enum FederatedMessage {
 /// In production, use secure multi-party computation
 pub struct SecureAggregation {
     /// Shared secrets for secure aggregation
-    secrets: FnvIndexMap<u64, [u8; 32], 100>,
+    secrets: FnvIndexMap<u64, [u8; 32], 128>,
 }
 
 impl SecureAggregation {
@@ -439,34 +439,45 @@ mod tests {
 
     #[test]
     fn test_aggregation() {
+        use ed25519_dalek::{SigningKey, Signer};
+
         let model = GlobalModel::new(5).unwrap();
         let mut key_store = KeyStore::new();
-        
-        // Add keys for test drones
+        let mut signing_keys = Vec::<SigningKey, 8>::new();
+
+        // Create valid Ed25519 key pairs for test drones
         for i in 1..=3 {
-             // In a real test we'd need valid keys, but for this unit test 
-             // we might need to mock or just add dummy keys if verification is strict.
-             // However, since we can't easily generate valid Ed25519 keys/sigs here without 
-             // bringing in the whole crypto machinery, we might hit verification failures.
-             // But the test just checks aggregation logic.
-             // Wait, submit_update verifies signature!
-             // So we need valid keys and signatures for this test to pass.
+            // Generate deterministic keys for testing
+            let mut seed = [0u8; 32];
+            seed[0] = i as u8;
+            let signing_key = SigningKey::from_bytes(&seed);
+            let verifying_key = signing_key.verifying_key();
+
+            key_store.add_key(DroneId::new(i as u64), verifying_key).unwrap();
+            signing_keys.push(signing_key).unwrap();
         }
-        
-        // Since I cannot easily generate valid keys/sigs in this test block without imports,
-        // I will just fix the compilation error for now. 
-        // If the test runs, it will fail on signature verification.
-        // But at least it compiles.
-        
+
         let mut coordinator = FederatedCoordinator::new(DroneId::new(1), model, key_store);
         coordinator.set_min_participants(2);
 
-        // Create test updates
+        // Create test updates with valid signatures
         for i in 1..=3 {
             let mut params = Vec::new();
             for j in 0..5 {
                 params.push((i + j) as f32).unwrap();
             }
+
+            // Serialize update data for signing
+            let mut update_data = Vec::<u8, 2048>::new();
+            update_data.extend_from_slice(&0u64.to_le_bytes()).unwrap(); // round
+            for &param in &params {
+                update_data.extend_from_slice(&param.to_le_bytes()).unwrap();
+            }
+            update_data.extend_from_slice(&10u32.to_le_bytes()).unwrap(); // sample_count
+            update_data.extend_from_slice(&0.5f32.to_le_bytes()).unwrap(); // loss
+
+            // Sign the update
+            let signature = signing_keys[(i - 1) as usize].sign(&update_data);
 
             let update = ModelUpdate {
                 drone_id: DroneId::new(i as u64),
@@ -474,7 +485,7 @@ mod tests {
                 parameters: params,
                 sample_count: 10,
                 loss: 0.5,
-                signature: [0u8; 64],
+                signature: signature.to_bytes(),
             };
 
             coordinator.submit_update(update).unwrap();

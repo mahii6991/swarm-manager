@@ -9,7 +9,7 @@ pub struct SecurityMonitor {
     /// Anomaly detection threshold
     anomaly_threshold: u32,
     /// Failed authentication attempts per drone
-    failed_auth_attempts: FnvIndexMap<u64, u32, 100>,
+    failed_auth_attempts: FnvIndexMap<u64, u32, 128>,
     /// Message rate limiter
     rate_limiter: RateLimiter,
     /// Intrusion detection system
@@ -29,14 +29,20 @@ impl SecurityMonitor {
 
     /// Record failed authentication attempt
     pub fn record_auth_failure(&mut self, drone_id: DroneId) -> Result<()> {
-        let count = self
-            .failed_auth_attempts
-            .entry(drone_id.as_u64())
-            .or_insert(0);
-        *count = count.saturating_add(1);
+        use heapless::Entry;
+        let count = match self.failed_auth_attempts.entry(drone_id.as_u64()) {
+            Entry::Occupied(mut o) => {
+                *o.get_mut() = o.get().saturating_add(1);
+                *o.get()
+            }
+            Entry::Vacant(v) => {
+                v.insert(1).ok();
+                1
+            }
+        };
 
         // Ban if too many failures
-        if *count > self.anomaly_threshold {
+        if count > self.anomaly_threshold {
             self.ids.ban_drone(drone_id)?;
             return Err(SwarmError::PermissionDenied);
         }
@@ -78,7 +84,7 @@ pub struct RateLimiter {
     /// Time window in milliseconds
     window_ms: u32,
     /// Message counts per drone
-    counts: FnvIndexMap<u64, RateLimitEntry, 100>,
+    counts: FnvIndexMap<u64, RateLimitEntry, 128>,
 }
 
 #[derive(Debug, Clone, Copy)]
@@ -99,12 +105,16 @@ impl RateLimiter {
 
     /// Check if message is within rate limit
     pub fn check(&mut self, drone_id: DroneId) -> Result<()> {
+        use heapless::Entry;
         let now = Self::get_time_ms();
 
-        let entry = self.counts.entry(drone_id.as_u64()).or_insert(RateLimitEntry {
-            count: 0,
-            window_start: now,
-        });
+        let entry = match self.counts.entry(drone_id.as_u64()) {
+            Entry::Occupied(o) => o.into_mut(),
+            Entry::Vacant(v) => v.insert(RateLimitEntry {
+                count: 0,
+                window_start: now,
+            }).map_err(|_| SwarmError::ResourceExhausted)?,
+        };
 
         // Reset window if expired
         if now - entry.window_start > self.window_ms as u64 {
@@ -133,7 +143,7 @@ pub struct IntrusionDetectionSystem {
     /// Banned drones
     banned: Vec<DroneId, 100>,
     /// Suspicious activity counter
-    suspicious_activity: FnvIndexMap<u64, u32, 100>,
+    suspicious_activity: FnvIndexMap<u64, u32, 128>,
 }
 
 impl IntrusionDetectionSystem {
@@ -175,14 +185,20 @@ impl IntrusionDetectionSystem {
         }
 
         if suspicious {
-            let count = self
-                .suspicious_activity
-                .entry(drone_id.as_u64())
-                .or_insert(0);
-            *count += 1;
+            use heapless::Entry;
+            let count = match self.suspicious_activity.entry(drone_id.as_u64()) {
+                Entry::Occupied(mut o) => {
+                    *o.get_mut() += 1;
+                    *o.get()
+                }
+                Entry::Vacant(v) => {
+                    v.insert(1).ok();
+                    1
+                }
+            };
 
             // Ban after multiple suspicious activities
-            if *count > 10 {
+            if count > 10 {
                 self.ban_drone(drone_id)?;
                 return Err(SwarmError::PermissionDenied);
             }
@@ -228,7 +244,7 @@ impl Default for IntrusionDetectionSystem {
 /// Access control manager
 pub struct AccessControl {
     /// Authorized drones
-    authorized: FnvIndexMap<u64, SecurityLevel, 100>,
+    authorized: FnvIndexMap<u64, SecurityLevel, 128>,
 }
 
 impl AccessControl {

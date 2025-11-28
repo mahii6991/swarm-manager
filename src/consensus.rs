@@ -101,9 +101,9 @@ pub struct ConsensusEngine {
     /// Index of highest log entry applied to state machine
     last_applied: u64,
     /// For leaders: next log index to send to each follower
-    next_index: FnvIndexMap<u64, u64, 100>,
+    next_index: FnvIndexMap<u64, u64, 128>,
     /// For leaders: highest log index known to be replicated on each follower
-    match_index: FnvIndexMap<u64, u64, 100>,
+    match_index: FnvIndexMap<u64, u64, 128>,
     /// Election timeout (randomized)
     election_timeout_ms: u32,
     /// Last heartbeat time

@@ -12,11 +12,11 @@ use crate::crypto::CryptoContext;
 use heapless::{FnvIndexMap, Vec};
 use serde::{Deserialize, Serialize};
 
-/// Maximum number of neighbors in mesh network
-pub const MAX_NEIGHBORS: usize = 20;
+/// Maximum number of neighbors in mesh network (must be power of 2 for FnvIndexMap)
+pub const MAX_NEIGHBORS: usize = 32;
 
-/// Maximum routing table entries
-pub const MAX_ROUTES: usize = 100;
+/// Maximum routing table entries (must be power of 2 for FnvIndexMap)
+pub const MAX_ROUTES: usize = 128;
 
 /// Maximum network hops (prevents routing loops)
 pub const MAX_NETWORK_HOPS: u8 = 15;
@@ -222,16 +222,16 @@ impl MeshNetwork {
     /// Send a message to a destination drone
     pub fn send_message(&mut self, destination: DroneId, payload: Vec<u8, 1024>) -> Result<()> {
         // Check if we have a route
-        if let Some(route) = self.routes.get(&destination.as_u64()) {
+        if let Some(_route) = self.routes.get(&destination.as_u64()) {
             // Send directly via route
-            let msg = NetworkMessage::Data {
+            let _msg = NetworkMessage::Data {
                 source: self.local_id,
                 destination,
                 payload,
                 hop_count: 0,
             };
             self.stats.messages_sent += 1;
-            // In actual implementation, send via network interface
+            // TODO: In actual implementation, send via network interface
             Ok(())
         } else {
             // No route - queue and initiate route discovery
@@ -280,7 +280,7 @@ impl MeshNetwork {
     }
 
     /// Handle heartbeat message
-    fn handle_heartbeat(&mut self, sender: DroneId, timestamp: u64) -> Result<()> {
+    fn handle_heartbeat(&mut self, sender: DroneId, _timestamp: u64) -> Result<()> {
         if let Some(neighbor) = self.neighbors.get_mut(&sender.as_u64()) {
             neighbor.last_seen = Self::get_time();
             neighbor.update_quality(true);
@@ -312,14 +312,14 @@ impl MeshNetwork {
         }
 
         // Find route
-        if let Some(route) = self.routes.get(&destination.as_u64()) {
-            let msg = NetworkMessage::Data {
+        if let Some(_route) = self.routes.get(&destination.as_u64()) {
+            let _msg = NetworkMessage::Data {
                 source,
                 destination,
                 payload,
                 hop_count: new_hop_count,
             };
-            // Send to next hop
+            // TODO: Send to next hop
             self.stats.messages_sent += 1;
             Ok(())
         } else {
@@ -332,7 +332,7 @@ impl MeshNetwork {
     /// Initiate route discovery
     fn initiate_route_discovery(&mut self, destination: DroneId) -> Result<()> {
         self.sequence_number += 1;
-        let msg = NetworkMessage::RouteRequest {
+        let _msg = NetworkMessage::RouteRequest {
             source: self.local_id,
             destination,
             sequence: self.sequence_number,
@@ -460,22 +460,22 @@ impl MeshNetwork {
     /// Broadcast hello message
     pub fn broadcast_hello(&mut self, position: Position) -> Result<()> {
         self.sequence_number += 1;
-        let msg = NetworkMessage::Hello {
+        let _msg = NetworkMessage::Hello {
             sender: self.local_id,
             position,
             sequence: self.sequence_number,
         };
-        // Broadcast to all neighbors
+        // TODO: Broadcast to all neighbors
         Ok(())
     }
 
     /// Send heartbeat to maintain connections
     pub fn send_heartbeat(&mut self) -> Result<()> {
-        let msg = NetworkMessage::Heartbeat {
+        let _msg = NetworkMessage::Heartbeat {
             sender: self.local_id,
             timestamp: Self::get_time(),
         };
-        // Send to all neighbors
+        // TODO: Send to all neighbors
         Ok(())
     }
 

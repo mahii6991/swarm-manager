@@ -17,9 +17,8 @@ smoltcp = { version = "0.11", default-features = false, features = ["proto-ipv4"
 heapless = { version = "0.8", features = ["serde"] }
 
 # Cryptography - Post-quantum ready
-# TODO: Fix ChaCha20Poly1305 API compatibility issues
-# chacha20poly1305 = { version = "0.10", default-features = false, features = ["heapless"] }
-# aead = { version = "0.5", default-features = false }
+chacha20poly1305 = { version = "0.10", default-features = false, features = ["heapless"] }
+aead = { version = "0.5", default-features = false }
 ed25519-dalek = { version = "2.1", default-features = false }
 sha3 = { version = "0.10", default-features = false }
 blake3 = { version = "1.5", default-features = false }

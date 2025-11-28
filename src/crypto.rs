@@ -11,8 +11,8 @@
 
 use crate::types::*;
 use crate::KEY_SIZE;
-use chacha20poly1305::{ChaCha20Poly1305, Nonce};
-use aead::{Aead, KeyInit};
+use chacha20poly1305::{ChaCha20Poly1305, Nonce, Tag};
+use aead::{AeadInPlace, KeyInit};
 use ed25519_dalek::{Signature, Signer, SigningKey, Verifier, VerifyingKey};
 use heapless::Vec;
 use sha3::{Digest, Sha3_256};
@@ -91,20 +91,26 @@ impl CryptoContext {
         let nonce = Nonce::from_slice(&nonce_bytes);
 
         // BUG-002 FIX: Use pre-initialized cipher (5-10x faster)
-        // TODO: Add support for AAD (associated_data) if needed
-        let _ = associated_data; // Suppress unused warning
+        // Encrypt in-place using no_std compatible API
+        let mut buffer = Vec::<u8, 2048>::new();
+        buffer
+            .extend_from_slice(plaintext)
+            .map_err(|_| SwarmError::BufferFull)?;
 
-        let ciphertext = self.cipher
-            .encrypt(nonce, plaintext)
+        let tag = self.cipher
+            .encrypt_in_place_detached(nonce, associated_data, &mut buffer)
             .map_err(|_| SwarmError::CryptoError)?;
 
-        // Create message: nonce || ciphertext
+        // Create message: nonce || ciphertext || tag
         let mut message = Vec::<u8, 2048>::new();
         message
             .extend_from_slice(&nonce_bytes)
             .map_err(|_| SwarmError::BufferFull)?;
         message
-            .extend_from_slice(&ciphertext)
+            .extend_from_slice(&buffer)
+            .map_err(|_| SwarmError::BufferFull)?;
+        message
+            .extend_from_slice(&tag)
             .map_err(|_| SwarmError::BufferFull)?;
 
         // Sign the entire message
@@ -146,25 +152,31 @@ impl CryptoContext {
             .verify(signed_data, &signature)
             .map_err(|_| SwarmError::AuthenticationFailed)?;
 
-        // Extract nonce and ciphertext
+        // Extract nonce, ciphertext, and tag
         let nonce_bytes = &signed_data[..12];
-        let ciphertext = &signed_data[12..];
         let nonce = Nonce::from_slice(nonce_bytes);
 
-        // Decrypt using pre-initialized cipher
-        // TODO: Add support for AAD (associated_data) if needed
-        let _ = associated_data; // Suppress unused warning
+        // Last TAG_SIZE bytes are the authentication tag
+        if signed_data.len() < 12 + TAG_SIZE {
+            return Err(SwarmError::InvalidMessage);
+        }
 
-        let plaintext = self.cipher
-            .decrypt(nonce, ciphertext)
-            .map_err(|_| SwarmError::AuthenticationFailed)?;
+        let ciphertext_end = signed_data.len() - TAG_SIZE;
+        let ciphertext = &signed_data[12..ciphertext_end];
+        let tag_bytes = &signed_data[ciphertext_end..];
+        let tag = Tag::from_slice(tag_bytes);
 
-        let mut result = Vec::<u8, 2048>::new();
-        result
-            .extend_from_slice(&plaintext)
+        // Decrypt using pre-initialized cipher with in-place API
+        let mut buffer = Vec::<u8, 2048>::new();
+        buffer
+            .extend_from_slice(ciphertext)
             .map_err(|_| SwarmError::BufferFull)?;
 
-        Ok(result)
+        self.cipher
+            .decrypt_in_place_detached(nonce, associated_data, &mut buffer, tag)
+            .map_err(|_| SwarmError::AuthenticationFailed)?;
+
+        Ok(buffer)
     }
 
     /// Compute BLAKE3 hash (fast, suitable for checksums)
@@ -213,7 +225,7 @@ impl CryptoContext {
 /// Secure key storage for swarm member keys
 pub struct KeyStore {
     /// Map of drone IDs to their public keys
-    keys: heapless::FnvIndexMap<u64, VerifyingKey, 100>,
+    keys: heapless::FnvIndexMap<u64, VerifyingKey, 128>,
 }
 
 impl KeyStore {
@@ -262,7 +274,7 @@ impl Default for KeyStore {
 /// Replay attack protection via nonce tracking
 pub struct NonceTracker {
     /// Seen nonces (using sliding window)
-    seen_nonces: heapless::FnvIndexMap<u64, u64, 1000>,
+    seen_nonces: heapless::FnvIndexMap<u64, u64, 1024>,
 }
 
 impl NonceTracker {

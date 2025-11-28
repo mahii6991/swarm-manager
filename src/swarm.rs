@@ -52,7 +52,7 @@ pub struct SwarmController {
     /// This drone's state
     local_state: DroneState,
     /// Known states of other drones
-    swarm_states: FnvIndexMap<u64, DroneState, 100>,
+    swarm_states: FnvIndexMap<u64, DroneState, 128>,
     /// Current formation
     formation: Formation,
     /// Behavior mode
@@ -379,7 +379,7 @@ pub struct TaskAllocator {
     /// Available tasks
     tasks: Vec<SwarmTask, 100>,
     /// Task assignments
-    assignments: FnvIndexMap<u64, u64, 100>, // task_id -> drone_id
+    assignments: FnvIndexMap<u64, u64, 128>, // task_id -> drone_id
 }
 
 impl TaskAllocator {
