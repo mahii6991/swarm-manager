@@ -6,8 +6,8 @@ email: "m.s.rajpoot20@gmail.com"
 baseurl: "/drone-swarm-system"
 url: "https://mahii6991.github.io"
 
-# Theme
-theme: just-the-docs
+# Theme (using remote_theme for GitHub Pages compatibility)
+remote_theme: just-the-docs/just-the-docs
 color_scheme: dark
 
 # Repository
@@ -51,6 +51,7 @@ aux_links:
 
 # Plugins
 plugins:
+  - jekyll-remote-theme
   - jekyll-seo-tag
   - jekyll-sitemap
   - jekyll-feed
