@@ -233,7 +233,12 @@ impl MeshNetwork {
                 hop_count: 0,
             };
             self.stats.messages_sent += 1;
-            // TODO: In actual implementation, send via network interface
+
+            // SIMULATION MODE: In production, this would transmit via hardware radio interface
+            // For testing/simulation, we track the message but don't perform actual I/O
+            #[cfg(feature = "hardware")]
+            unimplemented!("Hardware radio transmission not yet implemented");
+
             Ok(())
         } else {
             // No route - queue and initiate route discovery
@@ -320,7 +325,11 @@ impl MeshNetwork {
                 payload,
                 hop_count: new_hop_count,
             };
-            // TODO: Send to next hop
+
+            // SIMULATION MODE: In production, forward to next hop via hardware interface
+            #[cfg(feature = "hardware")]
+            unimplemented!("Hardware radio forwarding not yet implemented");
+
             self.stats.messages_sent += 1;
             Ok(())
         } else {
@@ -357,7 +366,9 @@ impl MeshNetwork {
                 next_hop: self.local_id,
                 hop_count: 0,
             };
-            // TODO: Send reply back
+            // SIMULATION MODE: In production, send reply via hardware interface
+            #[cfg(feature = "hardware")]
+            unimplemented!("Hardware radio transmission not yet implemented");
         } else if let Some(route) = self.routes.get(&destination.as_u64()) {
             // We have a route - send reply
             let _reply = NetworkMessage::RouteReply {
@@ -366,9 +377,13 @@ impl MeshNetwork {
                 next_hop: route.next_hop,
                 hop_count: route.hop_count,
             };
-            // TODO: Send reply back
+            // SIMULATION MODE: In production, send reply via hardware interface
+            #[cfg(feature = "hardware")]
+            unimplemented!("Hardware radio transmission not yet implemented");
         } else {
-            // TODO: Forward route request
+            // SIMULATION MODE: In production, forward request to neighbors
+            #[cfg(feature = "hardware")]
+            unimplemented!("Hardware radio forwarding not yet implemented");
         }
         Ok(())
     }
@@ -411,8 +426,12 @@ impl MeshNetwork {
         _neighbors: Vec<(DroneId, f32), MAX_NEIGHBORS>,
         _sequence: u32,
     ) -> Result<()> {
-        // TODO: Update routing table based on link state information
+        // SIMULATION MODE: In production, update routing table based on link state
         // This would implement a distance vector or link state routing protocol
+        // Currently stubbed for simulation/testing
+        #[cfg(feature = "hardware")]
+        unimplemented!("Link state routing table updates not yet implemented");
+
         Ok(())
     }
 
@@ -466,7 +485,10 @@ impl MeshNetwork {
             position,
             sequence: self.sequence_number,
         };
-        // TODO: Broadcast to all neighbors
+        // SIMULATION MODE: In production, broadcast to all neighbors via hardware
+        #[cfg(feature = "hardware")]
+        unimplemented!("Hardware broadcast not yet implemented");
+
         Ok(())
     }
 
@@ -476,7 +498,10 @@ impl MeshNetwork {
             sender: self.local_id,
             timestamp: Self::get_time(),
         };
-        // TODO: Send to all neighbors
+        // SIMULATION MODE: In production, send heartbeat to all neighbors
+        #[cfg(feature = "hardware")]
+        unimplemented!("Hardware heartbeat transmission not yet implemented");
+
         Ok(())
     }
 

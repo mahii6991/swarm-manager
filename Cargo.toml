@@ -56,5 +56,6 @@ opt-level = 1        # Some optimization for testing
 default = ["std"]
 std = []
 no_std = []
+hardware = []  # Enable hardware radio/network I/O (not yet implemented)
 hardware-crypto = []  # Enable hardware crypto accelerators
 post-quantum = []     # Enable post-quantum cryptography
