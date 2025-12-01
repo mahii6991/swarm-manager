@@ -20,12 +20,18 @@
 
 #![cfg_attr(not(feature = "std"), no_std)]
 #![forbid(unsafe_code)]
-// TODO: Re-enable after adding all missing documentation
-// #![deny(missing_docs)]
-// TODO: Re-enable after fixing all warnings
-// #![deny(warnings)]
-#![allow(warnings)]
-#![allow(missing_docs)]
+#![deny(warnings)]
+#![allow(missing_docs)]  // TODO: Remove in Phase 2 and fix all missing documentation
+#![allow(clippy::manual_range_contains)]
+#![allow(clippy::needless_borrow)]
+#![allow(clippy::excessive_precision)]
+#![allow(clippy::manual_find)]
+#![allow(clippy::manual_is_multiple_of)]
+#![allow(clippy::should_implement_trait)]
+#![allow(clippy::needless_range_loop)]
+#![allow(clippy::default_trait_access)]
+#![allow(clippy::clamp_range_without_using_clamp)]
+#![allow(clippy::manual_div_ceil)]
 
 pub mod config;
 pub mod consensus;

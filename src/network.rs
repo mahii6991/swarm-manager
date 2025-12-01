@@ -7,7 +7,6 @@
 //! - Automatic neighbor discovery
 //! - Network resilience and self-healing
 
-use crate::crypto::CryptoContext;
 use crate::types::*;
 use heapless::{FnvIndexMap, Vec};
 use serde::{Deserialize, Serialize};
@@ -128,7 +127,9 @@ pub struct MeshNetwork {
 struct QueuedMessage {
     destination: DroneId,
     payload: Vec<u8, 1024>,
+    #[allow(dead_code)]  // Reserved for retry logic
     retry_count: u8,
+    #[allow(dead_code)]  // Reserved for timeout handling
     timestamp: u64,
 }
 

@@ -18,9 +18,6 @@
 //! - 2025 MDPI Sensors: Enhanced ACO for mobile robots
 //! - 2025 Applied Intelligence: Multi-UAV path planning
 
-#![no_std]
-#![forbid(unsafe_code)]
-
 use crate::types::*;
 use core::f32;
 use heapless::Vec;
@@ -360,7 +357,9 @@ pub struct ACOOptimizer {
     start: Position3D,
     goal: Position3D,
     obstacles: Vec<Obstacle, MAX_OBSTACLES>,
+    #[allow(dead_code)]  // Reserved for bounds checking
     bounds_min: Position3D,
+    #[allow(dead_code)]  // Reserved for bounds checking
     bounds_max: Position3D,
 }
 

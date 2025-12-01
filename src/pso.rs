@@ -10,7 +10,7 @@
 
 use crate::types::*;
 use core::f32;
-use heapless::{FnvIndexMap, Vec};
+use heapless::Vec;
 
 /// Maximum number of particles in swarm
 pub const MAX_PARTICLES: usize = 128;
@@ -544,7 +544,8 @@ impl DronePathOptimizer {
             .map_err(|_| SwarmError::BufferFull)
     }
 
-    /// Compute path cost
+    /// Compute path cost (reserved for path evaluation)
+    #[allow(dead_code)]
     fn path_cost(&self, waypoints: &[f32]) -> f32 {
         Self::calculate_path_cost(waypoints, self.start, self.goal, &self.obstacles)
     }

@@ -1,7 +1,7 @@
 //! Core type definitions for the drone swarm system
 
 use core::fmt;
-use heapless::{String, Vec};
+use heapless::Vec;
 use serde::{Deserialize, Serialize};
 
 /// Result type for swarm operations

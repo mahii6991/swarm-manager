@@ -7,7 +7,7 @@
 //! - Privacy-preserving gradient sharing
 //! - Blockchain-based verification (concept)
 
-use crate::crypto::{CryptoContext, KeyStore};
+use crate::crypto::KeyStore;
 use crate::types::*;
 use ed25519_dalek::{Signature, Verifier};
 use heapless::{FnvIndexMap, Vec};
@@ -70,7 +70,8 @@ impl GlobalModel {
 
 /// Federated learning coordinator
 pub struct FederatedCoordinator {
-    /// This drone's ID
+    /// This drone's ID (reserved for multi-node coordination)
+    #[allow(dead_code)]
     node_id: DroneId,
     /// Current global model
     global_model: GlobalModel,

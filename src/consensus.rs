@@ -35,6 +35,7 @@ pub struct LogEntry {
 
 /// Commands that can be replicated via consensus
 #[derive(Debug, Clone, Serialize, Deserialize)]
+#[allow(clippy::large_enum_variant)]  // UpdateMission needs large buffer for parameters
 pub enum SwarmCommand {
     /// Assign task to drone
     AssignTask { drone: DroneId, task_id: u64 },
@@ -52,6 +53,7 @@ pub enum SwarmCommand {
 
 /// Consensus messages for Raft protocol
 #[derive(Debug, Clone, Serialize, Deserialize)]
+#[allow(clippy::large_enum_variant)]  // AppendEntries needs large buffer for log replication
 pub enum ConsensusMessage {
     /// Request vote from other nodes
     RequestVote {
@@ -98,7 +100,8 @@ pub struct ConsensusEngine {
     log: Vec<LogEntry, 1000>,
     /// Index of highest log entry known to be committed
     commit_index: u64,
-    /// Index of highest log entry applied to state machine
+    /// Index of highest log entry applied to state machine (reserved for state machine integration)
+    #[allow(dead_code)]
     last_applied: u64,
     /// For leaders: next log index to send to each follower
     next_index: FnvIndexMap<u64, u64, 128>,

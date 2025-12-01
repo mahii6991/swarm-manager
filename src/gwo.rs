@@ -17,9 +17,6 @@
 //! - 2025 Scientific Reports: Improved GWO variants
 //! - 2025 UAV trajectory optimization research
 
-#![no_std]
-#![forbid(unsafe_code)]
-
 use crate::types::*;
 use core::f32;
 use heapless::Vec;
@@ -270,6 +267,7 @@ impl GWOOptimizer {
     }
 
     /// Standard GWO position update
+    #[allow(non_snake_case)]  // Mathematical notation from GWO algorithm
     fn standard_position_update(
         &self,
         wolf_id: usize,
@@ -315,6 +313,7 @@ impl GWOOptimizer {
     }
 
     /// Hybrid GWO-PSO position update
+    #[allow(non_snake_case)]  // Mathematical notation from GWO algorithm
     fn hybrid_position_update(
         &self,
         wolf_id: usize,
@@ -357,6 +356,7 @@ impl GWOOptimizer {
     }
 
     /// Chaotic GWO position update (Lévy flight inspired)
+    #[allow(non_snake_case)]  // Mathematical notation from GWO algorithm
     fn chaotic_position_update(
         &self,
         wolf_id: usize,
@@ -458,7 +458,8 @@ fn gamma_function(z: f32) -> f32 {
     }
 }
 
-/// Multi-objective GWO
+/// Multi-objective GWO (reserved for future multi-objective optimization)
+#[allow(dead_code)]
 pub struct MOGWOOptimizer {
     config: GWOConfig,
     wolves: Vec<Wolf, MAX_WOLVES>,
@@ -504,6 +505,7 @@ mod tests {
         x.iter().map(|&xi| xi * xi).sum()
     }
 
+    #[allow(dead_code)]
     fn rastrigin_function(x: &[f32]) -> f32 {
         let n = x.len() as f32;
         let a = 10.0;

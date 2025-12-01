@@ -7,9 +7,7 @@
 //! - Collective decision making
 //! - Emergent behavior
 
-use crate::consensus::{ConsensusEngine, SwarmCommand};
-use crate::federated::FederatedCoordinator;
-use crate::network::MeshNetwork;
+// Consensus, federated, and network types available for integration
 use crate::types::*;
 use heapless::{FnvIndexMap, Vec};
 

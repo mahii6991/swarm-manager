@@ -1,6 +1,6 @@
 //! Advanced security features and intrusion detection
 
-use crate::crypto::{CryptoContext, KeyStore, NonceTracker};
+// Crypto types available for future enhancements
 use crate::types::*;
 use heapless::{FnvIndexMap, Vec};
 

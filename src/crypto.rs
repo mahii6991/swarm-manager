@@ -32,7 +32,8 @@ pub const MAX_SAFE_ENCRYPTIONS: u64 = 1_000_000_000; // 1 billion
 
 /// Cryptographic context for secure communication
 pub struct CryptoContext {
-    /// Symmetric encryption key
+    /// Symmetric encryption key (stored for key rotation)
+    #[allow(dead_code)]
     symmetric_key: [u8; KEY_SIZE],
     /// Pre-initialized cipher (reusable for better performance)
     cipher: ChaCha20Poly1305,
