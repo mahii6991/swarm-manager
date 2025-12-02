@@ -39,11 +39,10 @@ pub mod crypto;
 pub mod fault_tolerance;
 pub mod federated;
 pub mod network;
+pub mod rng;
 pub mod security;
 pub mod swarm;
 pub mod types;
-// TODO: Fix borrow checker errors before re-enabling
-// See KNOWN_ISSUES.md and FIXES_APPLIED.md for details
 pub mod aco;
 pub mod gwo;
 pub mod pso;
