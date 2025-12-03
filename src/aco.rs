@@ -114,6 +114,9 @@ impl Obstacle {
         let fz = self.center.z - p1.z;
 
         // Project onto segment
+        // Note: This computes t = dot(f, d) / dot(d, d) for line segment projection
+        // The pattern (dx*dx + dy*dy + dz*dz) is correct - it's the squared length of d
+        #[allow(clippy::suspicious_operation_groupings)]
         let t = ((fx * dx + fy * dy + fz * dz) / (dx * dx + dy * dy + dz * dz)).clamp(0.0, 1.0);
 
         // Closest point on segment
@@ -575,9 +578,9 @@ impl ACOOptimizer {
 
 /// Pseudo-random number generator
 fn pseudo_random(seed: usize) -> f32 {
-    let a = 1103515245_u64;
-    let c = 12345_u64;
-    let m = 2147483648_u64;
+    let a = 1_103_515_245_u64;
+    let c = 12_345_u64;
+    let m = 2_147_483_648_u64;
     let x = ((a.wrapping_mul(seed as u64).wrapping_add(c)) % m) as f32;
     x / m as f32
 }

@@ -74,12 +74,12 @@ impl Particle {
 
     /// SplitMix64 pseudo-random number generator (better statistical properties)
     pub fn pseudo_random(seed: usize) -> f32 {
-        let mut z = (seed as u64).wrapping_add(0x9e3779b97f4a7c15);
-        z = (z ^ (z >> 30)).wrapping_mul(0xbf58476d1ce4e5b9);
-        z = (z ^ (z >> 27)).wrapping_mul(0x94d049bb133111eb);
+        let mut z = (seed as u64).wrapping_add(0x9e37_79b9_7f4a_7c15);
+        z = (z ^ (z >> 30)).wrapping_mul(0xbf58_476d_1ce4_e5b9);
+        z = (z ^ (z >> 27)).wrapping_mul(0x94d0_49bb_1331_11eb);
         z = z ^ (z >> 31);
         // Convert to float [0, 1)
-        (z >> 11) as f32 * (1.0 / 9007199254740992.0)
+        (z >> 11) as f32 * (1.0 / 9_007_199_254_740_992.0)
     }
 }
 

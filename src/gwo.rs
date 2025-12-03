@@ -436,9 +436,9 @@ impl GWOOptimizer {
 
 /// Pseudo-random number generator
 fn pseudo_random(seed: usize) -> f32 {
-    let a = 1103515245_u64;
-    let c = 12345_u64;
-    let m = 2147483648_u64;
+    let a = 1_103_515_245_u64;
+    let c = 12_345_u64;
+    let m = 2_147_483_648_u64;
     let x = ((a.wrapping_mul(seed as u64).wrapping_add(c)) % m) as f32;
     x / m as f32
 }
@@ -450,10 +450,10 @@ fn gamma_function(z: f32) -> f32 {
         f32::consts::PI / ((f32::consts::PI * z).sin() * gamma_function(1.0 - z))
     } else {
         let z = z - 1.0;
-        let x = 0.99999999997092
-            + 0.57721566490153 / (z + 1.0)
-            + (-0.65587807152026) / (z + 2.0)
-            + 0.42002635034095 / (z + 3.0);
+        let x = 0.999_999_999_970_92
+            + 0.577_215_664_901_53 / (z + 1.0)
+            + (-0.655_878_071_520_26) / (z + 2.0)
+            + 0.420_026_350_340_95 / (z + 3.0);
         (2.0 * f32::consts::PI).sqrt() / z.exp() * (z / f32::consts::E).powf(z + 0.5) * x
     }
 }
