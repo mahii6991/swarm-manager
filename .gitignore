@@ -2,7 +2,7 @@
 /target/
 **/*.rs.bk
 *.pdb
-Cargo.lock
+# Note: Cargo.lock is committed for reproducible builds (this is an application, not a library)
 
 # IDEs and Editors
 .vscode/
