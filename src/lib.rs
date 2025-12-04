@@ -21,7 +21,7 @@
 #![cfg_attr(not(feature = "std"), no_std)]
 #![forbid(unsafe_code)]
 #![deny(warnings)]
-#![allow(missing_docs)] // TODO: Remove in Phase 2 and fix all missing documentation
+#![allow(missing_docs)] // Gradually adding docs - see Week 2-3 goals
 #![allow(clippy::manual_range_contains)]
 #![allow(clippy::needless_borrow)]
 #![allow(clippy::excessive_precision)]
@@ -32,42 +32,94 @@
 #![allow(clippy::default_trait_access)]
 #![allow(clippy::manual_div_ceil)]
 
+/// Ant Colony Optimization (ACO) for path planning and resource allocation
 pub mod aco;
+/// System configuration and parameter management
 pub mod config;
+/// Raft consensus protocol implementation for distributed coordination
 pub mod consensus;
+/// Cryptographic primitives (ChaCha20Poly1305, Ed25519, key management)
 pub mod crypto;
+/// Fault detection, isolation, and recovery mechanisms
 pub mod fault_tolerance;
+/// Federated learning with differential privacy and blockchain verification
 pub mod federated;
+/// Grey Wolf Optimizer (GWO) for multi-objective optimization
 pub mod gwo;
+/// Mesh networking, routing, and message passing
 pub mod network;
+/// Particle Swarm Optimization (PSO) for formation control
 pub mod pso;
+/// Advanced PSO variants with adaptive parameters
 pub mod pso_advanced;
+/// Cryptographically secure random number generation
 pub mod rng;
+/// Multi-layer security framework and intrusion detection
 pub mod security;
+/// High-level swarm coordination and behavior management
 pub mod swarm;
+/// Platform-agnostic time abstraction for embedded systems
 pub mod time_abstraction;
+/// Core types (Position, Velocity, DroneId, NetworkAddress, etc.)
 pub mod types;
 
+// Re-export configuration types for convenience
 pub use config::*;
+// Re-export time functions for easy access
 pub use time_abstraction::{delay_ms, get_time_ms, get_time_us, init_time_source};
+// Re-export core types for convenience
 pub use types::*;
 
-/// Maximum number of drones in a swarm
+/// Maximum number of drones in a swarm.
+///
+/// This limit ensures bounded memory usage in embedded systems.
+/// Increasing this value requires more heap/stack space for neighbor tables,
+/// routing information, and consensus state.
 pub const MAX_SWARM_SIZE: usize = 100;
 
-/// Maximum message size (bytes)
+/// Maximum message size in bytes.
+///
+/// Network messages are limited to this size to:
+/// - Prevent buffer overflows
+/// - Ensure real-time delivery (smaller packets = lower latency)
+/// - Work within typical RF module constraints (e.g., LoRa 256-byte payloads)
 pub const MAX_MESSAGE_SIZE: usize = 1024;
 
-/// Cryptographic key size (256-bit)
+/// Cryptographic key size in bytes (256-bit).
+///
+/// Used for:
+/// - ChaCha20Poly1305 encryption keys (256-bit)
+/// - Ed25519 signing keys (256-bit seed)
+/// - HMAC-SHA256 authentication
+///
+/// 256-bit keys provide ~128-bit security (post-quantum: 64-bit)
 pub const KEY_SIZE: usize = 32;
 
-/// Network timeout in milliseconds
+/// Network operation timeout in milliseconds.
+///
+/// Maximum time to wait for:
+/// - Message acknowledgments
+/// - Route discoveries
+/// - Connection establishment
+///
+/// Chosen to balance responsiveness vs. packet loss tolerance.
 pub const NETWORK_TIMEOUT_MS: u32 = 5000;
 
-/// Consensus election timeout (ms)
+/// Raft consensus election timeout in milliseconds.
+///
+/// If a follower doesn't receive a heartbeat within this time,
+/// it starts a new election. Must be >> HEARTBEAT_INTERVAL_MS
+/// to avoid spurious elections due to network jitter.
+///
+/// Typical range: 150-300ms (randomized per node)
 pub const ELECTION_TIMEOUT_MS: u32 = 150;
 
-/// Heartbeat interval (ms)
+/// Raft leader heartbeat interval in milliseconds.
+///
+/// Leaders send heartbeats at this interval to maintain authority
+/// and prevent unnecessary elections. Must be << ELECTION_TIMEOUT_MS.
+///
+/// 50ms provides good balance between overhead and responsiveness.
 pub const HEARTBEAT_INTERVAL_MS: u32 = 50;
 
 // ═══════════════════════════════════════════════════════════════════════════
