@@ -93,26 +93,52 @@ mod position_tests {
 
     #[test]
     fn test_position_distance_to_self() {
-        let pos = Position { x: 10.0, y: 20.0, z: 30.0 };
+        let pos = Position {
+            x: 10.0,
+            y: 20.0,
+            z: 30.0,
+        };
         let distance = pos.distance_to(&pos);
 
-        assert!((distance - 0.0).abs() < 1e-6, "Distance to self should be 0");
+        assert!(
+            (distance - 0.0).abs() < 1e-6,
+            "Distance to self should be 0"
+        );
     }
 
     #[test]
     fn test_position_distance_simple() {
-        let pos1 = Position { x: 0.0, y: 0.0, z: 0.0 };
-        let pos2 = Position { x: 3.0, y: 4.0, z: 0.0 };
+        let pos1 = Position {
+            x: 0.0,
+            y: 0.0,
+            z: 0.0,
+        };
+        let pos2 = Position {
+            x: 3.0,
+            y: 4.0,
+            z: 0.0,
+        };
 
         let distance = pos1.distance_to(&pos2);
 
-        assert!((distance - 5.0).abs() < 1e-6, "3-4-5 triangle should have distance 5");
+        assert!(
+            (distance - 5.0).abs() < 1e-6,
+            "3-4-5 triangle should have distance 5"
+        );
     }
 
     #[test]
     fn test_position_distance_3d() {
-        let pos1 = Position { x: 0.0, y: 0.0, z: 0.0 };
-        let pos2 = Position { x: 1.0, y: 1.0, z: 1.0 };
+        let pos1 = Position {
+            x: 0.0,
+            y: 0.0,
+            z: 0.0,
+        };
+        let pos2 = Position {
+            x: 1.0,
+            y: 1.0,
+            z: 1.0,
+        };
 
         let distance = pos1.distance_to(&pos2);
         let expected = libm::sqrtf(3.0); // sqrt(1^2 + 1^2 + 1^2)
@@ -122,19 +148,38 @@ mod position_tests {
 
     #[test]
     fn test_position_distance_symmetry() {
-        let pos1 = Position { x: 10.0, y: 20.0, z: 30.0 };
-        let pos2 = Position { x: 40.0, y: 50.0, z: 60.0 };
+        let pos1 = Position {
+            x: 10.0,
+            y: 20.0,
+            z: 30.0,
+        };
+        let pos2 = Position {
+            x: 40.0,
+            y: 50.0,
+            z: 60.0,
+        };
 
         let dist12 = pos1.distance_to(&pos2);
         let dist21 = pos2.distance_to(&pos1);
 
-        assert!((dist12 - dist21).abs() < 1e-6, "Distance should be symmetric");
+        assert!(
+            (dist12 - dist21).abs() < 1e-6,
+            "Distance should be symmetric"
+        );
     }
 
     #[test]
     fn test_position_distance_negative_coords() {
-        let pos1 = Position { x: -10.0, y: -20.0, z: -30.0 };
-        let pos2 = Position { x: 10.0, y: 20.0, z: 30.0 };
+        let pos1 = Position {
+            x: -10.0,
+            y: -20.0,
+            z: -30.0,
+        };
+        let pos2 = Position {
+            x: 10.0,
+            y: 20.0,
+            z: 30.0,
+        };
 
         let distance = pos1.distance_to(&pos2);
 
@@ -143,7 +188,11 @@ mod position_tests {
 
     #[test]
     fn test_position_clone() {
-        let pos1 = Position { x: 1.0, y: 2.0, z: 3.0 };
+        let pos1 = Position {
+            x: 1.0,
+            y: 2.0,
+            z: 3.0,
+        };
         let pos2 = pos1.clone();
 
         assert_eq!(pos1, pos2);
@@ -151,7 +200,11 @@ mod position_tests {
 
     #[test]
     fn test_position_copy() {
-        let pos1 = Position { x: 1.0, y: 2.0, z: 3.0 };
+        let pos1 = Position {
+            x: 1.0,
+            y: 2.0,
+            z: 3.0,
+        };
         let pos2 = pos1; // Copy semantics
 
         assert_eq!(pos1, pos2);
@@ -164,7 +217,11 @@ mod velocity_tests {
 
     #[test]
     fn test_velocity_creation() {
-        let vel = Velocity { vx: 1.0, vy: 2.0, vz: 3.0 };
+        let vel = Velocity {
+            vx: 1.0,
+            vy: 2.0,
+            vz: 3.0,
+        };
 
         assert_eq!(vel.vx, 1.0);
         assert_eq!(vel.vy, 2.0);
@@ -173,7 +230,11 @@ mod velocity_tests {
 
     #[test]
     fn test_velocity_zero() {
-        let vel = Velocity { vx: 0.0, vy: 0.0, vz: 0.0 };
+        let vel = Velocity {
+            vx: 0.0,
+            vy: 0.0,
+            vz: 0.0,
+        };
 
         assert_eq!(vel.vx, 0.0);
         assert_eq!(vel.vy, 0.0);
@@ -182,7 +243,11 @@ mod velocity_tests {
 
     #[test]
     fn test_velocity_negative() {
-        let vel = Velocity { vx: -5.0, vy: -10.0, vz: -15.0 };
+        let vel = Velocity {
+            vx: -5.0,
+            vy: -10.0,
+            vz: -15.0,
+        };
 
         assert_eq!(vel.vx, -5.0);
         assert_eq!(vel.vy, -10.0);
@@ -191,9 +256,21 @@ mod velocity_tests {
 
     #[test]
     fn test_velocity_equality() {
-        let vel1 = Velocity { vx: 1.0, vy: 2.0, vz: 3.0 };
-        let vel2 = Velocity { vx: 1.0, vy: 2.0, vz: 3.0 };
-        let vel3 = Velocity { vx: 1.0, vy: 2.0, vz: 4.0 };
+        let vel1 = Velocity {
+            vx: 1.0,
+            vy: 2.0,
+            vz: 3.0,
+        };
+        let vel2 = Velocity {
+            vx: 1.0,
+            vy: 2.0,
+            vz: 3.0,
+        };
+        let vel3 = Velocity {
+            vx: 1.0,
+            vy: 2.0,
+            vz: 4.0,
+        };
 
         assert_eq!(vel1, vel2);
         assert_ne!(vel1, vel3);
@@ -201,7 +278,11 @@ mod velocity_tests {
 
     #[test]
     fn test_velocity_clone() {
-        let vel1 = Velocity { vx: 5.5, vy: 6.6, vz: 7.7 };
+        let vel1 = Velocity {
+            vx: 5.5,
+            vy: 6.6,
+            vz: 7.7,
+        };
         let vel2 = vel1.clone();
 
         assert_eq!(vel1, vel2);
@@ -216,8 +297,16 @@ mod drone_state_tests {
     fn test_drone_state_creation() {
         let state = DroneState {
             id: DroneId::new(1),
-            position: Position { x: 0.0, y: 0.0, z: 0.0 },
-            velocity: Velocity { vx: 0.0, vy: 0.0, vz: 0.0 },
+            position: Position {
+                x: 0.0,
+                y: 0.0,
+                z: 0.0,
+            },
+            velocity: Velocity {
+                vx: 0.0,
+                vy: 0.0,
+                vz: 0.0,
+            },
             battery: 100,
             status: MissionStatus::Idle,
             timestamp: 1000,
@@ -233,8 +322,16 @@ mod drone_state_tests {
     fn test_drone_state_low_battery() {
         let state = DroneState {
             id: DroneId::new(2),
-            position: Position { x: 10.0, y: 20.0, z: 30.0 },
-            velocity: Velocity { vx: 1.0, vy: 2.0, vz: 3.0 },
+            position: Position {
+                x: 10.0,
+                y: 20.0,
+                z: 30.0,
+            },
+            velocity: Velocity {
+                vx: 1.0,
+                vy: 2.0,
+                vz: 3.0,
+            },
             battery: 15,
             status: MissionStatus::Returning,
             timestamp: 2000,
@@ -248,8 +345,16 @@ mod drone_state_tests {
     fn test_drone_state_clone() {
         let state1 = DroneState {
             id: DroneId::new(3),
-            position: Position { x: 1.0, y: 2.0, z: 3.0 },
-            velocity: Velocity { vx: 0.1, vy: 0.2, vz: 0.3 },
+            position: Position {
+                x: 1.0,
+                y: 2.0,
+                z: 3.0,
+            },
+            velocity: Velocity {
+                vx: 0.1,
+                vy: 0.2,
+                vz: 0.3,
+            },
             battery: 75,
             status: MissionStatus::Active,
             timestamp: 3000,
@@ -475,7 +580,8 @@ mod network_address_tests {
 
     #[test]
     fn test_network_address_ipv6() {
-        let addr = NetworkAddress::new([0xfe, 0x80, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1], 9000);
+        let addr =
+            NetworkAddress::new([0xfe, 0x80, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1], 9000);
 
         assert_eq!(addr.port, 9000);
         assert_eq!(addr.addr[0], 0xfe);
@@ -589,7 +695,11 @@ mod swarm_task_tests {
 
         let task = SwarmTask {
             task_id: 100,
-            target: Position { x: 50.0, y: 60.0, z: 70.0 },
+            target: Position {
+                x: 50.0,
+                y: 60.0,
+                z: 70.0,
+            },
             priority: TaskPriority::High,
             assigned_drones,
             completed: false,
@@ -605,7 +715,11 @@ mod swarm_task_tests {
     fn test_swarm_task_completion() {
         let task = SwarmTask {
             task_id: 200,
-            target: Position { x: 0.0, y: 0.0, z: 0.0 },
+            target: Position {
+                x: 0.0,
+                y: 0.0,
+                z: 0.0,
+            },
             priority: TaskPriority::Normal,
             assigned_drones: Vec::new(),
             completed: true,
@@ -624,7 +738,11 @@ mod swarm_task_tests {
 
         let task = SwarmTask {
             task_id: 300,
-            target: Position { x: 100.0, y: 200.0, z: 300.0 },
+            target: Position {
+                x: 100.0,
+                y: 200.0,
+                z: 300.0,
+            },
             priority: TaskPriority::Critical,
             assigned_drones,
             completed: false,
@@ -641,7 +759,11 @@ mod swarm_task_tests {
 
         let task1 = SwarmTask {
             task_id: 400,
-            target: Position { x: 10.0, y: 20.0, z: 30.0 },
+            target: Position {
+                x: 10.0,
+                y: 20.0,
+                z: 30.0,
+            },
             priority: TaskPriority::Low,
             assigned_drones,
             completed: false,

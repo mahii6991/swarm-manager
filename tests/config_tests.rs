@@ -2,8 +2,8 @@
 //!
 //! These tests ensure all configuration logic is correct and validated
 
-use drone_swarm_system::*;
 use drone_swarm_system::config::*;
+use drone_swarm_system::*;
 
 #[cfg(test)]
 mod swarm_config_tests {
@@ -17,9 +17,18 @@ mod swarm_config_tests {
         assert_eq!(config.drone_id, drone_id);
         assert_eq!(config.max_neighbors, 10);
         assert_eq!(config.comm_range, 1000.0);
-        assert!(config.encryption_enabled, "Encryption should be enabled by default");
-        assert!(config.consensus_enabled, "Consensus should be enabled by default");
-        assert!(config.federated_learning_enabled, "FL should be enabled by default");
+        assert!(
+            config.encryption_enabled,
+            "Encryption should be enabled by default"
+        );
+        assert!(
+            config.consensus_enabled,
+            "Consensus should be enabled by default"
+        );
+        assert!(
+            config.federated_learning_enabled,
+            "FL should be enabled by default"
+        );
         assert_eq!(config.heartbeat_interval_ms, 50);
         assert_eq!(config.election_timeout_range, (150, 300));
         assert_eq!(config.max_retries, 3);
@@ -34,9 +43,15 @@ mod swarm_config_tests {
         assert_eq!(config.drone_id, drone_id);
         assert_eq!(config.max_neighbors, 5);
         assert_eq!(config.comm_range, 500.0);
-        assert!(!config.encryption_enabled, "Encryption disabled for testing");
+        assert!(
+            !config.encryption_enabled,
+            "Encryption disabled for testing"
+        );
         assert!(config.consensus_enabled);
-        assert!(!config.federated_learning_enabled, "FL disabled for testing");
+        assert!(
+            !config.federated_learning_enabled,
+            "FL disabled for testing"
+        );
         assert_eq!(config.heartbeat_interval_ms, 100);
         assert_eq!(config.election_timeout_range, (200, 400));
         assert_eq!(config.max_retries, 2);
@@ -46,28 +61,40 @@ mod swarm_config_tests {
     #[test]
     fn test_validate_accepts_valid_config() {
         let config = SwarmConfig::new(DroneId::new(1));
-        assert!(config.validate().is_ok(), "Valid config should pass validation");
+        assert!(
+            config.validate().is_ok(),
+            "Valid config should pass validation"
+        );
     }
 
     #[test]
     fn test_validate_rejects_zero_neighbors() {
         let mut config = SwarmConfig::new(DroneId::new(1));
         config.max_neighbors = 0;
-        assert!(config.validate().is_err(), "Zero neighbors should be rejected");
+        assert!(
+            config.validate().is_err(),
+            "Zero neighbors should be rejected"
+        );
     }
 
     #[test]
     fn test_validate_rejects_too_many_neighbors() {
         let mut config = SwarmConfig::new(DroneId::new(1));
         config.max_neighbors = MAX_SWARM_SIZE + 1;
-        assert!(config.validate().is_err(), "Too many neighbors should be rejected");
+        assert!(
+            config.validate().is_err(),
+            "Too many neighbors should be rejected"
+        );
     }
 
     #[test]
     fn test_validate_rejects_negative_comm_range() {
         let mut config = SwarmConfig::new(DroneId::new(1));
         config.comm_range = -1.0;
-        assert!(config.validate().is_err(), "Negative range should be rejected");
+        assert!(
+            config.validate().is_err(),
+            "Negative range should be rejected"
+        );
     }
 
     #[test]
@@ -81,21 +108,30 @@ mod swarm_config_tests {
     fn test_validate_rejects_zero_heartbeat() {
         let mut config = SwarmConfig::new(DroneId::new(1));
         config.heartbeat_interval_ms = 0;
-        assert!(config.validate().is_err(), "Zero heartbeat should be rejected");
+        assert!(
+            config.validate().is_err(),
+            "Zero heartbeat should be rejected"
+        );
     }
 
     #[test]
     fn test_validate_rejects_invalid_election_timeout() {
         let mut config = SwarmConfig::new(DroneId::new(1));
         config.election_timeout_range = (300, 150); // min > max
-        assert!(config.validate().is_err(), "Invalid timeout range should be rejected");
+        assert!(
+            config.validate().is_err(),
+            "Invalid timeout range should be rejected"
+        );
     }
 
     #[test]
     fn test_validate_rejects_equal_election_timeouts() {
         let mut config = SwarmConfig::new(DroneId::new(1));
         config.election_timeout_range = (200, 200); // min == max
-        assert!(config.validate().is_err(), "Equal timeouts should be rejected");
+        assert!(
+            config.validate().is_err(),
+            "Equal timeouts should be rejected"
+        );
     }
 
     #[test]
@@ -119,7 +155,10 @@ mod crypto_config_tests {
         let config = CryptoConfig::new(key);
 
         assert_eq!(config.identity_key, key);
-        assert!(!config.post_quantum_enabled, "PQC should be disabled by default");
+        assert!(
+            !config.post_quantum_enabled,
+            "PQC should be disabled by default"
+        );
         assert_eq!(config.key_rotation_interval, 3600);
         assert_eq!(config.nonce_counter, 0);
     }
@@ -221,7 +260,10 @@ mod network_config_tests {
     fn test_routing_protocol_equality() {
         assert_eq!(RoutingProtocol::AdaptiveMesh, RoutingProtocol::AdaptiveMesh);
         assert_eq!(RoutingProtocol::Flooding, RoutingProtocol::Flooding);
-        assert_eq!(RoutingProtocol::GradientBased, RoutingProtocol::GradientBased);
+        assert_eq!(
+            RoutingProtocol::GradientBased,
+            RoutingProtocol::GradientBased
+        );
 
         assert_ne!(RoutingProtocol::AdaptiveMesh, RoutingProtocol::Flooding);
         assert_ne!(RoutingProtocol::Flooding, RoutingProtocol::GradientBased);

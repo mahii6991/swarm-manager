@@ -52,7 +52,9 @@ mod crypto_context_tests {
         let plaintext = b"Message without AAD";
         let encrypted = ctx.encrypt_and_sign(plaintext, b"").unwrap();
 
-        let decrypted = ctx.verify_and_decrypt(&encrypted, b"", ctx.public_key()).unwrap();
+        let decrypted = ctx
+            .verify_and_decrypt(&encrypted, b"", ctx.public_key())
+            .unwrap();
         assert_eq!(&decrypted[..], plaintext);
     }
 
@@ -161,7 +163,9 @@ mod crypto_context_tests {
         let large_message = vec![0x42u8; 1024];
         let encrypted = ctx.encrypt_and_sign(&large_message, b"").unwrap();
 
-        let decrypted = ctx.verify_and_decrypt(&encrypted, b"", ctx.public_key()).unwrap();
+        let decrypted = ctx
+            .verify_and_decrypt(&encrypted, b"", ctx.public_key())
+            .unwrap();
         assert_eq!(&decrypted[..], &large_message[..]);
     }
 }
@@ -265,8 +269,10 @@ mod key_exchange_tests {
         let bob_public = x25519_dalek::PublicKey::from(&bob_secret);
 
         // Perform key exchange
-        let alice_shared = CryptoContext::key_exchange(&alice_private, bob_public.as_bytes()).unwrap();
-        let bob_shared = CryptoContext::key_exchange(&bob_private, alice_public.as_bytes()).unwrap();
+        let alice_shared =
+            CryptoContext::key_exchange(&alice_private, bob_public.as_bytes()).unwrap();
+        let bob_shared =
+            CryptoContext::key_exchange(&bob_private, alice_public.as_bytes()).unwrap();
 
         // Both should compute the same shared secret
         assert_eq!(alice_shared, bob_shared);
@@ -405,7 +411,9 @@ mod keystore_tests {
 
         for i in 1..=10 {
             let ctx = CryptoContext::new([i as u8; 32]);
-            keystore.add_key(DroneId::new(i as u64), *ctx.public_key()).unwrap();
+            keystore
+                .add_key(DroneId::new(i as u64), *ctx.public_key())
+                .unwrap();
         }
 
         // All keys should be present

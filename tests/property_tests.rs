@@ -3,8 +3,8 @@
 //! These tests verify mathematical properties and invariants that should hold
 //! for all inputs, using randomized testing with proptest.
 
-use drone_swarm_system::*;
 use drone_swarm_system::network::MAX_NETWORK_HOPS;
+use drone_swarm_system::*;
 use proptest::prelude::*;
 
 // ============================================================================

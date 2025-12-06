@@ -64,7 +64,9 @@ mod swarm_command_tests {
         params.push(1).unwrap();
         params.push(2).unwrap();
 
-        let cmd = SwarmCommand::UpdateMission { params: params.clone() };
+        let cmd = SwarmCommand::UpdateMission {
+            params: params.clone(),
+        };
 
         match cmd {
             SwarmCommand::UpdateMission { params: p } => {
@@ -294,8 +296,16 @@ mod consensus_message_tests {
 
         match (msg1, msg2) {
             (
-                ConsensusMessage::VoteReply { term: t1, vote_granted: v1, voter_id: id1 },
-                ConsensusMessage::VoteReply { term: t2, vote_granted: v2, voter_id: id2 },
+                ConsensusMessage::VoteReply {
+                    term: t1,
+                    vote_granted: v1,
+                    voter_id: id1,
+                },
+                ConsensusMessage::VoteReply {
+                    term: t2,
+                    vote_granted: v2,
+                    voter_id: id2,
+                },
             ) => {
                 assert_eq!(t1, t2);
                 assert_eq!(v1, v2);

@@ -14,7 +14,11 @@ mod neighbor_tests {
         Neighbor {
             id: DroneId::new(1),
             address: NetworkAddress::new([0; 16], 8080),
-            position: Position { x: 10.0, y: 20.0, z: 30.0 },
+            position: Position {
+                x: 10.0,
+                y: 20.0,
+                z: 30.0,
+            },
             link_quality: 0.8,
             last_seen: 1000,
             rtt_ms: 50,
@@ -121,12 +125,20 @@ mod network_message_tests {
     fn test_network_message_hello() {
         let msg = NetworkMessage::Hello {
             sender: DroneId::new(1),
-            position: Position { x: 1.0, y: 2.0, z: 3.0 },
+            position: Position {
+                x: 1.0,
+                y: 2.0,
+                z: 3.0,
+            },
             sequence: 42,
         };
 
         match msg {
-            NetworkMessage::Hello { sender, position, sequence } => {
+            NetworkMessage::Hello {
+                sender,
+                position,
+                sequence,
+            } => {
                 assert_eq!(sender, DroneId::new(1));
                 assert_eq!(position.x, 1.0);
                 assert_eq!(sequence, 42);
@@ -166,7 +178,12 @@ mod network_message_tests {
         };
 
         match msg {
-            NetworkMessage::Data { source, destination, payload: p, hop_count } => {
+            NetworkMessage::Data {
+                source,
+                destination,
+                payload: p,
+                hop_count,
+            } => {
                 assert_eq!(source, DroneId::new(1));
                 assert_eq!(destination, DroneId::new(2));
                 assert_eq!(p.len(), 3);
@@ -185,7 +202,11 @@ mod network_message_tests {
         };
 
         match msg {
-            NetworkMessage::RouteRequest { source, destination, sequence } => {
+            NetworkMessage::RouteRequest {
+                source,
+                destination,
+                sequence,
+            } => {
                 assert_eq!(source, DroneId::new(1));
                 assert_eq!(destination, DroneId::new(3));
                 assert_eq!(sequence, 100);
@@ -204,7 +225,12 @@ mod network_message_tests {
         };
 
         match msg {
-            NetworkMessage::RouteReply { source, destination, next_hop, hop_count } => {
+            NetworkMessage::RouteReply {
+                source,
+                destination,
+                next_hop,
+                hop_count,
+            } => {
                 assert_eq!(source, DroneId::new(1));
                 assert_eq!(destination, DroneId::new(3));
                 assert_eq!(next_hop, DroneId::new(2));
@@ -227,7 +253,11 @@ mod network_message_tests {
         };
 
         match msg {
-            NetworkMessage::LinkStateUpdate { sender, neighbors: n, sequence } => {
+            NetworkMessage::LinkStateUpdate {
+                sender,
+                neighbors: n,
+                sequence,
+            } => {
                 assert_eq!(sender, DroneId::new(1));
                 assert_eq!(n.len(), 2);
                 assert_eq!(sequence, 50);
@@ -246,8 +276,16 @@ mod network_message_tests {
         let msg2 = msg1.clone();
 
         match (msg1, msg2) {
-            (NetworkMessage::Heartbeat { sender: s1, timestamp: t1 },
-             NetworkMessage::Heartbeat { sender: s2, timestamp: t2 }) => {
+            (
+                NetworkMessage::Heartbeat {
+                    sender: s1,
+                    timestamp: t1,
+                },
+                NetworkMessage::Heartbeat {
+                    sender: s2,
+                    timestamp: t2,
+                },
+            ) => {
                 assert_eq!(s1, s2);
                 assert_eq!(t1, t2);
             }
@@ -340,7 +378,11 @@ mod mesh_network_tests {
 
         let msg = NetworkMessage::Hello {
             sender: DroneId::new(2),
-            position: Position { x: 10.0, y: 20.0, z: 30.0 },
+            position: Position {
+                x: 10.0,
+                y: 20.0,
+                z: 30.0,
+            },
             sequence: 1,
         };
 
@@ -358,7 +400,11 @@ mod mesh_network_tests {
         // First add the neighbor via Hello
         let hello = NetworkMessage::Hello {
             sender: DroneId::new(2),
-            position: Position { x: 10.0, y: 20.0, z: 30.0 },
+            position: Position {
+                x: 10.0,
+                y: 20.0,
+                z: 30.0,
+            },
             sequence: 1,
         };
         let addr = NetworkAddress::new([0; 16], 8080);
@@ -420,7 +466,11 @@ mod mesh_network_tests {
     #[cfg(not(feature = "hardware"))]
     fn test_mesh_network_broadcast_hello() {
         let mut network = MeshNetwork::new(DroneId::new(1));
-        let position = Position { x: 5.0, y: 10.0, z: 15.0 };
+        let position = Position {
+            x: 5.0,
+            y: 10.0,
+            z: 15.0,
+        };
 
         let result = network.broadcast_hello(position);
 
@@ -433,7 +483,11 @@ mod mesh_network_tests {
     #[should_panic(expected = "Hardware broadcast not yet implemented")]
     fn test_mesh_network_broadcast_hello_hardware() {
         let mut network = MeshNetwork::new(DroneId::new(1));
-        let position = Position { x: 5.0, y: 10.0, z: 15.0 };
+        let position = Position {
+            x: 5.0,
+            y: 10.0,
+            z: 15.0,
+        };
 
         let _ = network.broadcast_hello(position);
     }
@@ -465,7 +519,11 @@ mod mesh_network_tests {
         // Add a neighbor
         let hello = NetworkMessage::Hello {
             sender: DroneId::new(2),
-            position: Position { x: 10.0, y: 20.0, z: 30.0 },
+            position: Position {
+                x: 10.0,
+                y: 20.0,
+                z: 30.0,
+            },
             sequence: 1,
         };
         let addr = NetworkAddress::new([0; 16], 8080);
@@ -495,7 +553,11 @@ mod mesh_network_tests {
         for i in 2..=3 {
             let hello = NetworkMessage::Hello {
                 sender: DroneId::new(i),
-                position: Position { x: 10.0 * i as f32, y: 20.0, z: 30.0 },
+                position: Position {
+                    x: 10.0 * i as f32,
+                    y: 20.0,
+                    z: 30.0,
+                },
                 sequence: 1,
             };
             let addr = NetworkAddress::new([0; 16], 8080);

@@ -14,7 +14,10 @@ mod std_time_source_tests {
         let time = source.get_time_ms();
 
         // Time should be very small (close to creation)
-        assert!(time < 1000, "Newly created time source should report small elapsed time");
+        assert!(
+            time < 1000,
+            "Newly created time source should report small elapsed time"
+        );
     }
 
     #[test]
@@ -62,8 +65,14 @@ mod std_time_source_tests {
 
         // Microseconds should be ms * 1000 (approximately)
         // Allow some tolerance due to measurement overhead
-        assert!(us >= ms * 1000, "Microseconds should be >= milliseconds * 1000");
-        assert!(us < (ms + 10) * 1000, "Microseconds should be close to ms * 1000");
+        assert!(
+            us >= ms * 1000,
+            "Microseconds should be >= milliseconds * 1000"
+        );
+        assert!(
+            us < (ms + 10) * 1000,
+            "Microseconds should be close to ms * 1000"
+        );
     }
 
     #[test]
@@ -131,7 +140,10 @@ mod public_api_tests {
         let us = get_time_us();
 
         // us should be much larger than ms (since it's microseconds)
-        assert!(us > ms * 1000, "Microseconds should be larger than milliseconds * 1000");
+        assert!(
+            us > ms * 1000,
+            "Microseconds should be larger than milliseconds * 1000"
+        );
     }
 
     #[test]
@@ -140,7 +152,10 @@ mod public_api_tests {
         delay_ms(20);
         let elapsed = get_time_ms() - start;
 
-        assert!(elapsed >= 20, "delay_ms should wait at least the specified time");
+        assert!(
+            elapsed >= 20,
+            "delay_ms should wait at least the specified time"
+        );
         assert!(elapsed < 50, "delay_ms should not wait excessively long");
     }
 
@@ -192,7 +207,10 @@ mod public_api_tests {
 
         // All measurements should be at least 10ms
         for &measurement in &measurements {
-            assert!(measurement >= 10, "Each measurement should be at least 10ms");
+            assert!(
+                measurement >= 10,
+                "Each measurement should be at least 10ms"
+            );
         }
 
         // Measurements should be reasonably consistent (within 20ms of each other)
@@ -321,7 +339,10 @@ mod edge_case_tests {
 
         for _ in 0..100 {
             let current_time = get_time_us();
-            assert!(current_time >= last_time, "Microsecond time should never decrease");
+            assert!(
+                current_time >= last_time,
+                "Microsecond time should never decrease"
+            );
             last_time = current_time;
         }
     }

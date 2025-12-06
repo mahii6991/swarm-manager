@@ -22,7 +22,10 @@ mod position3d_tests {
         let pos = Position3D::new(10.0, 20.0, 30.0);
         let distance = pos.distance_to(&pos);
 
-        assert!((distance - 0.0).abs() < 1e-6, "Distance to self should be 0");
+        assert!(
+            (distance - 0.0).abs() < 1e-6,
+            "Distance to self should be 0"
+        );
     }
 
     #[test]
@@ -32,7 +35,10 @@ mod position3d_tests {
 
         let distance = pos1.distance_to(&pos2);
 
-        assert!((distance - 5.0).abs() < 1e-6, "3-4-5 triangle should have distance 5");
+        assert!(
+            (distance - 5.0).abs() < 1e-6,
+            "3-4-5 triangle should have distance 5"
+        );
     }
 
     #[test]
@@ -54,7 +60,10 @@ mod position3d_tests {
         let dist12 = pos1.distance_to(&pos2);
         let dist21 = pos2.distance_to(&pos1);
 
-        assert!((dist12 - dist21).abs() < 1e-6, "Distance should be symmetric");
+        assert!(
+            (dist12 - dist21).abs() < 1e-6,
+            "Distance should be symmetric"
+        );
     }
 
     #[test]
@@ -240,7 +249,10 @@ mod path_tests {
         let mut path = Path::new();
         path.calculate_cost();
 
-        assert!(path.cost.is_infinite(), "Empty path should have infinite cost");
+        assert!(
+            path.cost.is_infinite(),
+            "Empty path should have infinite cost"
+        );
     }
 
     #[test]
@@ -249,7 +261,10 @@ mod path_tests {
         path.waypoints.push(Position3D::new(0.0, 0.0, 0.0)).unwrap();
         path.calculate_cost();
 
-        assert!(path.cost.is_infinite(), "Single waypoint should have infinite cost");
+        assert!(
+            path.cost.is_infinite(),
+            "Single waypoint should have infinite cost"
+        );
     }
 
     #[test]
@@ -259,7 +274,10 @@ mod path_tests {
         path.waypoints.push(Position3D::new(3.0, 4.0, 0.0)).unwrap();
         path.calculate_cost();
 
-        assert!((path.cost - 5.0).abs() < 1e-6, "Cost should be 5.0 for 3-4-5 triangle");
+        assert!(
+            (path.cost - 5.0).abs() < 1e-6,
+            "Cost should be 5.0 for 3-4-5 triangle"
+        );
     }
 
     #[test]
@@ -277,7 +295,9 @@ mod path_tests {
     fn test_path_validate_against_obstacles_no_obstacles() {
         let mut path = Path::new();
         path.waypoints.push(Position3D::new(0.0, 0.0, 0.0)).unwrap();
-        path.waypoints.push(Position3D::new(10.0, 10.0, 10.0)).unwrap();
+        path.waypoints
+            .push(Position3D::new(10.0, 10.0, 10.0))
+            .unwrap();
 
         let obstacles: heapless::Vec<Obstacle, MAX_OBSTACLES> = heapless::Vec::new();
         path.validate_against_obstacles(&obstacles);
@@ -288,8 +308,12 @@ mod path_tests {
     #[test]
     fn test_path_validate_against_obstacles_collision() {
         let mut path = Path::new();
-        path.waypoints.push(Position3D::new(0.0, 10.0, 10.0)).unwrap();
-        path.waypoints.push(Position3D::new(20.0, 10.0, 10.0)).unwrap();
+        path.waypoints
+            .push(Position3D::new(0.0, 10.0, 10.0))
+            .unwrap();
+        path.waypoints
+            .push(Position3D::new(20.0, 10.0, 10.0))
+            .unwrap();
 
         let mut obstacles: heapless::Vec<Obstacle, MAX_OBSTACLES> = heapless::Vec::new();
         let center = Position3D::new(10.0, 10.0, 10.0);
@@ -298,7 +322,10 @@ mod path_tests {
         path.validate_against_obstacles(&obstacles);
 
         assert!(!path.is_valid, "Path through obstacle should be invalid");
-        assert!(path.cost.is_infinite(), "Invalid path should have infinite cost");
+        assert!(
+            path.cost.is_infinite(),
+            "Invalid path should have infinite cost"
+        );
     }
 
     #[test]
@@ -319,7 +346,10 @@ mod path_tests {
     #[test]
     fn test_path_clone() {
         let mut path1 = Path::new();
-        path1.waypoints.push(Position3D::new(1.0, 2.0, 3.0)).unwrap();
+        path1
+            .waypoints
+            .push(Position3D::new(1.0, 2.0, 3.0))
+            .unwrap();
         path1.cost = 42.0;
         path1.is_valid = true;
 
@@ -353,7 +383,10 @@ mod ant_tests {
         let mut ant = Ant::new(1, start);
 
         // Add some waypoints
-        ant.path.waypoints.push(Position3D::new(10.0, 10.0, 10.0)).unwrap();
+        ant.path
+            .waypoints
+            .push(Position3D::new(10.0, 10.0, 10.0))
+            .unwrap();
         ant.current_pos = Position3D::new(10.0, 10.0, 10.0);
 
         // Reset to new start
@@ -374,7 +407,8 @@ mod ant_tests {
         let candidates: heapless::Vec<Position3D, MAX_WAYPOINTS> = heapless::Vec::new();
         let pheromones: heapless::Vec<f32, MAX_WAYPOINTS> = heapless::Vec::new();
 
-        let result = ant.select_next_waypoint(&candidates, &pheromones, ACOAlgorithm::AntSystem, 42);
+        let result =
+            ant.select_next_waypoint(&candidates, &pheromones, ACOAlgorithm::AntSystem, 42);
 
         assert!(result.is_none(), "Should return None for empty candidates");
     }
