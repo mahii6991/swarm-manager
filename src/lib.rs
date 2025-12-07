@@ -22,6 +22,7 @@
 #![forbid(unsafe_code)]
 #![deny(warnings)]
 #![allow(missing_docs)] // Gradually adding docs - see Week 2-3 goals
+// Standard clippy allows
 #![allow(clippy::manual_range_contains)]
 #![allow(clippy::needless_borrow)]
 #![allow(clippy::excessive_precision)]
@@ -31,6 +32,24 @@
 #![allow(clippy::needless_range_loop)]
 #![allow(clippy::default_trait_access)]
 #![allow(clippy::manual_div_ceil)]
+// Pedantic clippy allows (style preferences, not bugs)
+#![allow(clippy::must_use_candidate)] // Many pure functions don't need #[must_use]
+#![allow(clippy::missing_errors_doc)] // Docs will be added in Phase 1 Week 3
+#![allow(clippy::missing_panics_doc)] // Docs will be added in Phase 1 Week 3
+#![allow(clippy::missing_const_for_fn)] // Const fn not always beneficial
+#![allow(clippy::use_self)] // Self vs TypeName is a style preference
+#![allow(clippy::wildcard_imports)] // Used for internal module re-exports
+#![allow(clippy::cast_precision_loss)] // Intentional f32 casts for embedded
+#![allow(clippy::cast_possible_truncation)] // Checked at runtime where needed
+#![allow(clippy::cast_sign_loss)] // Checked at runtime where needed
+#![allow(clippy::cast_lossless)] // Style preference
+#![allow(clippy::suboptimal_flops)] // mul_add not always faster on embedded
+#![allow(clippy::items_after_statements)] // Sometimes clearer to define inline
+#![allow(clippy::doc_markdown)] // Docs will be improved in Phase 1 Week 3
+#![allow(clippy::unused_self)] // Sometimes needed for API consistency
+#![allow(clippy::unnecessary_wraps)] // Sometimes needed for API consistency
+#![allow(clippy::match_wildcard_for_single_variants)] // Style preference
+#![allow(clippy::unreadable_literal)] // Some constants are clearer without separators
 
 /// Ant Colony Optimization (ACO) for path planning and resource allocation
 pub mod aco;
