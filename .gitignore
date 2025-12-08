@@ -86,15 +86,10 @@ Documentation/
 docs/internal/
 
 # Markdown files (keep locally, not in repo)
-# Exception: README.md is allowed
+# Exception: README.md and docs/ are allowed
 *.md
 !README.md
-**/*.md
-!**/README.md
+!docs/*.md
 
 # Shell scripts (keep locally)
 *.sh
-
-# Docs config files
-docs/Gemfile
-docs/_config.yml
