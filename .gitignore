@@ -86,8 +86,11 @@ Documentation/
 docs/internal/
 
 # Markdown files (keep locally, not in repo)
+# Exception: README.md is allowed
 *.md
+!README.md
 **/*.md
+!**/README.md
 
 # Shell scripts (keep locally)
 *.sh
