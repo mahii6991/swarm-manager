@@ -1,16 +1,16 @@
-//! Algorithm visualization panel with tabs for PSO, ACO, GWO
+//! Algorithm visualization panel with tabs for PSO, ACO, GWO, Federated, Consensus, DE
 
 use egui::{Ui, Pos2, Vec2, Rect, Color32, Stroke};
 use crate::state::{SimulationState, AlgorithmType};
 use crate::themes;
-use crate::renderers::{pso_renderer, aco_renderer, gwo_renderer};
+use crate::renderers::{pso_renderer, aco_renderer, gwo_renderer, federated_renderer, consensus_renderer, de_renderer};
 
 pub fn show(ui: &mut Ui, state: &mut SimulationState) {
     ui.horizontal(|ui| {
         ui.heading("Algorithm Visualization");
         ui.separator();
 
-        // Tab buttons
+        // Tab buttons - Swarm Intelligence
         if ui.selectable_label(state.active_algorithm == AlgorithmType::PSO, "PSO").clicked() {
             state.active_algorithm = AlgorithmType::PSO;
         }
@@ -19,6 +19,19 @@ pub fn show(ui: &mut Ui, state: &mut SimulationState) {
         }
         if ui.selectable_label(state.active_algorithm == AlgorithmType::GWO, "GWO").clicked() {
             state.active_algorithm = AlgorithmType::GWO;
+        }
+        ui.separator();
+        // Distributed Systems
+        if ui.selectable_label(state.active_algorithm == AlgorithmType::Federated, "FL").clicked() {
+            state.active_algorithm = AlgorithmType::Federated;
+        }
+        if ui.selectable_label(state.active_algorithm == AlgorithmType::Consensus, "Raft").clicked() {
+            state.active_algorithm = AlgorithmType::Consensus;
+        }
+        ui.separator();
+        // Evolutionary
+        if ui.selectable_label(state.active_algorithm == AlgorithmType::DE, "DE").clicked() {
+            state.active_algorithm = AlgorithmType::DE;
         }
     });
 
@@ -90,6 +103,58 @@ pub fn show(ui: &mut Ui, state: &mut SimulationState) {
                 let info = format!(
                     "GWO | Iteration: {} | Wolves: {} | Alpha: {:.4}",
                     gwo.iteration, gwo.wolves.len(), alpha_fitness
+                );
+                painter.text(
+                    rect.min + Vec2::new(10.0, 10.0),
+                    egui::Align2::LEFT_TOP,
+                    info,
+                    egui::FontId::monospace(11.0),
+                    themes::ui::TEXT,
+                );
+            }
+        }
+        AlgorithmType::Federated => {
+            if let Some(ref fed) = state.federated_state {
+                federated_renderer::draw(&painter, fed, world_to_screen, scale);
+
+                let info = format!(
+                    "Federated Learning | Round: {} | Nodes: {} | Accuracy: {:.1}%",
+                    fed.round, fed.nodes.len(), fed.current_accuracy * 100.0
+                );
+                painter.text(
+                    rect.min + Vec2::new(10.0, 10.0),
+                    egui::Align2::LEFT_TOP,
+                    info,
+                    egui::FontId::monospace(11.0),
+                    themes::ui::TEXT,
+                );
+            }
+        }
+        AlgorithmType::Consensus => {
+            if let Some(ref cons) = state.consensus_state {
+                consensus_renderer::draw(&painter, cons, world_to_screen, scale);
+
+                let leader_str = cons.leader_id.map(|l| format!("N{}", l)).unwrap_or_else(|| "None".to_string());
+                let info = format!(
+                    "SwarmRaft | Term: {} | Leader: {} | Committed: {}",
+                    cons.term, leader_str, cons.committed_index
+                );
+                painter.text(
+                    rect.min + Vec2::new(10.0, 10.0),
+                    egui::Align2::LEFT_TOP,
+                    info,
+                    egui::FontId::monospace(11.0),
+                    themes::ui::TEXT,
+                );
+            }
+        }
+        AlgorithmType::DE => {
+            if let Some(ref de) = state.de_state {
+                de_renderer::draw(&painter, de, world_to_screen, scale);
+
+                let info = format!(
+                    "Differential Evolution | Iter: {} | Pop: {} | Best: {:.4}",
+                    de.iteration, de.population.len(), de.best_fitness
                 );
                 painter.text(
                     rect.min + Vec2::new(10.0, 10.0),

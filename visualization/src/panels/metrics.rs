@@ -120,8 +120,28 @@ pub fn show(ui: &mut Ui, state: &SimulationState) {
                     .unwrap_or_default()
             }
             AlgorithmType::ACO => {
-                // ACO doesn't have a direct cost history, use iteration count
+                // ACO doesn't have a direct cost history
                 vec![]
+            }
+            AlgorithmType::Federated => {
+                state.federated_state.as_ref()
+                    .map(|fed| fed.accuracy_history.iter()
+                        .enumerate()
+                        .map(|(i, &a)| [i as f64, a as f64 * 100.0])
+                        .collect())
+                    .unwrap_or_default()
+            }
+            AlgorithmType::Consensus => {
+                // Consensus doesn't have convergence history
+                vec![]
+            }
+            AlgorithmType::DE => {
+                state.de_state.as_ref()
+                    .map(|de| de.fitness_history.iter()
+                        .enumerate()
+                        .map(|(i, &f)| [i as f64, f as f64])
+                        .collect())
+                    .unwrap_or_default()
             }
         };
 
@@ -133,11 +153,17 @@ pub fn show(ui: &mut Ui, state: &SimulationState) {
                     AlgorithmType::PSO => themes::graph::COST_LINE,
                     AlgorithmType::GWO => themes::graph::FITNESS_LINE,
                     AlgorithmType::ACO => themes::graph::COST_LINE,
+                    AlgorithmType::Federated => themes::graph::FITNESS_LINE,
+                    AlgorithmType::Consensus => themes::graph::COST_LINE,
+                    AlgorithmType::DE => themes::graph::FITNESS_LINE,
                 })
                 .name(match state.active_algorithm {
                     AlgorithmType::PSO => "Cost",
                     AlgorithmType::GWO => "Fitness",
                     AlgorithmType::ACO => "Path Length",
+                    AlgorithmType::Federated => "Accuracy %",
+                    AlgorithmType::Consensus => "Term",
+                    AlgorithmType::DE => "Best Fitness",
                 });
 
             Plot::new("convergence_plot")

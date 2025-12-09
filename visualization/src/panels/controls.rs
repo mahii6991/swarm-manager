@@ -126,9 +126,17 @@ pub fn show(ui: &mut Ui, state: &mut SimulationState) {
             egui::ComboBox::from_label("Active")
                 .selected_text(format!("{:?}", state.active_algorithm))
                 .show_ui(ui, |ui| {
+                    ui.label("Swarm Intelligence");
                     ui.selectable_value(&mut state.active_algorithm, AlgorithmType::PSO, "PSO - Particle Swarm");
                     ui.selectable_value(&mut state.active_algorithm, AlgorithmType::ACO, "ACO - Ant Colony");
                     ui.selectable_value(&mut state.active_algorithm, AlgorithmType::GWO, "GWO - Grey Wolf");
+                    ui.separator();
+                    ui.label("Distributed Systems");
+                    ui.selectable_value(&mut state.active_algorithm, AlgorithmType::Federated, "FL - Federated Learning");
+                    ui.selectable_value(&mut state.active_algorithm, AlgorithmType::Consensus, "Raft - SwarmRaft Consensus");
+                    ui.separator();
+                    ui.label("Evolutionary");
+                    ui.selectable_value(&mut state.active_algorithm, AlgorithmType::DE, "DE - Differential Evolution");
                 });
 
             ui.add_space(5.0);
@@ -149,6 +157,22 @@ pub fn show(ui: &mut Ui, state: &mut SimulationState) {
                     if let Some(ref gwo) = state.gwo_state {
                         let alpha_fit = gwo.alpha.as_ref().map(|a| a.fitness).unwrap_or(0.0);
                         ui.label(format!("Iteration: {} | Alpha: {:.4}", gwo.iteration, alpha_fit));
+                    }
+                }
+                AlgorithmType::Federated => {
+                    if let Some(ref fed) = state.federated_state {
+                        ui.label(format!("Round: {} | Accuracy: {:.1}%", fed.round, fed.current_accuracy * 100.0));
+                    }
+                }
+                AlgorithmType::Consensus => {
+                    if let Some(ref cons) = state.consensus_state {
+                        let leader = cons.leader_id.map(|l| format!("N{}", l)).unwrap_or_else(|| "None".to_string());
+                        ui.label(format!("Term: {} | Leader: {}", cons.term, leader));
+                    }
+                }
+                AlgorithmType::DE => {
+                    if let Some(ref de) = state.de_state {
+                        ui.label(format!("Iteration: {} | Best: {:.4}", de.iteration, de.best_fitness));
                     }
                 }
             }
@@ -202,6 +226,55 @@ pub fn show(ui: &mut Ui, state: &mut SimulationState) {
                 if let Some(ref delta) = gwo.delta {
                     ui.label(format!("Delta Fitness: {:.4}", delta.fitness));
                 }
+            });
+    }
+
+    // Federated Learning Parameters
+    if let Some(ref fed) = state.federated_state {
+        egui::CollapsingHeader::new("Federated Learning")
+            .default_open(false)
+            .show(ui, |ui| {
+                ui.label(format!("Nodes: {}", fed.nodes.len()));
+                ui.label(format!("Round: {}", fed.round));
+                ui.label(format!("Accuracy: {:.1}%", fed.current_accuracy * 100.0));
+                let aggregator = fed.aggregator.map(|a| format!("N{}", a)).unwrap_or_else(|| "None".to_string());
+                ui.label(format!("Aggregator: {}", aggregator));
+                ui.add_space(3.0);
+                ui.label("Global Model Weights:");
+                ui.horizontal(|ui| {
+                    for (i, w) in fed.global_model.iter().enumerate() {
+                        ui.label(format!("w{}: {:.2}", i, w));
+                    }
+                });
+            });
+    }
+
+    // Consensus Parameters
+    if let Some(ref cons) = state.consensus_state {
+        egui::CollapsingHeader::new("SwarmRaft Consensus")
+            .default_open(false)
+            .show(ui, |ui| {
+                ui.label(format!("Nodes: {}", cons.nodes.len()));
+                ui.label(format!("Term: {}", cons.term));
+                let leader = cons.leader_id.map(|l| format!("N{}", l)).unwrap_or_else(|| "None".to_string());
+                ui.label(format!("Leader: {}", leader));
+                ui.label(format!("Log Entries: {}", cons.log_entries.len()));
+                ui.label(format!("Committed: {}", cons.committed_index));
+                ui.label(format!("Messages in flight: {}", cons.messages.len()));
+            });
+    }
+
+    // DE Parameters
+    if let Some(ref mut de) = state.de_state {
+        egui::CollapsingHeader::new("Differential Evolution")
+            .default_open(false)
+            .show(ui, |ui| {
+                ui.add(egui::Slider::new(&mut de.mutation_factor, 0.1..=2.0).text("Mutation (F)"));
+                ui.add(egui::Slider::new(&mut de.crossover_rate, 0.0..=1.0).text("Crossover (CR)"));
+                ui.add_space(5.0);
+                ui.label(format!("Population: {}", de.population.len()));
+                ui.label(format!("Iteration: {}", de.iteration));
+                ui.label(format!("Best Fitness: {:.6}", de.best_fitness));
             });
     }
 

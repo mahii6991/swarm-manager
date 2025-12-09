@@ -24,6 +24,9 @@ pub struct SimulationState {
     pub pso_state: Option<PSOVisualState>,
     pub aco_state: Option<ACOVisualState>,
     pub gwo_state: Option<GWOVisualState>,
+    pub federated_state: Option<FederatedVisualState>,
+    pub consensus_state: Option<ConsensusVisualState>,
+    pub de_state: Option<DEVisualState>,
     pub active_algorithm: AlgorithmType,
 
     // Network state
@@ -53,6 +56,9 @@ impl SimulationState {
             pso_state: Some(PSOVisualState::new(30)),
             aco_state: Some(ACOVisualState::new()),
             gwo_state: Some(GWOVisualState::new(20)),
+            federated_state: Some(FederatedVisualState::new(8)),
+            consensus_state: Some(ConsensusVisualState::new(5)),
+            de_state: Some(DEVisualState::new(25)),
             active_algorithm: AlgorithmType::PSO,
             network: NetworkTopology::new(),
             is_running: false,
@@ -435,6 +441,21 @@ impl SimulationState {
         if let Some(ref mut gwo) = self.gwo_state {
             gwo.step();
         }
+
+        // Step Federated Learning
+        if let Some(ref mut fed) = self.federated_state {
+            fed.step();
+        }
+
+        // Step Consensus
+        if let Some(ref mut cons) = self.consensus_state {
+            cons.step();
+        }
+
+        // Step DE
+        if let Some(ref mut de) = self.de_state {
+            de.step();
+        }
     }
 }
 
@@ -500,6 +521,9 @@ pub enum AlgorithmType {
     PSO,
     ACO,
     GWO,
+    Federated,
+    Consensus,
+    DE,
 }
 
 // ============ PSO State ============
@@ -892,6 +916,383 @@ impl GWOVisualState {
             wolf.position.x = wolf.position.x.clamp(-bounds, bounds);
             wolf.position.y = wolf.position.y.clamp(-bounds, bounds);
         }
+    }
+}
+
+// ============ Federated Learning State ============
+
+#[derive(Clone, Debug)]
+pub struct FederatedVisualState {
+    pub nodes: Vec<FederatedNode>,
+    pub aggregator: Option<usize>,
+    pub global_model: Vec<f32>,
+    pub round: u32,
+    pub accuracy_history: Vec<f32>,
+    pub current_accuracy: f32,
+}
+
+#[derive(Clone, Debug)]
+pub struct FederatedNode {
+    pub id: usize,
+    pub position: Pos2,
+    pub local_weights: Vec<f32>,
+    pub contribution: f32,
+    pub is_selected: bool,
+    pub training_progress: f32,
+}
+
+impl FederatedVisualState {
+    pub fn new(node_count: usize) -> Self {
+        let mut nodes = Vec::new();
+        let bounds = 80.0;
+
+        for i in 0..node_count {
+            let angle = (i as f32 / node_count as f32) * std::f32::consts::TAU;
+            let radius = 60.0;
+            nodes.push(FederatedNode {
+                id: i,
+                position: Pos2::new(radius * angle.cos(), radius * angle.sin()),
+                local_weights: vec![rand::random::<f32>(); 5],
+                contribution: rand::random::<f32>(),
+                is_selected: false,
+                training_progress: 0.0,
+            });
+        }
+
+        Self {
+            nodes,
+            aggregator: Some(0),
+            global_model: vec![0.5; 5],
+            round: 0,
+            accuracy_history: Vec::new(),
+            current_accuracy: 0.5,
+        }
+    }
+
+    pub fn step(&mut self) {
+        // Simulate training round
+        self.round += 1;
+
+        // Select random nodes for this round
+        for node in &mut self.nodes {
+            node.is_selected = rand::random::<f32>() > 0.3;
+            if node.is_selected {
+                node.training_progress = (node.training_progress + 0.1).min(1.0);
+                // Update local weights
+                for w in &mut node.local_weights {
+                    *w += (rand::random::<f32>() - 0.5) * 0.1;
+                    *w = w.clamp(0.0, 1.0);
+                }
+            }
+        }
+
+        // Aggregate models
+        if self.round % 10 == 0 {
+            let selected: Vec<&FederatedNode> = self.nodes.iter().filter(|n| n.is_selected).collect();
+            if !selected.is_empty() {
+                for i in 0..self.global_model.len() {
+                    let sum: f32 = selected.iter().map(|n| n.local_weights.get(i).unwrap_or(&0.5)).sum();
+                    self.global_model[i] = sum / selected.len() as f32;
+                }
+            }
+
+            // Improve accuracy over time
+            self.current_accuracy = (self.current_accuracy + 0.01).min(0.98);
+            self.accuracy_history.push(self.current_accuracy);
+            if self.accuracy_history.len() > 100 {
+                self.accuracy_history.remove(0);
+            }
+
+            // Rotate aggregator
+            self.aggregator = Some((self.aggregator.unwrap_or(0) + 1) % self.nodes.len());
+        }
+    }
+}
+
+// ============ Consensus State ============
+
+#[derive(Clone, Debug)]
+pub struct ConsensusVisualState {
+    pub nodes: Vec<ConsensusNode>,
+    pub leader_id: Option<usize>,
+    pub term: u32,
+    pub log_entries: Vec<LogEntry>,
+    pub committed_index: usize,
+    pub messages: Vec<ConsensusMessage>,
+}
+
+#[derive(Clone, Debug)]
+pub struct ConsensusNode {
+    pub id: usize,
+    pub position: Pos2,
+    pub state: NodeState,
+    pub vote_granted: bool,
+    pub log_index: usize,
+}
+
+#[derive(Clone, Copy, Debug, PartialEq)]
+pub enum NodeState {
+    Follower,
+    Candidate,
+    Leader,
+}
+
+#[derive(Clone, Debug)]
+pub struct LogEntry {
+    pub term: u32,
+    pub command: String,
+    pub committed: bool,
+}
+
+#[derive(Clone, Debug)]
+pub struct ConsensusMessage {
+    pub from: usize,
+    pub to: usize,
+    pub msg_type: MessageType,
+    pub progress: f32,
+}
+
+#[derive(Clone, Copy, Debug, PartialEq)]
+pub enum MessageType {
+    RequestVote,
+    VoteGranted,
+    AppendEntries,
+    Heartbeat,
+}
+
+impl ConsensusVisualState {
+    pub fn new(node_count: usize) -> Self {
+        let mut nodes = Vec::new();
+        let radius = 70.0;
+
+        for i in 0..node_count {
+            let angle = (i as f32 / node_count as f32) * std::f32::consts::TAU;
+            nodes.push(ConsensusNode {
+                id: i,
+                position: Pos2::new(radius * angle.cos(), radius * angle.sin()),
+                state: if i == 0 { NodeState::Leader } else { NodeState::Follower },
+                vote_granted: false,
+                log_index: 0,
+            });
+        }
+
+        Self {
+            nodes,
+            leader_id: Some(0),
+            term: 1,
+            log_entries: vec![LogEntry {
+                term: 1,
+                command: "init".to_string(),
+                committed: true,
+            }],
+            committed_index: 0,
+            messages: Vec::new(),
+        }
+    }
+
+    pub fn step(&mut self) {
+        // Update message progress
+        self.messages.retain_mut(|msg| {
+            msg.progress += 0.1;
+            msg.progress < 1.0
+        });
+
+        // Simulate leader sending heartbeats
+        if let Some(leader) = self.leader_id {
+            if rand::random::<f32>() > 0.9 {
+                for i in 0..self.nodes.len() {
+                    if i != leader {
+                        self.messages.push(ConsensusMessage {
+                            from: leader,
+                            to: i,
+                            msg_type: MessageType::Heartbeat,
+                            progress: 0.0,
+                        });
+                    }
+                }
+            }
+
+            // Occasionally add log entry
+            if rand::random::<f32>() > 0.95 {
+                self.log_entries.push(LogEntry {
+                    term: self.term,
+                    command: format!("cmd_{}", self.log_entries.len()),
+                    committed: false,
+                });
+
+                // Send AppendEntries
+                for i in 0..self.nodes.len() {
+                    if i != leader {
+                        self.messages.push(ConsensusMessage {
+                            from: leader,
+                            to: i,
+                            msg_type: MessageType::AppendEntries,
+                            progress: 0.0,
+                        });
+                    }
+                }
+            }
+
+            // Commit entries
+            if self.log_entries.len() > self.committed_index + 1 && rand::random::<f32>() > 0.9 {
+                self.committed_index += 1;
+                if let Some(entry) = self.log_entries.get_mut(self.committed_index) {
+                    entry.committed = true;
+                }
+            }
+        }
+
+        // Simulate leader election (rarely)
+        if rand::random::<f32>() > 0.995 {
+            self.term += 1;
+            let new_leader = rand::random::<usize>() % self.nodes.len();
+
+            // Make old leader follower
+            if let Some(old_leader) = self.leader_id {
+                if let Some(node) = self.nodes.get_mut(old_leader) {
+                    node.state = NodeState::Follower;
+                }
+            }
+
+            // New leader
+            if let Some(node) = self.nodes.get_mut(new_leader) {
+                node.state = NodeState::Leader;
+            }
+            self.leader_id = Some(new_leader);
+
+            // Request votes
+            for i in 0..self.nodes.len() {
+                if i != new_leader {
+                    self.messages.push(ConsensusMessage {
+                        from: new_leader,
+                        to: i,
+                        msg_type: MessageType::RequestVote,
+                        progress: 0.0,
+                    });
+                }
+            }
+        }
+
+        // Update node log indices
+        for node in &mut self.nodes {
+            node.log_index = self.committed_index;
+        }
+    }
+}
+
+// ============ Differential Evolution State ============
+
+#[derive(Clone, Debug)]
+pub struct DEVisualState {
+    pub population: Vec<DEIndividual>,
+    pub best_individual: Option<DEIndividual>,
+    pub best_fitness: f32,
+    pub fitness_history: Vec<f32>,
+    pub iteration: u32,
+    pub mutation_factor: f32,
+    pub crossover_rate: f32,
+}
+
+#[derive(Clone, Debug)]
+pub struct DEIndividual {
+    pub position: Pos2,
+    pub fitness: f32,
+    pub is_trial: bool,
+}
+
+impl DEVisualState {
+    pub fn new(pop_size: usize) -> Self {
+        let bounds = 100.0;
+        let mut population = Vec::new();
+
+        for _ in 0..pop_size {
+            population.push(DEIndividual {
+                position: Pos2::new(
+                    (rand::random::<f32>() - 0.5) * bounds * 2.0,
+                    (rand::random::<f32>() - 0.5) * bounds * 2.0,
+                ),
+                fitness: f32::MAX,
+                is_trial: false,
+            });
+        }
+
+        Self {
+            population,
+            best_individual: None,
+            best_fitness: f32::MAX,
+            fitness_history: Vec::new(),
+            iteration: 0,
+            mutation_factor: 0.8,
+            crossover_rate: 0.9,
+        }
+    }
+
+    pub fn step(&mut self) {
+        self.iteration += 1;
+        let pop_size = self.population.len();
+        let bounds = 100.0;
+
+        // Evaluate fitness
+        for ind in &mut self.population {
+            ind.fitness = ind.position.x.powi(2) + ind.position.y.powi(2);
+            ind.is_trial = false;
+        }
+
+        // Find best
+        if let Some(best) = self.population.iter().min_by(|a, b| a.fitness.partial_cmp(&b.fitness).unwrap()) {
+            if best.fitness < self.best_fitness {
+                self.best_fitness = best.fitness;
+                self.best_individual = Some(best.clone());
+            }
+        }
+
+        self.fitness_history.push(self.best_fitness);
+        if self.fitness_history.len() > 200 {
+            self.fitness_history.remove(0);
+        }
+
+        // DE/rand/1/bin mutation and crossover
+        let mut new_population = Vec::new();
+        for i in 0..pop_size {
+            // Select three random distinct individuals
+            let mut indices: Vec<usize> = (0..pop_size).filter(|&j| j != i).collect();
+            let r1 = indices.remove(rand::random::<usize>() % indices.len());
+            let r2 = indices.remove(rand::random::<usize>() % indices.len());
+            let r3 = indices.remove(rand::random::<usize>() % indices.len());
+
+            // Mutation
+            let mutant_x = self.population[r1].position.x
+                + self.mutation_factor * (self.population[r2].position.x - self.population[r3].position.x);
+            let mutant_y = self.population[r1].position.y
+                + self.mutation_factor * (self.population[r2].position.y - self.population[r3].position.y);
+
+            // Crossover
+            let trial_x = if rand::random::<f32>() < self.crossover_rate {
+                mutant_x.clamp(-bounds, bounds)
+            } else {
+                self.population[i].position.x
+            };
+            let trial_y = if rand::random::<f32>() < self.crossover_rate {
+                mutant_y.clamp(-bounds, bounds)
+            } else {
+                self.population[i].position.y
+            };
+
+            let trial = DEIndividual {
+                position: Pos2::new(trial_x, trial_y),
+                fitness: trial_x.powi(2) + trial_y.powi(2),
+                is_trial: true,
+            };
+
+            // Selection
+            if trial.fitness < self.population[i].fitness {
+                new_population.push(trial);
+            } else {
+                new_population.push(self.population[i].clone());
+            }
+        }
+
+        self.population = new_population;
     }
 }
 
