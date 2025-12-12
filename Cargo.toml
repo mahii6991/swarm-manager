@@ -98,3 +98,8 @@ required-features = ["simulation", "tokio"]
 name = "pso_sitl_formation"
 path = "examples/pso_sitl_formation.rs"
 required-features = ["simulation"]
+
+[[example]]
+name = "aco_sitl_navigation"
+path = "examples/aco_sitl_navigation.rs"
+required-features = ["simulation"]
