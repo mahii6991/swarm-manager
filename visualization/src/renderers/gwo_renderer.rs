@@ -1,8 +1,8 @@
 //! GWO (Grey Wolf Optimizer) rendering
 
-use egui::{Painter, Pos2, Vec2, Color32, Stroke};
 use crate::state::{GWOVisualState, WolfRank};
 use crate::themes;
+use egui::{Color32, Painter, Pos2, Stroke, Vec2};
 
 /// Draw GWO visualization
 pub fn draw<F>(painter: &Painter, gwo: &GWOVisualState, world_to_screen: F, _scale: f32)
@@ -10,7 +10,8 @@ where
     F: Fn(Pos2) -> Pos2,
 {
     // Draw connections from omega wolves to leaders
-    if let (Some(ref alpha), Some(ref beta), Some(ref delta)) = (&gwo.alpha, &gwo.beta, &gwo.delta) {
+    if let (Some(ref alpha), Some(ref beta), Some(ref delta)) = (&gwo.alpha, &gwo.beta, &gwo.delta)
+    {
         let alpha_pos = world_to_screen(alpha.position);
         let beta_pos = world_to_screen(beta.position);
         let delta_pos = world_to_screen(delta.position);
@@ -130,7 +131,11 @@ fn draw_wolf(painter: &Painter, pos: Pos2, rank: WolfRank, _fitness: f32) {
     // Draw wolf as a diamond shape for leaders, circle for omega
     if rank == WolfRank::Omega {
         painter.circle_filled(pos, size, color);
-        painter.circle_stroke(pos, size, Stroke::new(1.0, Color32::from_rgb(150, 150, 150)));
+        painter.circle_stroke(
+            pos,
+            size,
+            Stroke::new(1.0, Color32::from_rgb(150, 150, 150)),
+        );
     } else {
         // Diamond shape
         let points = vec![

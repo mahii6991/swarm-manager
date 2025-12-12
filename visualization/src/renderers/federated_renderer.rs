@@ -1,16 +1,16 @@
 //! Federated Learning visualization rendering
 
-use egui::{Painter, Pos2, Vec2, Color32, Stroke};
 use crate::state::FederatedVisualState;
+use egui::{Color32, Painter, Pos2, Stroke, Vec2};
 
 /// Draw Federated Learning visualization
 pub fn draw<F>(painter: &Painter, state: &FederatedVisualState, world_to_screen: F, _scale: f32)
 where
     F: Fn(Pos2) -> Pos2,
 {
-    let aggregator_pos = state.aggregator.and_then(|id| {
-        state.nodes.get(id).map(|n| world_to_screen(n.position))
-    });
+    let aggregator_pos = state
+        .aggregator
+        .and_then(|id| state.nodes.get(id).map(|n| world_to_screen(n.position)));
 
     // Draw connections to aggregator
     if let Some(agg_pos) = aggregator_pos {
@@ -64,7 +64,11 @@ where
         painter.circle_stroke(pos, size, Stroke::new(1.5, Color32::WHITE));
 
         // Node label
-        let label = if is_aggregator { "AGG" } else { &format!("N{}", node.id) };
+        let label = if is_aggregator {
+            "AGG"
+        } else {
+            &format!("N{}", node.id)
+        };
         painter.text(
             pos,
             egui::Align2::CENTER_CENTER,
@@ -85,7 +89,10 @@ where
                 Color32::from_rgb(40, 40, 40),
             );
             painter.rect_filled(
-                egui::Rect::from_min_size(bar_pos, Vec2::new(bar_width * node.training_progress, bar_height)),
+                egui::Rect::from_min_size(
+                    bar_pos,
+                    Vec2::new(bar_width * node.training_progress, bar_height),
+                ),
                 1.0,
                 Color32::from_rgb(100, 200, 100),
             );
@@ -97,7 +104,11 @@ where
     painter.text(
         center + Vec2::new(0.0, 70.0),
         egui::Align2::CENTER_CENTER,
-        format!("Round: {} | Accuracy: {:.1}%", state.round, state.current_accuracy * 100.0),
+        format!(
+            "Round: {} | Accuracy: {:.1}%",
+            state.round,
+            state.current_accuracy * 100.0
+        ),
         egui::FontId::monospace(10.0),
         Color32::from_rgb(200, 200, 200),
     );

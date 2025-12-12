@@ -14,7 +14,7 @@
 //! - Network routing optimization
 
 use crate::types::{Position, Result, SwarmError};
-use libm::{cosf, fabsf, expf};
+use libm::{cosf, expf, fabsf};
 
 /// Configuration for WOA
 #[derive(Debug, Clone, Copy)]
@@ -97,17 +97,19 @@ impl WhaleOptimizer {
             let x = min.x + self.rng.next_f32() * (max.x - min.x);
             let y = min.y + self.rng.next_f32() * (max.y - min.y);
             let z = min.z + self.rng.next_f32() * (max.z - min.z);
-            
-            self.whales.push(Whale {
-                position: Position { x, y, z },
-                fitness: f32::INFINITY, // Assuming minimization
-            }).map_err(|_| SwarmError::ResourceExhausted)?;
+
+            self.whales
+                .push(Whale {
+                    position: Position { x, y, z },
+                    fitness: f32::INFINITY, // Assuming minimization
+                })
+                .map_err(|_| SwarmError::ResourceExhausted)?;
         }
         Ok(())
     }
 
     /// Run one iteration of the optimization
-    /// 
+    ///
     /// Cost function: f(Position) -> f32 (lower is better)
     pub fn step<F>(&mut self, iter: u32, cost_function: &F) -> Result<f32>
     where
@@ -116,7 +118,7 @@ impl WhaleOptimizer {
         // 1. Calculate fitness and update best
         for whale in &mut self.whales {
             // Apply boundary checks here if needed (clamping)
-            
+
             let fitness = cost_function(&whale.position);
             whale.fitness = fitness;
 
@@ -187,7 +189,7 @@ impl WhaleOptimizer {
 
                 // X(t+1) = D' * e^(bl) * cos(2pi*l) + X_best
                 let factor = expf(b * l) * cosf(2.0 * core::f32::consts::PI * l);
-                
+
                 new_pos.x = dx * factor + best_pos.x;
                 new_pos.y = dy * factor + best_pos.y;
                 new_pos.z = dz * factor + best_pos.z;
@@ -208,10 +210,18 @@ mod tests {
     fn test_initialization() {
         let config = WoaConfig::default();
         let mut woa = WhaleOptimizer::new(config, 42);
-        
-        let min = Position { x: -10.0, y: -10.0, z: 0.0 };
-        let max = Position { x: 10.0, y: 10.0, z: 20.0 };
-        
+
+        let min = Position {
+            x: -10.0,
+            y: -10.0,
+            z: 0.0,
+        };
+        let max = Position {
+            x: 10.0,
+            y: 10.0,
+            z: 20.0,
+        };
+
         woa.initialize(min, max).unwrap();
         assert_eq!(woa.whales.len(), 30);
     }
@@ -225,15 +235,21 @@ mod tests {
             spiral_param: 1.0,
         };
         let mut woa = WhaleOptimizer::new(config, 12345);
-        
-        let min = Position { x: -5.0, y: -5.0, z: -5.0 };
-        let max = Position { x: 5.0, y: 5.0, z: 5.0 };
-        
-        woa.initialize(min, max).unwrap();
-        
-        let cost_fn = |p: &Position| -> f32 {
-            p.x * p.x + p.y * p.y + p.z * p.z
+
+        let min = Position {
+            x: -5.0,
+            y: -5.0,
+            z: -5.0,
         };
+        let max = Position {
+            x: 5.0,
+            y: 5.0,
+            z: 5.0,
+        };
+
+        woa.initialize(min, max).unwrap();
+
+        let cost_fn = |p: &Position| -> f32 { p.x * p.x + p.y * p.y + p.z * p.z };
 
         for i in 0..50 {
             woa.step(i, &cost_fn).unwrap();
@@ -241,6 +257,10 @@ mod tests {
 
         let best = woa.best_whale.unwrap();
         // Should be close to 0
-        assert!(best.fitness < 0.1, "WOA failed to converge on sphere function. Cost: {}", best.fitness);
+        assert!(
+            best.fitness < 0.1,
+            "WOA failed to converge on sphere function. Cost: {}",
+            best.fitness
+        );
     }
 }

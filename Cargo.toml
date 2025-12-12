@@ -71,3 +71,25 @@ no_std = []
 hardware = []  # Enable hardware radio/network I/O (not yet implemented)
 hardware-crypto = []  # Enable hardware crypto accelerators
 post-quantum = []     # Enable post-quantum cryptography
+simulation = ["std", "mavlink"]  # Enable SITL simulation support
+
+# MAVLink protocol support (optional, requires std)
+[dependencies.mavlink]
+version = "0.13"
+optional = true
+default-features = true
+features = ["common", "ardupilotmega", "std", "tcp", "udp", "direct-serial"]
+
+# Async runtime for simulation (optional)
+[target.'cfg(not(target_os = "none"))'.dependencies]
+tokio = { version = "1.0", features = ["net", "rt-multi-thread", "macros", "time", "sync"], optional = true }
+
+[[example]]
+name = "sitl_connection"
+path = "examples/sitl_connection.rs"
+required-features = ["simulation"]
+
+[[example]]
+name = "swarm_sitl"
+path = "examples/swarm_sitl.rs"
+required-features = ["simulation", "tokio"]

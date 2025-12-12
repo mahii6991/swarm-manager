@@ -1,8 +1,8 @@
 //! Network topology rendering
 
-use egui::{Painter, Pos2, Vec2, Color32, Stroke};
 use crate::state::NetworkTopology;
 use crate::themes;
+use egui::{Color32, Painter, Pos2, Stroke, Vec2};
 
 /// Draw network topology
 pub fn draw<F>(painter: &Painter, network: &NetworkTopology, world_to_screen: F)
@@ -24,10 +24,7 @@ where
 
             // Draw RTT label at midpoint for good links
             if edge.link_quality > 0.5 {
-                let mid = Pos2::new(
-                    (from_pos.x + to_pos.x) / 2.0,
-                    (from_pos.y + to_pos.y) / 2.0,
-                );
+                let mid = Pos2::new((from_pos.x + to_pos.x) / 2.0, (from_pos.y + to_pos.y) / 2.0);
                 painter.text(
                     mid,
                     egui::Align2::CENTER_CENTER,

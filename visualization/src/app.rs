@@ -1,9 +1,9 @@
 //! Main application state and UI orchestration
 
-use eframe::egui;
+use crate::panels::{algorithm, controls, metrics, network, viewport};
 use crate::state::SimulationState;
-use crate::panels::{viewport, controls, algorithm, network, metrics};
 use crate::themes;
+use eframe::egui;
 
 /// Main application struct implementing eframe::App
 pub struct DroneSwarmApp {
@@ -82,8 +82,14 @@ impl eframe::App for DroneSwarmApp {
 
                 ui.menu_button("Demo", |ui| {
                     if self.state.is_demo_active() {
-                        ui.label(format!("Current: {}",
-                            self.state.demo_mode.as_ref().map(|d| d.scenario_name()).unwrap_or("None")));
+                        ui.label(format!(
+                            "Current: {}",
+                            self.state
+                                .demo_mode
+                                .as_ref()
+                                .map(|d| d.scenario_name())
+                                .unwrap_or("None")
+                        ));
                         ui.separator();
                         if ui.button("Stop Demo (D)").clicked() {
                             self.state.stop_demo();
@@ -108,8 +114,13 @@ impl eframe::App for DroneSwarmApp {
 
                 // Spacer
                 ui.with_layout(egui::Layout::right_to_left(egui::Align::Center), |ui| {
-                    let status = if self.state.is_running { "Running" } else { "Paused" };
-                    ui.label(format!("Status: {} | Drones: {} | Step: {}",
+                    let status = if self.state.is_running {
+                        "Running"
+                    } else {
+                        "Paused"
+                    };
+                    ui.label(format!(
+                        "Status: {} | Drones: {} | Step: {}",
                         status,
                         self.state.drones.len(),
                         self.state.time_step
@@ -133,15 +144,23 @@ impl eframe::App for DroneSwarmApp {
                 // Demo mode indicator
                 if let Some(ref demo) = self.state.demo_mode {
                     ui.separator();
-                    ui.label(egui::RichText::new(format!("DEMO: {}", demo.scenario_name()))
-                        .color(egui::Color32::from_rgb(255, 200, 100)));
+                    ui.label(
+                        egui::RichText::new(format!("DEMO: {}", demo.scenario_name()))
+                            .color(egui::Color32::from_rgb(255, 200, 100)),
+                    );
                 }
                 // Selected drone indicator
                 if let Some(drone_id) = self.state.selected_drone {
                     ui.separator();
                     if let Some(drone) = self.state.drones.iter().find(|d| d.id == drone_id) {
-                        ui.label(format!("Selected: D{} | Pos: ({:.0}, {:.0}) | Battery: {}% | {:?}",
-                            drone_id, drone.position.x, drone.position.y, drone.battery, drone.status));
+                        ui.label(format!(
+                            "Selected: D{} | Pos: ({:.0}, {:.0}) | Battery: {}% | {:?}",
+                            drone_id,
+                            drone.position.x,
+                            drone.position.y,
+                            drone.battery,
+                            drone.status
+                        ));
                     }
                 }
             });
@@ -186,18 +205,24 @@ impl eframe::App for DroneSwarmApp {
                     let bottom_width = available.x;
 
                     // Algorithm Visualization (left half)
-                    ui.allocate_ui(egui::vec2(bottom_width * 0.6, available.y - top_height - 10.0), |ui| {
-                        egui::Frame::canvas(ui.style()).show(ui, |ui| {
-                            algorithm::show(ui, &mut self.state);
-                        });
-                    });
+                    ui.allocate_ui(
+                        egui::vec2(bottom_width * 0.6, available.y - top_height - 10.0),
+                        |ui| {
+                            egui::Frame::canvas(ui.style()).show(ui, |ui| {
+                                algorithm::show(ui, &mut self.state);
+                            });
+                        },
+                    );
 
                     // Network Topology (right half)
-                    ui.allocate_ui(egui::vec2(bottom_width * 0.4 - 10.0, available.y - top_height - 10.0), |ui| {
-                        egui::Frame::canvas(ui.style()).show(ui, |ui| {
-                            network::show(ui, &self.state);
-                        });
-                    });
+                    ui.allocate_ui(
+                        egui::vec2(bottom_width * 0.4 - 10.0, available.y - top_height - 10.0),
+                        |ui| {
+                            egui::Frame::canvas(ui.style()).show(ui, |ui| {
+                                network::show(ui, &self.state);
+                            });
+                        },
+                    );
                 });
             });
         });
@@ -234,7 +259,10 @@ impl eframe::App for DroneSwarmApp {
                     ui.label("Real-time visualization for drone swarm algorithms");
                     ui.label("including PSO, ACO, and GWO optimization.");
                     ui.add_space(10.0);
-                    ui.hyperlink_to("GitHub Repository", "https://github.com/mahii6991/drone-swarm-system");
+                    ui.hyperlink_to(
+                        "GitHub Repository",
+                        "https://github.com/mahii6991/drone-swarm-system",
+                    );
                     ui.add_space(10.0);
                     if ui.button("Close").clicked() {
                         self.show_about = false;

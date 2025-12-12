@@ -1,7 +1,7 @@
 //! Parameter control panel
 
+use crate::state::{AlgorithmType, FormationType, SimulationState};
 use egui::Ui;
-use crate::state::{SimulationState, FormationType, AlgorithmType};
 
 pub fn show(ui: &mut Ui, state: &mut SimulationState) {
     ui.heading("Controls");
@@ -23,21 +23,35 @@ pub fn show(ui: &mut Ui, state: &mut SimulationState) {
 
         ui.horizontal(|ui| {
             // Large play/pause button
-            let play_text = if state.is_running { "⏸ Pause" } else { "▶ Play" };
+            let play_text = if state.is_running {
+                "⏸ Pause"
+            } else {
+                "▶ Play"
+            };
             let play_color = if state.is_running {
                 egui::Color32::from_rgb(200, 150, 50)
             } else {
                 egui::Color32::from_rgb(50, 200, 100)
             };
-            if ui.add_sized([80.0, 28.0], egui::Button::new(
-                egui::RichText::new(play_text).color(play_color)
-            )).clicked() {
+            if ui
+                .add_sized(
+                    [80.0, 28.0],
+                    egui::Button::new(egui::RichText::new(play_text).color(play_color)),
+                )
+                .clicked()
+            {
                 state.is_running = !state.is_running;
             }
-            if ui.add_sized([55.0, 28.0], egui::Button::new("Reset")).clicked() {
+            if ui
+                .add_sized([55.0, 28.0], egui::Button::new("Reset"))
+                .clicked()
+            {
                 state.reset();
             }
-            if ui.add_sized([50.0, 28.0], egui::Button::new("Step")).clicked() {
+            if ui
+                .add_sized([50.0, 28.0], egui::Button::new("Step"))
+                .clicked()
+            {
                 state.step();
             }
         });
@@ -58,19 +72,38 @@ pub fn show(ui: &mut Ui, state: &mut SimulationState) {
             egui::ComboBox::from_label("Type")
                 .selected_text(format!("{:?}", state.formation))
                 .show_ui(ui, |ui| {
-                    if ui.selectable_value(&mut state.formation, FormationType::Circle, "Circle").clicked() {
+                    if ui
+                        .selectable_value(&mut state.formation, FormationType::Circle, "Circle")
+                        .clicked()
+                    {
                         formation_changed = true;
                     }
-                    if ui.selectable_value(&mut state.formation, FormationType::Grid, "Grid").clicked() {
+                    if ui
+                        .selectable_value(&mut state.formation, FormationType::Grid, "Grid")
+                        .clicked()
+                    {
                         formation_changed = true;
                     }
-                    if ui.selectable_value(&mut state.formation, FormationType::Line, "Line").clicked() {
+                    if ui
+                        .selectable_value(&mut state.formation, FormationType::Line, "Line")
+                        .clicked()
+                    {
                         formation_changed = true;
                     }
-                    if ui.selectable_value(&mut state.formation, FormationType::VFormation, "V-Formation").clicked() {
+                    if ui
+                        .selectable_value(
+                            &mut state.formation,
+                            FormationType::VFormation,
+                            "V-Formation",
+                        )
+                        .clicked()
+                    {
                         formation_changed = true;
                     }
-                    if ui.selectable_value(&mut state.formation, FormationType::Random, "Random").clicked() {
+                    if ui
+                        .selectable_value(&mut state.formation, FormationType::Random, "Random")
+                        .clicked()
+                    {
                         formation_changed = true;
                     }
                 });
@@ -79,7 +112,10 @@ pub fn show(ui: &mut Ui, state: &mut SimulationState) {
 
             let mut drone_count_changed = false;
             let mut drone_count = state.formation_params.drone_count as i32;
-            if ui.add(egui::Slider::new(&mut drone_count, 1..=100).text("Drones")).changed() {
+            if ui
+                .add(egui::Slider::new(&mut drone_count, 1..=100).text("Drones"))
+                .changed()
+            {
                 state.formation_params.drone_count = drone_count as usize;
                 drone_count_changed = true;
             }
@@ -87,25 +123,37 @@ pub fn show(ui: &mut Ui, state: &mut SimulationState) {
             match state.formation {
                 FormationType::Circle => {
                     let mut radius = state.formation_params.circle_radius as i32;
-                    if ui.add(egui::Slider::new(&mut radius, 20..=200).text("Radius")).changed() {
+                    if ui
+                        .add(egui::Slider::new(&mut radius, 20..=200).text("Radius"))
+                        .changed()
+                    {
                         state.formation_params.circle_radius = radius as u32;
                     }
                 }
                 FormationType::Grid => {
                     let mut spacing = state.formation_params.grid_spacing as i32;
-                    if ui.add(egui::Slider::new(&mut spacing, 10..=100).text("Spacing")).changed() {
+                    if ui
+                        .add(egui::Slider::new(&mut spacing, 10..=100).text("Spacing"))
+                        .changed()
+                    {
                         state.formation_params.grid_spacing = spacing as u32;
                     }
                 }
                 FormationType::Line => {
                     let mut spacing = state.formation_params.line_spacing as i32;
-                    if ui.add(egui::Slider::new(&mut spacing, 10..=100).text("Spacing")).changed() {
+                    if ui
+                        .add(egui::Slider::new(&mut spacing, 10..=100).text("Spacing"))
+                        .changed()
+                    {
                         state.formation_params.line_spacing = spacing as u32;
                     }
                 }
                 FormationType::VFormation => {
                     let mut spacing = state.formation_params.v_spacing as i32;
-                    if ui.add(egui::Slider::new(&mut spacing, 10..=100).text("Spacing")).changed() {
+                    if ui
+                        .add(egui::Slider::new(&mut spacing, 10..=100).text("Spacing"))
+                        .changed()
+                    {
                         state.formation_params.v_spacing = spacing as u32;
                     }
                 }
@@ -127,16 +175,40 @@ pub fn show(ui: &mut Ui, state: &mut SimulationState) {
                 .selected_text(format!("{:?}", state.active_algorithm))
                 .show_ui(ui, |ui| {
                     ui.label("Swarm Intelligence");
-                    ui.selectable_value(&mut state.active_algorithm, AlgorithmType::PSO, "PSO - Particle Swarm");
-                    ui.selectable_value(&mut state.active_algorithm, AlgorithmType::ACO, "ACO - Ant Colony");
-                    ui.selectable_value(&mut state.active_algorithm, AlgorithmType::GWO, "GWO - Grey Wolf");
+                    ui.selectable_value(
+                        &mut state.active_algorithm,
+                        AlgorithmType::PSO,
+                        "PSO - Particle Swarm",
+                    );
+                    ui.selectable_value(
+                        &mut state.active_algorithm,
+                        AlgorithmType::ACO,
+                        "ACO - Ant Colony",
+                    );
+                    ui.selectable_value(
+                        &mut state.active_algorithm,
+                        AlgorithmType::GWO,
+                        "GWO - Grey Wolf",
+                    );
                     ui.separator();
                     ui.label("Distributed Systems");
-                    ui.selectable_value(&mut state.active_algorithm, AlgorithmType::Federated, "FL - Federated Learning");
-                    ui.selectable_value(&mut state.active_algorithm, AlgorithmType::Consensus, "Raft - SwarmRaft Consensus");
+                    ui.selectable_value(
+                        &mut state.active_algorithm,
+                        AlgorithmType::Federated,
+                        "FL - Federated Learning",
+                    );
+                    ui.selectable_value(
+                        &mut state.active_algorithm,
+                        AlgorithmType::Consensus,
+                        "Raft - SwarmRaft Consensus",
+                    );
                     ui.separator();
                     ui.label("Evolutionary");
-                    ui.selectable_value(&mut state.active_algorithm, AlgorithmType::DE, "DE - Differential Evolution");
+                    ui.selectable_value(
+                        &mut state.active_algorithm,
+                        AlgorithmType::DE,
+                        "DE - Differential Evolution",
+                    );
                 });
 
             ui.add_space(5.0);
@@ -145,34 +217,54 @@ pub fn show(ui: &mut Ui, state: &mut SimulationState) {
             match state.active_algorithm {
                 AlgorithmType::PSO => {
                     if let Some(ref pso) = state.pso_state {
-                        ui.label(format!("Iteration: {} | Best: {:.4}", pso.iteration, pso.gbest_cost));
+                        ui.label(format!(
+                            "Iteration: {} | Best: {:.4}",
+                            pso.iteration, pso.gbest_cost
+                        ));
                     }
                 }
                 AlgorithmType::ACO => {
                     if let Some(ref aco) = state.aco_state {
-                        ui.label(format!("Iteration: {} | Path: {} nodes", aco.iteration, aco.best_path.len()));
+                        ui.label(format!(
+                            "Iteration: {} | Path: {} nodes",
+                            aco.iteration,
+                            aco.best_path.len()
+                        ));
                     }
                 }
                 AlgorithmType::GWO => {
                     if let Some(ref gwo) = state.gwo_state {
                         let alpha_fit = gwo.alpha.as_ref().map(|a| a.fitness).unwrap_or(0.0);
-                        ui.label(format!("Iteration: {} | Alpha: {:.4}", gwo.iteration, alpha_fit));
+                        ui.label(format!(
+                            "Iteration: {} | Alpha: {:.4}",
+                            gwo.iteration, alpha_fit
+                        ));
                     }
                 }
                 AlgorithmType::Federated => {
                     if let Some(ref fed) = state.federated_state {
-                        ui.label(format!("Round: {} | Accuracy: {:.1}%", fed.round, fed.current_accuracy * 100.0));
+                        ui.label(format!(
+                            "Round: {} | Accuracy: {:.1}%",
+                            fed.round,
+                            fed.current_accuracy * 100.0
+                        ));
                     }
                 }
                 AlgorithmType::Consensus => {
                     if let Some(ref cons) = state.consensus_state {
-                        let leader = cons.leader_id.map(|l| format!("N{}", l)).unwrap_or_else(|| "None".to_string());
+                        let leader = cons
+                            .leader_id
+                            .map(|l| format!("N{}", l))
+                            .unwrap_or_else(|| "None".to_string());
                         ui.label(format!("Term: {} | Leader: {}", cons.term, leader));
                     }
                 }
                 AlgorithmType::DE => {
                     if let Some(ref de) = state.de_state {
-                        ui.label(format!("Iteration: {} | Best: {:.4}", de.iteration, de.best_fitness));
+                        ui.label(format!(
+                            "Iteration: {} | Best: {:.4}",
+                            de.iteration, de.best_fitness
+                        ));
                     }
                 }
             }
@@ -200,7 +292,9 @@ pub fn show(ui: &mut Ui, state: &mut SimulationState) {
         egui::CollapsingHeader::new("ACO Parameters")
             .default_open(false)
             .show(ui, |ui| {
-                ui.add(egui::Slider::new(&mut aco.evaporation_rate, 0.01..=0.5).text("Evaporation"));
+                ui.add(
+                    egui::Slider::new(&mut aco.evaporation_rate, 0.01..=0.5).text("Evaporation"),
+                );
                 ui.add(egui::Slider::new(&mut aco.alpha, 0.1..=5.0).text("Alpha (α)"));
                 ui.add(egui::Slider::new(&mut aco.beta, 0.1..=5.0).text("Beta (β)"));
 
@@ -237,7 +331,10 @@ pub fn show(ui: &mut Ui, state: &mut SimulationState) {
                 ui.label(format!("Nodes: {}", fed.nodes.len()));
                 ui.label(format!("Round: {}", fed.round));
                 ui.label(format!("Accuracy: {:.1}%", fed.current_accuracy * 100.0));
-                let aggregator = fed.aggregator.map(|a| format!("N{}", a)).unwrap_or_else(|| "None".to_string());
+                let aggregator = fed
+                    .aggregator
+                    .map(|a| format!("N{}", a))
+                    .unwrap_or_else(|| "None".to_string());
                 ui.label(format!("Aggregator: {}", aggregator));
                 ui.add_space(3.0);
                 ui.label("Global Model Weights:");
@@ -256,7 +353,10 @@ pub fn show(ui: &mut Ui, state: &mut SimulationState) {
             .show(ui, |ui| {
                 ui.label(format!("Nodes: {}", cons.nodes.len()));
                 ui.label(format!("Term: {}", cons.term));
-                let leader = cons.leader_id.map(|l| format!("N{}", l)).unwrap_or_else(|| "None".to_string());
+                let leader = cons
+                    .leader_id
+                    .map(|l| format!("N{}", l))
+                    .unwrap_or_else(|| "None".to_string());
                 ui.label(format!("Leader: {}", leader));
                 ui.label(format!("Log Entries: {}", cons.log_entries.len()));
                 ui.label(format!("Committed: {}", cons.committed_index));
@@ -305,8 +405,10 @@ pub fn show(ui: &mut Ui, state: &mut SimulationState) {
             ui.label("Demo Mode");
             if state.is_demo_active() {
                 if let Some(ref demo) = state.demo_mode {
-                    ui.label(egui::RichText::new(demo.scenario_name())
-                        .color(egui::Color32::from_rgb(255, 200, 100)));
+                    ui.label(
+                        egui::RichText::new(demo.scenario_name())
+                            .color(egui::Color32::from_rgb(255, 200, 100)),
+                    );
                 }
             }
         });

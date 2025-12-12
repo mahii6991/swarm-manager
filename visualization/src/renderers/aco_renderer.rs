@@ -1,8 +1,8 @@
 //! ACO (Ant Colony Optimization) rendering
 
-use egui::{Painter, Pos2, Vec2, Color32, Stroke};
 use crate::state::ACOVisualState;
 use crate::themes;
+use egui::{Color32, Painter, Pos2, Stroke, Vec2};
 
 /// Draw ACO visualization
 pub fn draw<F>(painter: &Painter, aco: &ACOVisualState, world_to_screen: F, _scale: f32)
@@ -15,7 +15,11 @@ where
         // Note: we need to scale the radius too, but since we don't have direct access
         // to scale here, we'll use a fixed visual size
         painter.circle_filled(center, obstacle.radius * 1.5, themes::aco::OBSTACLE);
-        painter.circle_stroke(center, obstacle.radius * 1.5, Stroke::new(2.0, Color32::from_rgb(150, 70, 70)));
+        painter.circle_stroke(
+            center,
+            obstacle.radius * 1.5,
+            Stroke::new(2.0, Color32::from_rgb(150, 70, 70)),
+        );
     }
 
     // Draw pheromone trails

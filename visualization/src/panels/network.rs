@@ -1,9 +1,9 @@
 //! Network topology visualization panel
 
-use egui::{Ui, Pos2, Vec2, Color32, Stroke};
+use crate::renderers::network_renderer;
 use crate::state::SimulationState;
 use crate::themes;
-use crate::renderers::network_renderer;
+use egui::{Color32, Pos2, Stroke, Ui, Vec2};
 
 pub fn show(ui: &mut Ui, state: &SimulationState) {
     ui.heading("Network Topology");

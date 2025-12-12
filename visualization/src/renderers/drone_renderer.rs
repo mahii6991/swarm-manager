@@ -1,8 +1,8 @@
 //! Drone rendering utilities
 
-use egui::{Painter, Pos2, Vec2, Color32, Stroke};
-use crate::state::{DroneVisual, DroneStatus};
+use crate::state::{DroneStatus, DroneVisual};
 use crate::themes;
+use egui::{Color32, Painter, Pos2, Stroke, Vec2};
 
 /// Draw a single drone at the given screen position
 pub fn draw_drone(painter: &Painter, screen_pos: Pos2, drone: &DroneVisual, _zoom: f32) {
@@ -90,9 +90,5 @@ fn drone_triangle(center: Pos2, size: f32, angle: f32) -> [Pos2; 3] {
     let back1 = Vec2::new(back_angle1.cos(), back_angle1.sin()) * size * 0.6;
     let back2 = Vec2::new(back_angle2.cos(), back_angle2.sin()) * size * 0.6;
 
-    [
-        center + front,
-        center + back1,
-        center + back2,
-    ]
+    [center + front, center + back1, center + back2]
 }

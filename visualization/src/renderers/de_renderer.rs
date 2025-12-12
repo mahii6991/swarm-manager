@@ -1,7 +1,7 @@
 //! Differential Evolution visualization rendering
 
-use egui::{Painter, Pos2, Vec2, Color32, Stroke};
 use crate::state::DEVisualState;
+use egui::{Color32, Painter, Pos2, Stroke, Vec2};
 
 /// Draw Differential Evolution visualization
 pub fn draw<F>(painter: &Painter, state: &DEVisualState, world_to_screen: F, _scale: f32)
@@ -87,8 +87,12 @@ where
     painter.text(
         center + Vec2::new(0.0, 70.0),
         egui::Align2::CENTER_CENTER,
-        format!("Iter: {} | Best: {:.4} | Pop: {}",
-            state.iteration, state.best_fitness, state.population.len()),
+        format!(
+            "Iter: {} | Best: {:.4} | Pop: {}",
+            state.iteration,
+            state.best_fitness,
+            state.population.len()
+        ),
         egui::FontId::monospace(10.0),
         Color32::from_rgb(200, 200, 200),
     );
@@ -140,8 +144,19 @@ where
     // Convergence indicator based on fitness history
     let diversity = if state.fitness_history.len() > 10 {
         let recent: f32 = state.fitness_history.iter().rev().take(5).sum::<f32>() / 5.0;
-        let older: f32 = state.fitness_history.iter().rev().skip(5).take(5).sum::<f32>() / 5.0;
-        if older > 0.001 { (recent / older).clamp(0.0, 1.0) } else { 1.0 }
+        let older: f32 = state
+            .fitness_history
+            .iter()
+            .rev()
+            .skip(5)
+            .take(5)
+            .sum::<f32>()
+            / 5.0;
+        if older > 0.001 {
+            (recent / older).clamp(0.0, 1.0)
+        } else {
+            1.0
+        }
     } else {
         1.0
     };

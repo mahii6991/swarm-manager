@@ -1,9 +1,9 @@
 //! Main 2D viewport showing drone positions
 
-use egui::{Ui, Pos2, Vec2, Rect, Sense, Color32, Stroke};
+use crate::renderers::drone_renderer;
 use crate::state::SimulationState;
 use crate::themes;
-use crate::renderers::drone_renderer;
+use egui::{Color32, Pos2, Rect, Sense, Stroke, Ui, Vec2};
 
 pub fn show(ui: &mut Ui, state: &mut SimulationState) {
     let (response, painter) = ui.allocate_painter(ui.available_size(), Sense::click_and_drag());
@@ -12,7 +12,10 @@ pub fn show(ui: &mut Ui, state: &mut SimulationState) {
     // Handle pan (only when not clicking on a drone)
     if response.dragged() {
         let delta = response.drag_delta();
-        state.viewport.center -= Vec2::new(delta.x / state.viewport.zoom, -delta.y / state.viewport.zoom);
+        state.viewport.center -= Vec2::new(
+            delta.x / state.viewport.zoom,
+            -delta.y / state.viewport.zoom,
+        );
     }
 
     // Handle zoom
@@ -101,21 +104,41 @@ pub fn show(ui: &mut Ui, state: &mut SimulationState) {
         // Draw velocity vector
         if state.viewport.show_velocities && drone.velocity.length() > 0.1 {
             let vel_end = screen_pos + drone.velocity * state.viewport.zoom * 3.0;
-            painter.arrow(screen_pos, vel_end - screen_pos, Stroke::new(1.5, themes::drone::VELOCITY));
+            painter.arrow(
+                screen_pos,
+                vel_end - screen_pos,
+                Stroke::new(1.5, themes::drone::VELOCITY),
+            );
         }
 
         // Highlight selected drone
         let is_selected = Some(drone.id) == selected_id;
         if is_selected {
             // Draw selection ring
-            painter.circle_stroke(screen_pos, 18.0, Stroke::new(2.0, Color32::from_rgb(0, 255, 255)));
-            painter.circle_stroke(screen_pos, 22.0, Stroke::new(1.0, Color32::from_rgb(0, 200, 200)));
+            painter.circle_stroke(
+                screen_pos,
+                18.0,
+                Stroke::new(2.0, Color32::from_rgb(0, 255, 255)),
+            );
+            painter.circle_stroke(
+                screen_pos,
+                22.0,
+                Stroke::new(1.0, Color32::from_rgb(0, 200, 200)),
+            );
 
             // Draw drone info tooltip
             let info_pos = screen_pos + Vec2::new(25.0, -20.0);
             let info_rect = egui::Rect::from_min_size(info_pos, Vec2::new(100.0, 60.0));
-            painter.rect_filled(info_rect, 4.0, Color32::from_rgba_premultiplied(0, 0, 0, 220));
-            painter.rect_stroke(info_rect, 4.0, Stroke::new(1.0, Color32::from_rgb(0, 200, 200)));
+            painter.rect_filled(
+                info_rect,
+                4.0,
+                Color32::from_rgba_premultiplied(0, 0, 0, 220),
+            );
+            painter.rect_stroke(
+                info_rect,
+                4.0,
+                Stroke::new(1.0, Color32::from_rgb(0, 200, 200)),
+            );
 
             painter.text(
                 info_pos + Vec2::new(5.0, 5.0),
@@ -153,7 +176,11 @@ pub fn show(ui: &mut Ui, state: &mut SimulationState) {
 
     // Draw info overlay
     let info_rect = Rect::from_min_size(rect.min + Vec2::new(10.0, 10.0), Vec2::new(220.0, 95.0));
-    painter.rect_filled(info_rect, 4.0, Color32::from_rgba_premultiplied(0, 0, 0, 180));
+    painter.rect_filled(
+        info_rect,
+        4.0,
+        Color32::from_rgba_premultiplied(0, 0, 0, 180),
+    );
 
     let text_pos = info_rect.min + Vec2::new(10.0, 10.0);
     painter.text(
@@ -197,7 +224,11 @@ pub fn show(ui: &mut Ui, state: &mut SimulationState) {
         Pos2::new(rect.max.x - 120.0, rect.min.y + 10.0),
         Vec2::new(110.0, 90.0),
     );
-    painter.rect_filled(legend_rect, 4.0, Color32::from_rgba_premultiplied(0, 0, 0, 180));
+    painter.rect_filled(
+        legend_rect,
+        4.0,
+        Color32::from_rgba_premultiplied(0, 0, 0, 180),
+    );
 
     let legend_items = [
         ("Active", themes::drone::ACTIVE),
@@ -276,13 +307,19 @@ fn draw_grid(painter: &egui::Painter, rect: Rect, state: &SimulationState) {
 
     if rect.contains(Pos2::new(origin.x, rect.center().y)) {
         painter.line_segment(
-            [Pos2::new(origin.x, rect.min.y), Pos2::new(origin.x, rect.max.y)],
+            [
+                Pos2::new(origin.x, rect.min.y),
+                Pos2::new(origin.x, rect.max.y),
+            ],
             Stroke::new(1.5, themes::ui::AXIS_Y),
         );
     }
     if rect.contains(Pos2::new(rect.center().x, origin.y)) {
         painter.line_segment(
-            [Pos2::new(rect.min.x, origin.y), Pos2::new(rect.max.x, origin.y)],
+            [
+                Pos2::new(rect.min.x, origin.y),
+                Pos2::new(rect.max.x, origin.y),
+            ],
             Stroke::new(1.5, themes::ui::AXIS_X),
         );
     }

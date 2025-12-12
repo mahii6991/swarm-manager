@@ -1,9 +1,11 @@
 //! Algorithm visualization panel with tabs for PSO, ACO, GWO, Federated, Consensus, DE
 
-use egui::{Ui, Pos2, Vec2, Rect, Color32, Stroke};
-use crate::state::{SimulationState, AlgorithmType};
+use crate::renderers::{
+    aco_renderer, consensus_renderer, de_renderer, federated_renderer, gwo_renderer, pso_renderer,
+};
+use crate::state::{AlgorithmType, SimulationState};
 use crate::themes;
-use crate::renderers::{pso_renderer, aco_renderer, gwo_renderer, federated_renderer, consensus_renderer, de_renderer};
+use egui::{Color32, Pos2, Rect, Stroke, Ui, Vec2};
 
 pub fn show(ui: &mut Ui, state: &mut SimulationState) {
     ui.horizontal(|ui| {
@@ -11,26 +13,44 @@ pub fn show(ui: &mut Ui, state: &mut SimulationState) {
         ui.separator();
 
         // Tab buttons - Swarm Intelligence
-        if ui.selectable_label(state.active_algorithm == AlgorithmType::PSO, "PSO").clicked() {
+        if ui
+            .selectable_label(state.active_algorithm == AlgorithmType::PSO, "PSO")
+            .clicked()
+        {
             state.active_algorithm = AlgorithmType::PSO;
         }
-        if ui.selectable_label(state.active_algorithm == AlgorithmType::ACO, "ACO").clicked() {
+        if ui
+            .selectable_label(state.active_algorithm == AlgorithmType::ACO, "ACO")
+            .clicked()
+        {
             state.active_algorithm = AlgorithmType::ACO;
         }
-        if ui.selectable_label(state.active_algorithm == AlgorithmType::GWO, "GWO").clicked() {
+        if ui
+            .selectable_label(state.active_algorithm == AlgorithmType::GWO, "GWO")
+            .clicked()
+        {
             state.active_algorithm = AlgorithmType::GWO;
         }
         ui.separator();
         // Distributed Systems
-        if ui.selectable_label(state.active_algorithm == AlgorithmType::Federated, "FL").clicked() {
+        if ui
+            .selectable_label(state.active_algorithm == AlgorithmType::Federated, "FL")
+            .clicked()
+        {
             state.active_algorithm = AlgorithmType::Federated;
         }
-        if ui.selectable_label(state.active_algorithm == AlgorithmType::Consensus, "Raft").clicked() {
+        if ui
+            .selectable_label(state.active_algorithm == AlgorithmType::Consensus, "Raft")
+            .clicked()
+        {
             state.active_algorithm = AlgorithmType::Consensus;
         }
         ui.separator();
         // Evolutionary
-        if ui.selectable_label(state.active_algorithm == AlgorithmType::DE, "DE").clicked() {
+        if ui
+            .selectable_label(state.active_algorithm == AlgorithmType::DE, "DE")
+            .clicked()
+        {
             state.active_algorithm = AlgorithmType::DE;
         }
     });
@@ -67,7 +87,9 @@ pub fn show(ui: &mut Ui, state: &mut SimulationState) {
                 // Info text
                 let info = format!(
                     "PSO | Iteration: {} | Best: {:.4} | Particles: {}",
-                    pso.iteration, pso.gbest_cost, pso.particles.len()
+                    pso.iteration,
+                    pso.gbest_cost,
+                    pso.particles.len()
                 );
                 painter.text(
                     rect.min + Vec2::new(10.0, 10.0),
@@ -84,7 +106,9 @@ pub fn show(ui: &mut Ui, state: &mut SimulationState) {
 
                 let info = format!(
                     "ACO | Iteration: {} | Ants: {} | Path: {} waypoints",
-                    aco.iteration, aco.ants.len(), aco.best_path.len()
+                    aco.iteration,
+                    aco.ants.len(),
+                    aco.best_path.len()
                 );
                 painter.text(
                     rect.min + Vec2::new(10.0, 10.0),
@@ -102,7 +126,9 @@ pub fn show(ui: &mut Ui, state: &mut SimulationState) {
                 let alpha_fitness = gwo.alpha.as_ref().map(|a| a.fitness).unwrap_or(0.0);
                 let info = format!(
                     "GWO | Iteration: {} | Wolves: {} | Alpha: {:.4}",
-                    gwo.iteration, gwo.wolves.len(), alpha_fitness
+                    gwo.iteration,
+                    gwo.wolves.len(),
+                    alpha_fitness
                 );
                 painter.text(
                     rect.min + Vec2::new(10.0, 10.0),
@@ -119,7 +145,9 @@ pub fn show(ui: &mut Ui, state: &mut SimulationState) {
 
                 let info = format!(
                     "Federated Learning | Round: {} | Nodes: {} | Accuracy: {:.1}%",
-                    fed.round, fed.nodes.len(), fed.current_accuracy * 100.0
+                    fed.round,
+                    fed.nodes.len(),
+                    fed.current_accuracy * 100.0
                 );
                 painter.text(
                     rect.min + Vec2::new(10.0, 10.0),
@@ -134,7 +162,10 @@ pub fn show(ui: &mut Ui, state: &mut SimulationState) {
             if let Some(ref cons) = state.consensus_state {
                 consensus_renderer::draw(&painter, cons, world_to_screen, scale);
 
-                let leader_str = cons.leader_id.map(|l| format!("N{}", l)).unwrap_or_else(|| "None".to_string());
+                let leader_str = cons
+                    .leader_id
+                    .map(|l| format!("N{}", l))
+                    .unwrap_or_else(|| "None".to_string());
                 let info = format!(
                     "SwarmRaft | Term: {} | Leader: {} | Committed: {}",
                     cons.term, leader_str, cons.committed_index
@@ -154,7 +185,9 @@ pub fn show(ui: &mut Ui, state: &mut SimulationState) {
 
                 let info = format!(
                     "Differential Evolution | Iter: {} | Pop: {} | Best: {:.4}",
-                    de.iteration, de.population.len(), de.best_fitness
+                    de.iteration,
+                    de.population.len(),
+                    de.best_fitness
                 );
                 painter.text(
                     rect.min + Vec2::new(10.0, 10.0),
@@ -194,11 +227,17 @@ fn draw_algorithm_grid(painter: &egui::Painter, rect: Rect, center: Pos2, scale:
 
     // Draw axes
     painter.line_segment(
-        [Pos2::new(center.x, rect.min.y), Pos2::new(center.x, rect.max.y)],
+        [
+            Pos2::new(center.x, rect.min.y),
+            Pos2::new(center.x, rect.max.y),
+        ],
         Stroke::new(1.0, themes::ui::AXIS_Y),
     );
     painter.line_segment(
-        [Pos2::new(rect.min.x, center.y), Pos2::new(rect.max.x, center.y)],
+        [
+            Pos2::new(rect.min.x, center.y),
+            Pos2::new(rect.max.x, center.y),
+        ],
         Stroke::new(1.0, themes::ui::AXIS_X),
     );
 

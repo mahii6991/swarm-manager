@@ -221,9 +221,7 @@ impl SimulationState {
         for i in 0..count {
             let angle = (i as f32 / count as f32) * std::f32::consts::TAU;
             let pos = match self.formation {
-                FormationType::Circle => {
-                    Pos2::new(radius * angle.cos(), radius * angle.sin())
-                }
+                FormationType::Circle => Pos2::new(radius * angle.cos(), radius * angle.sin()),
                 FormationType::Grid => {
                     let cols = (count as f32).sqrt().ceil() as usize;
                     let row = i / cols;
@@ -248,12 +246,10 @@ impl SimulationState {
                         Pos2::new(j as f32 * spacing, -(j as f32) * spacing)
                     }
                 }
-                FormationType::Random => {
-                    Pos2::new(
-                        (rand::random::<f32>() - 0.5) * 200.0,
-                        (rand::random::<f32>() - 0.5) * 200.0,
-                    )
-                }
+                FormationType::Random => Pos2::new(
+                    (rand::random::<f32>() - 0.5) * 200.0,
+                    (rand::random::<f32>() - 0.5) * 200.0,
+                ),
             };
 
             let drone = DroneVisual {
@@ -383,8 +379,15 @@ impl SimulationState {
         if self.drones.is_empty() {
             return Pos2::ZERO;
         }
-        let sum: Pos2 = self.drones.iter().map(|d| d.position).fold(Pos2::ZERO, |a, b| a + b.to_vec2());
-        Pos2::new(sum.x / self.drones.len() as f32, sum.y / self.drones.len() as f32)
+        let sum: Pos2 = self
+            .drones
+            .iter()
+            .map(|d| d.position)
+            .fold(Pos2::ZERO, |a, b| a + b.to_vec2());
+        Pos2::new(
+            sum.x / self.drones.len() as f32,
+            sum.y / self.drones.len() as f32,
+        )
     }
 
     fn calculate_target_position_static(&self, index: usize, center: Pos2, count: usize) -> Pos2 {
@@ -684,9 +687,18 @@ impl ACOVisualState {
         let goal = Pos2::new(80.0, 60.0);
 
         let obstacles = vec![
-            ObstacleVisual { center: Pos2::new(0.0, 0.0), radius: 25.0 },
-            ObstacleVisual { center: Pos2::new(-40.0, 30.0), radius: 15.0 },
-            ObstacleVisual { center: Pos2::new(40.0, -20.0), radius: 20.0 },
+            ObstacleVisual {
+                center: Pos2::new(0.0, 0.0),
+                radius: 25.0,
+            },
+            ObstacleVisual {
+                center: Pos2::new(-40.0, 30.0),
+                radius: 15.0,
+            },
+            ObstacleVisual {
+                center: Pos2::new(40.0, -20.0),
+                radius: 20.0,
+            },
         ];
 
         let mut ants = Vec::new();
@@ -730,9 +742,10 @@ impl ACOVisualState {
                 let new_pos = ant.position + move_dir * 5.0;
 
                 // Check obstacle collision
-                let collides = self.obstacles.iter().any(|obs| {
-                    (new_pos - obs.center).length() < obs.radius + 5.0
-                });
+                let collides = self
+                    .obstacles
+                    .iter()
+                    .any(|obs| (new_pos - obs.center).length() < obs.radius + 5.0);
 
                 if !collides {
                     // Add pheromone trail
@@ -834,12 +847,15 @@ impl GWOVisualState {
         for wolf in &mut self.wolves {
             let x = wolf.position.x / 20.0;
             let y = wolf.position.y / 20.0;
-            wolf.fitness = x.powi(2) + y.powi(2) - 10.0 * (2.0 * std::f32::consts::PI * x).cos()
-                - 10.0 * (2.0 * std::f32::consts::PI * y).cos() + 20.0;
+            wolf.fitness = x.powi(2) + y.powi(2)
+                - 10.0 * (2.0 * std::f32::consts::PI * x).cos()
+                - 10.0 * (2.0 * std::f32::consts::PI * y).cos()
+                + 20.0;
         }
 
         // Sort by fitness and assign ranks
-        self.wolves.sort_by(|a, b| a.fitness.partial_cmp(&b.fitness).unwrap());
+        self.wolves
+            .sort_by(|a, b| a.fitness.partial_cmp(&b.fitness).unwrap());
 
         for (i, wolf) in self.wolves.iter_mut().enumerate() {
             wolf.rank = match i {
@@ -864,9 +880,17 @@ impl GWOVisualState {
         }
 
         // Update positions (skip leaders)
-        let alpha_pos = self.alpha.as_ref().map(|w| w.position).unwrap_or(Pos2::ZERO);
+        let alpha_pos = self
+            .alpha
+            .as_ref()
+            .map(|w| w.position)
+            .unwrap_or(Pos2::ZERO);
         let beta_pos = self.beta.as_ref().map(|w| w.position).unwrap_or(Pos2::ZERO);
-        let delta_pos = self.delta.as_ref().map(|w| w.position).unwrap_or(Pos2::ZERO);
+        let delta_pos = self
+            .delta
+            .as_ref()
+            .map(|w| w.position)
+            .unwrap_or(Pos2::ZERO);
 
         for i in 3..self.wolves.len() {
             let a = self.convergence_param;
@@ -906,10 +930,7 @@ impl GWOVisualState {
             let x3_y = delta_pos.y - a3 * d_delta_y;
 
             // Average position
-            wolf.position = Pos2::new(
-                (x1_x + x2_x + x3_x) / 3.0,
-                (x1_y + x2_y + x3_y) / 3.0,
-            );
+            wolf.position = Pos2::new((x1_x + x2_x + x3_x) / 3.0, (x1_y + x2_y + x3_y) / 3.0);
 
             // Boundary handling
             let bounds = 100.0;
@@ -988,10 +1009,14 @@ impl FederatedVisualState {
 
         // Aggregate models
         if self.round % 10 == 0 {
-            let selected: Vec<&FederatedNode> = self.nodes.iter().filter(|n| n.is_selected).collect();
+            let selected: Vec<&FederatedNode> =
+                self.nodes.iter().filter(|n| n.is_selected).collect();
             if !selected.is_empty() {
                 for i in 0..self.global_model.len() {
-                    let sum: f32 = selected.iter().map(|n| n.local_weights.get(i).unwrap_or(&0.5)).sum();
+                    let sum: f32 = selected
+                        .iter()
+                        .map(|n| n.local_weights.get(i).unwrap_or(&0.5))
+                        .sum();
                     self.global_model[i] = sum / selected.len() as f32;
                 }
             }
@@ -1070,7 +1095,11 @@ impl ConsensusVisualState {
             nodes.push(ConsensusNode {
                 id: i,
                 position: Pos2::new(radius * angle.cos(), radius * angle.sin()),
-                state: if i == 0 { NodeState::Leader } else { NodeState::Follower },
+                state: if i == 0 {
+                    NodeState::Leader
+                } else {
+                    NodeState::Follower
+                },
                 vote_granted: false,
                 log_index: 0,
             });
@@ -1239,7 +1268,11 @@ impl DEVisualState {
         }
 
         // Find best
-        if let Some(best) = self.population.iter().min_by(|a, b| a.fitness.partial_cmp(&b.fitness).unwrap()) {
+        if let Some(best) = self
+            .population
+            .iter()
+            .min_by(|a, b| a.fitness.partial_cmp(&b.fitness).unwrap())
+        {
             if best.fitness < self.best_fitness {
                 self.best_fitness = best.fitness;
                 self.best_individual = Some(best.clone());
@@ -1262,9 +1295,11 @@ impl DEVisualState {
 
             // Mutation
             let mutant_x = self.population[r1].position.x
-                + self.mutation_factor * (self.population[r2].position.x - self.population[r3].position.x);
+                + self.mutation_factor
+                    * (self.population[r2].position.x - self.population[r3].position.x);
             let mutant_y = self.population[r1].position.y
-                + self.mutation_factor * (self.population[r2].position.y - self.population[r3].position.y);
+                + self.mutation_factor
+                    * (self.population[r2].position.y - self.population[r3].position.y);
 
             // Crossover
             let trial_x = if rand::random::<f32>() < self.crossover_rate {

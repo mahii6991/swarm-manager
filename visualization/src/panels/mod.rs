@@ -1,7 +1,7 @@
 //! UI Panels
 
-pub mod viewport;
-pub mod controls;
 pub mod algorithm;
-pub mod network;
+pub mod controls;
 pub mod metrics;
+pub mod network;
+pub mod viewport;

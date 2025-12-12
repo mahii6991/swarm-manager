@@ -438,7 +438,7 @@ pub fn get_time_us() -> u64 {
     {
         // High precision: combine interrupt counter with DWT cycle counter
         let ms = GLOBAL_TIME_MS.load(Ordering::Relaxed);
-        
+
         let cycles_per_us = CYCLES_PER_US.load(Ordering::Relaxed);
         if cycles_per_us > 0 {
             // Read DWT cycle counter directly

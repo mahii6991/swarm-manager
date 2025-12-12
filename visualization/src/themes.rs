@@ -1,6 +1,6 @@
 //! Color themes and styling
 
-use egui::{Color32, Visuals, Stroke};
+use egui::{Color32, Stroke, Visuals};
 
 /// Dark theme optimized for visualization
 pub fn dark_theme() -> Visuals {
@@ -59,9 +59,9 @@ pub mod aco {
 pub mod gwo {
     use super::*;
 
-    pub const ALPHA: Color32 = Color32::from_rgb(255, 215, 0);   // Gold
-    pub const BETA: Color32 = Color32::from_rgb(192, 192, 192);  // Silver
-    pub const DELTA: Color32 = Color32::from_rgb(205, 127, 50);  // Bronze
+    pub const ALPHA: Color32 = Color32::from_rgb(255, 215, 0); // Gold
+    pub const BETA: Color32 = Color32::from_rgb(192, 192, 192); // Silver
+    pub const DELTA: Color32 = Color32::from_rgb(205, 127, 50); // Bronze
     pub const OMEGA: Color32 = Color32::from_rgb(100, 100, 100); // Gray
 
     pub const ALPHA_RING: Color32 = Color32::from_rgba_premultiplied(255, 215, 0, 80);

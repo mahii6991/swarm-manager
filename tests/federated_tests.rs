@@ -332,7 +332,7 @@ mod secure_aggregation_tests {
         };
 
         let encrypted = sa.encrypt_update(&update).unwrap();
-        
+
         let updates = [(DroneId::new(1), encrypted)];
         let result = sa.aggregate_encrypted(&updates).unwrap();
 

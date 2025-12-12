@@ -1,8 +1,8 @@
 //! PSO (Particle Swarm Optimization) rendering
 
-use egui::{Painter, Pos2, Vec2, Color32, Stroke};
 use crate::state::PSOVisualState;
 use crate::themes;
+use egui::{Color32, Painter, Pos2, Stroke, Vec2};
 
 /// Draw PSO visualization
 pub fn draw<F>(painter: &Painter, pso: &PSOVisualState, world_to_screen: F, scale: f32)
@@ -30,11 +30,7 @@ where
         let pos = world_to_screen(particle.position);
         if particle.velocity.length() > 0.1 {
             let vel_end = pos + particle.velocity * scale * 2.0;
-            painter.arrow(
-                pos,
-                vel_end - pos,
-                Stroke::new(1.0, themes::pso::VELOCITY),
-            );
+            painter.arrow(pos, vel_end - pos, Stroke::new(1.0, themes::pso::VELOCITY));
         }
     }
 
@@ -73,8 +69,13 @@ fn draw_star(painter: &Painter, center: Pos2, size: f32, color: Color32) {
 
     let mut vertices = Vec::new();
     for i in 0..(points * 2) {
-        let angle = (i as f32 / (points * 2) as f32) * std::f32::consts::TAU - std::f32::consts::FRAC_PI_2;
-        let radius = if i % 2 == 0 { outer_radius } else { inner_radius };
+        let angle =
+            (i as f32 / (points * 2) as f32) * std::f32::consts::TAU - std::f32::consts::FRAC_PI_2;
+        let radius = if i % 2 == 0 {
+            outer_radius
+        } else {
+            inner_radius
+        };
         vertices.push(center + Vec2::new(angle.cos() * radius, angle.sin() * radius));
     }
 

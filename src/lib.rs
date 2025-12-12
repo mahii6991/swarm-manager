@@ -71,8 +71,6 @@ pub mod merkle;
 pub mod network;
 /// Particle Swarm Optimization (PSO) for formation control
 pub mod pso;
-/// Whale Optimization Algorithm (WOA) for advanced path planning
-pub mod woa;
 /// Advanced PSO variants with adaptive parameters
 pub mod pso_advanced;
 /// Cryptographically secure random number generation
@@ -87,6 +85,8 @@ pub mod task_allocation;
 pub mod time_abstraction;
 /// Core types (Position, Velocity, DroneId, NetworkAddress, etc.)
 pub mod types;
+/// Whale Optimization Algorithm (WOA) for advanced path planning
+pub mod woa;
 
 // Re-export configuration types for convenience
 pub use config::*;

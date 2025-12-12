@@ -38,6 +38,12 @@ pub struct MerkleTree<const N: usize> {
     current_level_indices: Vec<usize, N>,
 }
 
+impl<const N: usize> Default for MerkleTree<N> {
+    fn default() -> Self {
+        Self::new()
+    }
+}
+
 impl<const N: usize> MerkleTree<N> {
     /// Create a new empty Merkle Tree
     pub fn new() -> Self {
@@ -64,10 +70,14 @@ impl<const N: usize> MerkleTree<N> {
         for item in data_items {
             let hash = CryptoContext::secure_hash(item);
             if self.nodes.push(MerkleNode::Leaf(hash)).is_err() {
-                 return Err(SwarmError::BufferFull);
+                return Err(SwarmError::BufferFull);
             }
-            if self.current_level_indices.push(self.nodes.len() - 1).is_err() {
-                 return Err(SwarmError::BufferFull);
+            if self
+                .current_level_indices
+                .push(self.nodes.len() - 1)
+                .is_err()
+            {
+                return Err(SwarmError::BufferFull);
             }
         }
 
@@ -88,19 +98,27 @@ impl<const N: usize> MerkleTree<N> {
                 // Compute combined hash: H(left || right)
                 let left_hash = self.nodes[left_idx].hash();
                 let right_hash = self.nodes[right_idx].hash();
-                
+
                 let mut combined = Vec::<u8, 64>::new();
-                combined.extend_from_slice(&left_hash).map_err(|_| SwarmError::BufferFull)?;
-                combined.extend_from_slice(&right_hash).map_err(|_| SwarmError::BufferFull)?;
-                
+                combined
+                    .extend_from_slice(&left_hash)
+                    .map_err(|_| SwarmError::BufferFull)?;
+                combined
+                    .extend_from_slice(&right_hash)
+                    .map_err(|_| SwarmError::BufferFull)?;
+
                 let parent_hash = CryptoContext::secure_hash(&combined);
 
                 // Store parent
-                if self.nodes.push(MerkleNode::Node {
-                    hash: parent_hash,
-                    left_child: left_idx,
-                    right_child: right_idx,
-                }).is_err() {
+                if self
+                    .nodes
+                    .push(MerkleNode::Node {
+                        hash: parent_hash,
+                        left_child: left_idx,
+                        right_child: right_idx,
+                    })
+                    .is_err()
+                {
                     return Err(SwarmError::BufferFull);
                 }
 
@@ -139,7 +157,7 @@ mod tests {
         let mut tree = MerkleTree::<10>::new();
         let data = b"test";
         let root = tree.compute_root(&[data]).unwrap();
-        
+
         // Root should be hash of leaf
         let expected = CryptoContext::secure_hash(data);
         assert_eq!(root, expected);
@@ -149,25 +167,25 @@ mod tests {
     fn test_consistency() {
         let mut tree1 = MerkleTree::<100>::new();
         let mut tree2 = MerkleTree::<100>::new();
-        
+
         let data = vec![b"one".as_slice(), b"two".as_slice(), b"three".as_slice()];
-        
+
         let root1 = tree1.compute_root(&data).unwrap();
         let root2 = tree2.compute_root(&data).unwrap();
-        
+
         assert_eq!(root1, root2);
     }
 
     #[test]
     fn test_tamper_evidence() {
         let mut tree = MerkleTree::<100>::new();
-        
+
         let data1 = vec![b"one".as_slice(), b"two".as_slice()];
         let root1 = tree.compute_root(&data1).unwrap();
-        
+
         let data2 = vec![b"one".as_slice(), b"two_modified".as_slice()];
         let root2 = tree.compute_root(&data2).unwrap();
-        
+
         assert_ne!(root1, root2);
     }
 }

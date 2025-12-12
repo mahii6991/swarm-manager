@@ -7,8 +7,8 @@
 //! - Low-latency agreement suitable for real-time swarm operations
 //! - Resource-constrained optimization
 
-use crate::types::*;
 use crate::merkle::MerkleTree;
+use crate::types::*;
 use heapless::{FnvIndexMap, Vec};
 use serde::{Deserialize, Serialize};
 
@@ -557,22 +557,23 @@ impl ConsensusEngine {
     /// Used for periodic checkpoints and verifying log consistency across the swarm.
     pub fn get_log_merkle_root(&self) -> Result<[u8; 32]> {
         let mut tree = MerkleTree::<1024>::new(); // Max log size
-        
+
         let mut serialized_log: Vec<Vec<u8, 256>, 100> = Vec::new();
-        
-        for entry in self.log.iter().take(100) { // Limit to 100 for stack safety
+
+        for entry in self.log.iter().take(100) {
+            // Limit to 100 for stack safety
             let mut buf = Vec::<u8, 256>::new();
             if postcard::to_slice(&entry.command, &mut buf).is_ok() {
                 serialized_log.push(buf).ok();
             }
         }
-        
+
         // Now create references
         let mut refs: Vec<&[u8], 100> = Vec::new();
         for buf in &serialized_log {
             refs.push(buf).ok();
         }
-        
+
         tree.compute_root(&refs)
     }
 

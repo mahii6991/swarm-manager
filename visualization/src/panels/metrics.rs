@@ -1,9 +1,9 @@
 //! Metrics and statistics panel with graphs
 
-use egui::Ui;
-use egui_plot::{Plot, Line, PlotPoints};
-use crate::state::{SimulationState, DroneStatus, AlgorithmType};
+use crate::state::{AlgorithmType, DroneStatus, SimulationState};
 use crate::themes;
+use egui::Ui;
+use egui_plot::{Line, Plot, PlotPoints};
 
 pub fn show(ui: &mut Ui, state: &SimulationState) {
     ui.heading("Metrics");
@@ -11,9 +11,21 @@ pub fn show(ui: &mut Ui, state: &SimulationState) {
 
     // Drone Statistics
     ui.collapsing("Drone Stats", |ui| {
-        let active = state.drones.iter().filter(|d| d.status == DroneStatus::Active).count();
-        let returning = state.drones.iter().filter(|d| d.status == DroneStatus::Returning).count();
-        let emergency = state.drones.iter().filter(|d| d.status == DroneStatus::Emergency).count();
+        let active = state
+            .drones
+            .iter()
+            .filter(|d| d.status == DroneStatus::Active)
+            .count();
+        let returning = state
+            .drones
+            .iter()
+            .filter(|d| d.status == DroneStatus::Returning)
+            .count();
+        let emergency = state
+            .drones
+            .iter()
+            .filter(|d| d.status == DroneStatus::Emergency)
+            .count();
 
         ui.horizontal(|ui| {
             ui.label("Total:");
@@ -34,9 +46,8 @@ pub fn show(ui: &mut Ui, state: &SimulationState) {
 
         // Average battery
         if !state.drones.is_empty() {
-            let avg_battery: f32 = state.drones.iter()
-                .map(|d| d.battery as f32)
-                .sum::<f32>() / state.drones.len() as f32;
+            let avg_battery: f32 = state.drones.iter().map(|d| d.battery as f32).sum::<f32>()
+                / state.drones.len() as f32;
             ui.add_space(5.0);
             ui.horizontal(|ui| {
                 ui.label("Avg Battery:");
@@ -66,9 +77,13 @@ pub fn show(ui: &mut Ui, state: &SimulationState) {
         });
 
         if !state.network.edges.is_empty() {
-            let avg_quality: f32 = state.network.edges.iter()
+            let avg_quality: f32 = state
+                .network
+                .edges
+                .iter()
                 .map(|e| e.link_quality)
-                .sum::<f32>() / state.network.edges.len() as f32;
+                .sum::<f32>()
+                / state.network.edges.len() as f32;
             ui.horizontal(|ui| {
                 ui.label("Avg Link Quality:");
                 ui.label(format!("{:.2}", avg_quality));
@@ -103,46 +118,58 @@ pub fn show(ui: &mut Ui, state: &SimulationState) {
     // Cost/Fitness Graph
     ui.collapsing("Convergence Graph", |ui| {
         let data: Vec<[f64; 2]> = match state.active_algorithm {
-            AlgorithmType::PSO => {
-                state.pso_state.as_ref()
-                    .map(|pso| pso.cost_history.iter()
+            AlgorithmType::PSO => state
+                .pso_state
+                .as_ref()
+                .map(|pso| {
+                    pso.cost_history
+                        .iter()
                         .enumerate()
                         .map(|(i, &c)| [i as f64, c as f64])
-                        .collect())
-                    .unwrap_or_default()
-            }
-            AlgorithmType::GWO => {
-                state.gwo_state.as_ref()
-                    .map(|gwo| gwo.fitness_history.iter()
+                        .collect()
+                })
+                .unwrap_or_default(),
+            AlgorithmType::GWO => state
+                .gwo_state
+                .as_ref()
+                .map(|gwo| {
+                    gwo.fitness_history
+                        .iter()
                         .enumerate()
                         .map(|(i, &f)| [i as f64, f as f64])
-                        .collect())
-                    .unwrap_or_default()
-            }
+                        .collect()
+                })
+                .unwrap_or_default(),
             AlgorithmType::ACO => {
                 // ACO doesn't have a direct cost history
                 vec![]
             }
-            AlgorithmType::Federated => {
-                state.federated_state.as_ref()
-                    .map(|fed| fed.accuracy_history.iter()
+            AlgorithmType::Federated => state
+                .federated_state
+                .as_ref()
+                .map(|fed| {
+                    fed.accuracy_history
+                        .iter()
                         .enumerate()
                         .map(|(i, &a)| [i as f64, a as f64 * 100.0])
-                        .collect())
-                    .unwrap_or_default()
-            }
+                        .collect()
+                })
+                .unwrap_or_default(),
             AlgorithmType::Consensus => {
                 // Consensus doesn't have convergence history
                 vec![]
             }
-            AlgorithmType::DE => {
-                state.de_state.as_ref()
-                    .map(|de| de.fitness_history.iter()
+            AlgorithmType::DE => state
+                .de_state
+                .as_ref()
+                .map(|de| {
+                    de.fitness_history
+                        .iter()
                         .enumerate()
                         .map(|(i, &f)| [i as f64, f as f64])
-                        .collect())
-                    .unwrap_or_default()
-            }
+                        .collect()
+                })
+                .unwrap_or_default(),
         };
 
         if data.is_empty() {

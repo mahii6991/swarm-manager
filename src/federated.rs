@@ -9,11 +9,14 @@
 
 use crate::crypto::KeyStore;
 use crate::types::*;
+use chacha20poly1305::{
+    aead::{AeadInPlace, KeyInit},
+    ChaCha20Poly1305, Nonce, Tag,
+};
 use ed25519_dalek::{Signature, Verifier};
 use heapless::{FnvIndexMap, Vec};
 use serde::{Deserialize, Serialize};
 use serde_big_array::BigArray;
-use chacha20poly1305::{aead::{AeadInPlace, KeyInit}, ChaCha20Poly1305, Nonce, Tag};
 
 /// Maximum model parameters (simplified)
 pub const MAX_MODEL_PARAMS: usize = 1000;
@@ -414,8 +417,8 @@ impl SecureAggregation {
             .get(&update.drone_id.as_u64())
             .ok_or(SwarmError::AuthenticationFailed)?;
 
-        let cipher = ChaCha20Poly1305::new_from_slice(secret)
-            .map_err(|_| SwarmError::CryptoError)?;
+        let cipher =
+            ChaCha20Poly1305::new_from_slice(secret).map_err(|_| SwarmError::CryptoError)?;
 
         // Use round number for nonce
         let mut nonce_bytes = [0u8; 12];
@@ -425,7 +428,8 @@ impl SecureAggregation {
         // Serialize parameters into buffer
         let mut buffer = Vec::<u8, 2048>::new();
         for &param in &update.parameters {
-            buffer.extend_from_slice(&param.to_le_bytes())
+            buffer
+                .extend_from_slice(&param.to_le_bytes())
                 .map_err(|_| SwarmError::BufferFull)?;
         }
 
@@ -453,7 +457,7 @@ impl SecureAggregation {
 
         let mut summed_params = [0.0f32; MAX_MODEL_PARAMS];
         let mut valid_count = 0;
-        let param_count = MAX_MODEL_PARAMS; 
+        let param_count = MAX_MODEL_PARAMS;
 
         let nonce_bytes = [0u8; 12];
         let nonce = Nonce::from_slice(&nonce_bytes);
@@ -463,27 +467,41 @@ impl SecureAggregation {
                 if let Ok(cipher) = ChaCha20Poly1305::new_from_slice(secret) {
                     // Split into ciphertext and tag
                     // encrypted_data = ciphertext || tag (16 bytes)
-                    if encrypted_data.len() < 16 { continue; }
-                    
+                    if encrypted_data.len() < 16 {
+                        continue;
+                    }
+
                     let tag_pos = encrypted_data.len() - 16;
                     let tag_bytes = &encrypted_data[tag_pos..];
                     let tag = Tag::from_slice(tag_bytes);
 
                     // We need a mutable buffer for in-place decryption
                     let mut buffer = Vec::<u8, 2048>::new();
-                    if buffer.extend_from_slice(&encrypted_data[..tag_pos]).is_err() { continue; }
+                    if buffer
+                        .extend_from_slice(&encrypted_data[..tag_pos])
+                        .is_err()
+                    {
+                        continue;
+                    }
 
-                    if cipher.decrypt_in_place_detached(nonce, &[], &mut buffer, tag).is_ok() {
+                    if cipher
+                        .decrypt_in_place_detached(nonce, &[], &mut buffer, tag)
+                        .is_ok()
+                    {
                         let mut idx = 0;
                         for chunk in buffer.chunks(4) {
-                            if idx >= param_count { break; }
+                            if idx >= param_count {
+                                break;
+                            }
                             if let Ok(bytes) = chunk.try_into() {
                                 let val = f32::from_le_bytes(bytes);
                                 summed_params[idx] += val;
                                 idx += 1;
                             }
                         }
-                        if idx > 0 { valid_count += 1; }
+                        if idx > 0 {
+                            valid_count += 1;
+                        }
                     }
                 }
             }
@@ -495,7 +513,9 @@ impl SecureAggregation {
 
         let mut result = Vec::new();
         for i in 0..param_count {
-            result.push(summed_params[i] / valid_count as f32).map_err(|_| SwarmError::BufferFull)?;
+            result
+                .push(summed_params[i] / valid_count as f32)
+                .map_err(|_| SwarmError::BufferFull)?;
         }
 
         Ok(result)

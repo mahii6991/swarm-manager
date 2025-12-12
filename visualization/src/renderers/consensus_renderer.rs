@@ -1,16 +1,16 @@
 //! Consensus/SwarmRaft visualization rendering
 
-use egui::{Painter, Pos2, Vec2, Color32, Stroke};
-use crate::state::{ConsensusVisualState, NodeState, MessageType};
+use crate::state::{ConsensusVisualState, MessageType, NodeState};
+use egui::{Color32, Painter, Pos2, Stroke, Vec2};
 
 /// Draw Consensus/SwarmRaft visualization
 pub fn draw<F>(painter: &Painter, state: &ConsensusVisualState, world_to_screen: F, _scale: f32)
 where
     F: Fn(Pos2) -> Pos2,
 {
-    let leader_pos = state.leader_id.and_then(|id| {
-        state.nodes.get(id).map(|n| world_to_screen(n.position))
-    });
+    let leader_pos = state
+        .leader_id
+        .and_then(|id| state.nodes.get(id).map(|n| world_to_screen(n.position)));
 
     // Draw connections from followers to leader
     if let Some(l_pos) = leader_pos {
@@ -31,7 +31,9 @@ where
 
     // Draw messages in flight
     for msg in &state.messages {
-        if let (Some(from_node), Some(to_node)) = (state.nodes.get(msg.from), state.nodes.get(msg.to)) {
+        if let (Some(from_node), Some(to_node)) =
+            (state.nodes.get(msg.from), state.nodes.get(msg.to))
+        {
             let from_pos = world_to_screen(from_node.position);
             let to_pos = world_to_screen(to_node.position);
             let msg_pos = Pos2::new(
@@ -57,7 +59,10 @@ where
         painter.circle_stroke(
             l_pos,
             pulse_radius,
-            Stroke::new(2.0, Color32::from_rgba_premultiplied(255, 200, 100, pulse_alpha)),
+            Stroke::new(
+                2.0,
+                Color32::from_rgba_premultiplied(255, 200, 100, pulse_alpha),
+            ),
         );
     }
 
@@ -134,8 +139,12 @@ where
     painter.text(
         center + Vec2::new(0.0, 90.0),
         egui::Align2::CENTER_CENTER,
-        format!("Term: {} | Commit Index: {} | Entries: {}",
-            state.term, state.committed_index, state.log_entries.len()),
+        format!(
+            "Term: {} | Commit Index: {} | Entries: {}",
+            state.term,
+            state.committed_index,
+            state.log_entries.len()
+        ),
         egui::FontId::monospace(10.0),
         Color32::from_rgb(200, 200, 200),
     );

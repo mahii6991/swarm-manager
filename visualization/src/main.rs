@@ -7,11 +7,11 @@
 //! - Interactive parameter tuning
 
 mod app;
-mod state;
-mod themes;
 mod panels;
 mod renderers;
 mod simulation;
+mod state;
+mod themes;
 
 use app::DroneSwarmApp;
 
