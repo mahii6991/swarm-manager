@@ -1,6 +1,6 @@
 //! Main application state and UI orchestration
 
-use crate::panels::{algorithm, controls, metrics, network, viewport};
+use crate::panels::{algorithm, controls, metrics, network, safety, viewport};
 use crate::state::SimulationState;
 use crate::themes;
 use eframe::egui;
@@ -165,6 +165,16 @@ impl eframe::App for DroneSwarmApp {
                 }
             });
         });
+
+        // Left panel - Safety & Mission
+        egui::SidePanel::left("left_panel")
+            .min_width(250.0)
+            .max_width(320.0)
+            .show(ctx, |ui| {
+                egui::ScrollArea::vertical().show(ui, |ui| {
+                    safety::show(ui, &mut self.state);
+                });
+            });
 
         // Right panel - Controls and Metrics
         egui::SidePanel::right("right_panel")

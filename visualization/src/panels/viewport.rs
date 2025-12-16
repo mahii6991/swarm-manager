@@ -73,6 +73,93 @@ pub fn show(ui: &mut Ui, state: &mut SimulationState) {
         )
     };
 
+    // Draw geofence boundary
+    if state.failsafe_state.geofence_enabled && state.failsafe_state.show_geofence {
+        let center_screen = world_to_screen(Pos2::ZERO);
+        let radius = state.failsafe_state.geofence_radius * state.viewport.zoom;
+        painter.circle_stroke(
+            center_screen,
+            radius,
+            Stroke::new(2.0, Color32::from_rgba_premultiplied(255, 100, 100, 150)),
+        );
+        // Draw warning zone (inner ring at 80%)
+        painter.circle_stroke(
+            center_screen,
+            radius * 0.8,
+            Stroke::new(1.0, Color32::from_rgba_premultiplied(255, 200, 100, 100)),
+        );
+    }
+
+    // Draw mission waypoints and path
+    if state.mission_state.show_waypoints && !state.mission_state.waypoints.is_empty() {
+        let waypoints = &state.mission_state.waypoints;
+
+        // Draw path lines
+        if state.mission_state.show_path && waypoints.len() > 1 {
+            for i in 1..waypoints.len() {
+                let from = world_to_screen(waypoints[i - 1]);
+                let to = world_to_screen(waypoints[i]);
+                let color = if i <= state.mission_state.current_waypoint {
+                    Color32::from_rgba_premultiplied(100, 255, 100, 150) // Completed
+                } else {
+                    Color32::from_rgba_premultiplied(100, 150, 255, 150) // Pending
+                };
+                painter.line_segment([from, to], Stroke::new(2.0, color));
+            }
+        }
+
+        // Draw waypoint markers
+        for (i, wp) in waypoints.iter().enumerate() {
+            let screen_pos = world_to_screen(*wp);
+            let (color, size) = if i < state.mission_state.current_waypoint {
+                (Color32::from_rgb(100, 200, 100), 6.0) // Completed
+            } else if i == state.mission_state.current_waypoint {
+                (Color32::from_rgb(255, 200, 50), 10.0) // Current
+            } else {
+                (Color32::from_rgb(100, 150, 255), 6.0) // Pending
+            };
+
+            painter.circle_filled(screen_pos, size, color);
+            painter.text(
+                screen_pos + Vec2::new(10.0, -10.0),
+                egui::Align2::LEFT_BOTTOM,
+                format!("{}", i + 1),
+                egui::FontId::monospace(10.0),
+                color,
+            );
+        }
+    }
+
+    // Draw collision avoidance zones
+    if state.safety_state.collision_avoidance_enabled && state.safety_state.show_avoidance_zones {
+        for drone in &state.drones {
+            let screen_pos = world_to_screen(drone.position);
+            let radius = state.safety_state.avoidance_radius * state.viewport.zoom;
+
+            // Draw avoidance zone
+            painter.circle_stroke(
+                screen_pos,
+                radius,
+                Stroke::new(1.0, Color32::from_rgba_premultiplied(255, 150, 50, 80)),
+            );
+        }
+
+        // Highlight collision warnings
+        let warnings = state.get_collision_warnings();
+        for (d1_id, d2_id, _dist) in warnings {
+            if let Some(d1) = state.drones.iter().find(|d| d.id == d1_id) {
+                if let Some(d2) = state.drones.iter().find(|d| d.id == d2_id) {
+                    let p1 = world_to_screen(d1.position);
+                    let p2 = world_to_screen(d2.position);
+                    painter.line_segment(
+                        [p1, p2],
+                        Stroke::new(2.0, Color32::from_rgb(255, 50, 50)),
+                    );
+                }
+            }
+        }
+    }
+
     // Draw drone trails
     if state.viewport.show_trails {
         for drone in &state.drones {

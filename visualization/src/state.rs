@@ -45,6 +45,13 @@ pub struct SimulationState {
 
     // Demo mode
     pub demo_mode: Option<DemoMode>,
+
+    // Safety & Mission states
+    pub safety_state: SafetyState,
+    pub mission_state: MissionState,
+    pub telemetry_state: TelemetryState,
+    pub failsafe_state: FailsafeState,
+    pub alerts: Vec<Alert>,
 }
 
 impl SimulationState {
@@ -67,6 +74,11 @@ impl SimulationState {
             viewport: ViewportState::default(),
             selected_drone: None,
             demo_mode: None,
+            safety_state: SafetyState::default(),
+            mission_state: MissionState::default(),
+            telemetry_state: TelemetryState::default(),
+            failsafe_state: FailsafeState::default(),
+            alerts: Vec::new(),
         };
 
         // Initialize drones
@@ -1422,4 +1434,238 @@ pub enum DemoScenario {
     ACOPathfinding,
     GWOHunting,
     ScaleTest,
+}
+
+// ============ Safety State ============
+
+#[derive(Clone, Debug)]
+pub struct SafetyState {
+    pub collision_avoidance_enabled: bool,
+    pub min_separation: f32,
+    pub avoidance_radius: f32,
+    pub show_avoidance_zones: bool,
+}
+
+impl Default for SafetyState {
+    fn default() -> Self {
+        Self {
+            collision_avoidance_enabled: true,
+            min_separation: 5.0,
+            avoidance_radius: 15.0,
+            show_avoidance_zones: true,
+        }
+    }
+}
+
+// ============ Mission State ============
+
+#[derive(Clone, Debug)]
+pub struct MissionState {
+    pub waypoints: Vec<Pos2>,
+    pub current_waypoint: usize,
+    pub is_active: bool,
+    pub show_waypoints: bool,
+    pub show_path: bool,
+}
+
+impl Default for MissionState {
+    fn default() -> Self {
+        Self {
+            waypoints: Vec::new(),
+            current_waypoint: 0,
+            is_active: false,
+            show_waypoints: true,
+            show_path: true,
+        }
+    }
+}
+
+// ============ Telemetry State ============
+
+#[derive(Clone, Debug)]
+pub struct TelemetryState {
+    pub show_health_overlay: bool,
+}
+
+impl Default for TelemetryState {
+    fn default() -> Self {
+        Self {
+            show_health_overlay: true,
+        }
+    }
+}
+
+// ============ Failsafe State ============
+
+#[derive(Clone, Debug)]
+pub struct FailsafeState {
+    pub active_failsafe: Option<String>,
+    pub geofence_enabled: bool,
+    pub geofence_radius: f32,
+    pub show_geofence: bool,
+}
+
+impl Default for FailsafeState {
+    fn default() -> Self {
+        Self {
+            active_failsafe: None,
+            geofence_enabled: true,
+            geofence_radius: 150.0,
+            show_geofence: true,
+        }
+    }
+}
+
+// ============ Alert Types ============
+
+#[derive(Clone, Debug)]
+pub struct Alert {
+    pub message: String,
+    pub severity: String,
+}
+
+// ============ Swarm Telemetry Stats ============
+
+#[derive(Clone, Debug)]
+pub struct SwarmTelemetryStats {
+    pub health_status: String,
+    pub avg_battery: f32,
+    pub min_battery: u8,
+    pub avg_speed: f32,
+    pub max_speed: f32,
+    pub connected_drones: usize,
+    pub total_drones: usize,
+}
+
+// ============ Safety Helper Methods ============
+
+impl SimulationState {
+    /// Get collision warnings for drones that are too close
+    pub fn get_collision_warnings(&self) -> Vec<(u64, u64, f32)> {
+        let mut warnings = Vec::new();
+        for i in 0..self.drones.len() {
+            for j in (i + 1)..self.drones.len() {
+                let dist = self.drones[i].position.distance(self.drones[j].position);
+                if dist < self.safety_state.min_separation * 2.0 {
+                    warnings.push((self.drones[i].id, self.drones[j].id, dist));
+                }
+            }
+        }
+        warnings
+    }
+
+    /// Get swarm telemetry statistics
+    pub fn get_swarm_telemetry(&self) -> SwarmTelemetryStats {
+        if self.drones.is_empty() {
+            return SwarmTelemetryStats {
+                health_status: "No Drones".to_string(),
+                avg_battery: 0.0,
+                min_battery: 0,
+                avg_speed: 0.0,
+                max_speed: 0.0,
+                connected_drones: 0,
+                total_drones: 0,
+            };
+        }
+
+        let total = self.drones.len();
+        let avg_battery: f32 =
+            self.drones.iter().map(|d| d.battery as f32).sum::<f32>() / total as f32;
+        let min_battery = self.drones.iter().map(|d| d.battery).min().unwrap_or(0);
+        let avg_speed: f32 =
+            self.drones.iter().map(|d| d.velocity.length()).sum::<f32>() / total as f32;
+        let max_speed = self
+            .drones
+            .iter()
+            .map(|d| d.velocity.length())
+            .fold(0.0f32, |a, b| a.max(b));
+
+        let health_status = if min_battery < 10 {
+            "Critical"
+        } else if min_battery < 20 {
+            "Warning"
+        } else {
+            "Healthy"
+        }
+        .to_string();
+
+        SwarmTelemetryStats {
+            health_status,
+            avg_battery,
+            min_battery,
+            avg_speed,
+            max_speed,
+            connected_drones: total,
+            total_drones: total,
+        }
+    }
+
+    /// Add a random waypoint for mission planning
+    pub fn add_random_waypoint(&mut self) {
+        let x = (rand::random::<f32>() - 0.5) * 200.0;
+        let y = (rand::random::<f32>() - 0.5) * 200.0;
+        self.mission_state.waypoints.push(Pos2::new(x, y));
+    }
+
+    /// Generate survey pattern waypoints
+    pub fn generate_survey_pattern(&mut self, pattern: &str) {
+        self.mission_state.waypoints.clear();
+        self.mission_state.current_waypoint = 0;
+
+        match pattern {
+            "lawnmower" => {
+                // Lawnmower pattern
+                let rows = 5;
+                let cols = 4;
+                let spacing = 30.0;
+                for row in 0..rows {
+                    if row % 2 == 0 {
+                        for col in 0..cols {
+                            let x = col as f32 * spacing - (cols as f32 * spacing / 2.0);
+                            let y = row as f32 * spacing - (rows as f32 * spacing / 2.0);
+                            self.mission_state.waypoints.push(Pos2::new(x, y));
+                        }
+                    } else {
+                        for col in (0..cols).rev() {
+                            let x = col as f32 * spacing - (cols as f32 * spacing / 2.0);
+                            let y = row as f32 * spacing - (rows as f32 * spacing / 2.0);
+                            self.mission_state.waypoints.push(Pos2::new(x, y));
+                        }
+                    }
+                }
+            }
+            "spiral" => {
+                // Spiral pattern
+                let turns = 3.0;
+                let points = 30;
+                for i in 0..points {
+                    let t = i as f32 / points as f32;
+                    let angle = t * turns * std::f32::consts::TAU;
+                    let radius = t * 80.0;
+                    self.mission_state
+                        .waypoints
+                        .push(Pos2::new(radius * angle.cos(), radius * angle.sin()));
+                }
+            }
+            "square" => {
+                // Square pattern
+                let size = 60.0;
+                self.mission_state.waypoints.push(Pos2::new(-size, -size));
+                self.mission_state.waypoints.push(Pos2::new(size, -size));
+                self.mission_state.waypoints.push(Pos2::new(size, size));
+                self.mission_state.waypoints.push(Pos2::new(-size, size));
+                self.mission_state.waypoints.push(Pos2::new(-size, -size));
+            }
+            _ => {}
+        }
+    }
+
+    /// Trigger a failsafe condition
+    pub fn trigger_failsafe(&mut self, reason: &str) {
+        self.failsafe_state.active_failsafe = Some(reason.to_string());
+        self.alerts.push(Alert {
+            message: format!("FAILSAFE: {}", reason),
+            severity: "Critical".to_string(),
+        });
+    }
 }
