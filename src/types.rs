@@ -124,6 +124,8 @@ pub enum SwarmError {
     SwarmSizeExceeded,
     /// Invalid parameter provided
     InvalidParameter,
+    /// Serialization/deserialization error
+    SerializationError,
 }
 
 impl fmt::Display for SwarmError {
@@ -143,6 +145,7 @@ impl fmt::Display for SwarmError {
             SwarmError::ConfigError => write!(f, "Configuration error"),
             SwarmError::SwarmSizeExceeded => write!(f, "Swarm size exceeded"),
             SwarmError::InvalidParameter => write!(f, "Invalid parameter"),
+            SwarmError::SerializationError => write!(f, "Serialization error"),
         }
     }
 }

@@ -53,20 +53,36 @@
 
 /// Ant Colony Optimization (ACO) for path planning and resource allocation
 pub mod aco;
+/// Advanced collision avoidance algorithms (VO, RVO, ORCA, APF)
+pub mod collision_avoidance;
 /// System configuration and parameter management
 pub mod config;
 /// Raft consensus protocol implementation for distributed coordination
 pub mod consensus;
 /// Cryptographic primitives (ChaCha20Poly1305, Ed25519, key management)
 pub mod crypto;
+/// ESP32 WiFi mesh networking module
+pub mod esp32_mesh;
+/// Failsafe behaviors for drone safety
+pub mod failsafe;
 /// Fault detection, isolation, and recovery mechanisms
 pub mod fault_tolerance;
 /// Federated learning with differential privacy and blockchain verification
 pub mod federated;
 /// Grey Wolf Optimizer (GWO) for multi-objective optimization
 pub mod gwo;
+/// MAVLink flight controller interface (requires simulation feature)
+#[cfg(feature = "simulation")]
+pub mod mavlink_controller;
+/// Multi-drone SITL coordinator for swarm operations
+#[cfg(feature = "simulation")]
+pub mod multi_drone_coordinator;
 /// Merkle Tree for tamper-evident logging (SwarmRaft)
 pub mod merkle;
+/// Mesh network protocol for drone swarm communication
+pub mod mesh_protocol;
+/// Mission planning and waypoint management
+pub mod mission_planning;
 /// Mesh networking, routing, and message passing
 pub mod network;
 /// Particle Swarm Optimization (PSO) for formation control
@@ -79,6 +95,8 @@ pub mod rng;
 pub mod security;
 /// High-level swarm coordination and behavior management
 pub mod swarm;
+/// Telemetry monitoring and alerting system
+pub mod telemetry;
 /// Task allocation logic for the swarm
 pub mod task_allocation;
 /// Platform-agnostic time abstraction for embedded systems
@@ -94,6 +112,9 @@ pub use config::*;
 pub use time_abstraction::{delay_ms, get_time_ms, get_time_us, init_time_source};
 // Re-export core types for convenience
 pub use types::*;
+// Re-export mesh networking types
+pub use esp32_mesh::{MeshConfig, MeshNode, NodeState, ProcessResult};
+pub use mesh_protocol::{CommandAction, CommandTarget, MeshMessage, MeshMessageType, MeshNodeId};
 
 /// Maximum number of drones in a swarm.
 ///

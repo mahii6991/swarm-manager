@@ -108,3 +108,18 @@ required-features = ["simulation"]
 name = "multi_drone_swarm_demo"
 path = "examples/multi_drone_swarm_demo.rs"
 required-features = ["std"]
+
+[[example]]
+name = "esp32_mesh_simulation"
+path = "examples/esp32_mesh_simulation.rs"
+required-features = ["std"]
+
+[[example]]
+name = "flight_control_demo"
+path = "examples/flight_control_demo.rs"
+required-features = ["simulation"]
+
+[[example]]
+name = "swarm_formation_sitl"
+path = "examples/swarm_formation_sitl.rs"
+required-features = ["simulation"]
