@@ -356,7 +356,7 @@ impl MeshMessage {
 
     /// Check if message should be forwarded
     pub fn should_forward(&self, my_id: MeshNodeId) -> bool {
-        self.ttl > 0 && self.source != my_id && self.destination.map_or(true, |d| d != my_id)
+        self.ttl > 0 && self.source != my_id && self.destination != Some(my_id)
     }
 
     // Note: Serialization functions require postcard with use-std feature.

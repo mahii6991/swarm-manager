@@ -301,8 +301,7 @@ impl CollisionAvoidance {
             AvoidanceAlgorithm::Hybrid => {
                 // Combine ORCA and potential field
                 let orca_vel = self.orca(position, safe_vel);
-                let apf_vel = self.potential_field(position, orca_vel);
-                apf_vel
+                self.potential_field(position, orca_vel)
             }
         };
 

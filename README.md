@@ -24,9 +24,14 @@
 | Swarm Algorithms (PSO, ACO, GWO, WOA) | :white_check_mark: Production-ready | Bio-inspired optimization suite |
 | Cryptography (ChaCha20, Ed25519) | :white_check_mark: Production-ready | Military-grade encryption |
 | SwarmRaft Consensus + Merkle Trees | :white_check_mark: Production-ready | Tamper-evident distributed consensus |
-| Hardware Integration (ESP32 WiFi mesh) | :construction: In Progress | Embedded mesh networking |
-| MAVLink Protocol | :clipboard: Roadmap | Flight controller communication |
-| Flight Controller Integration | :clipboard: Roadmap | PX4/ArduPilot support |
+| ESP32 WiFi Mesh Networking | :white_check_mark: Production-ready | Self-healing mesh with auto-discovery |
+| MAVLink Protocol | :white_check_mark: Production-ready | Flight controller communication |
+| PX4 SITL Integration | :white_check_mark: Production-ready | Multi-drone simulation support |
+| Collision Avoidance | :white_check_mark: Production-ready | VO, RVO, ORCA, APF algorithms |
+| Mission Planning | :white_check_mark: Production-ready | Waypoints & survey patterns |
+| Telemetry & Monitoring | :white_check_mark: Production-ready | Health alerts & status tracking |
+| Failsafe Behaviors | :white_check_mark: Production-ready | RTL, land, geofence protection |
+| Interactive Visualization | :white_check_mark: Production-ready | egui-based real-time GUI |
 
 ---
 
@@ -40,6 +45,10 @@
 | :handshake: | **Distributed Consensus** | SwarmRaft protocol with Merkle tree verification for tamper-evident logging |
 | :robot: | **Federated Learning** | Privacy-preserving decentralized model training across the swarm |
 | :zap: | **Real-Time Performance** | Zero heap allocation, `no_std` compatible for embedded systems |
+| :warning: | **Collision Avoidance** | VO, RVO, ORCA, APF algorithms with geofence protection |
+| :world_map: | **Mission Planning** | Waypoint navigation with lawnmower, spiral, square survey patterns |
+| :helicopter: | **Flight Control** | MAVLink integration with PX4/ArduPilot SITL support |
+| :bar_chart: | **Telemetry & Failsafe** | Real-time health monitoring with automated RTL, land, hold behaviors |
 
 ---
 
@@ -151,6 +160,14 @@ network.update_position(position);
 | `fault_tolerance` | Self-healing & automatic failover |
 | `security` | Intrusion detection & threat mitigation |
 | `time_abstraction` | Hardware-agnostic time abstraction layer |
+| `esp32_mesh` | ESP32 WiFi mesh with auto-discovery & self-healing |
+| `mavlink_controller` | MAVLink flight controller interface (PX4/ArduPilot) |
+| `multi_drone_coordinator` | Multi-drone SITL coordination & formations |
+| `collision_avoidance` | VO, RVO, ORCA, APF collision avoidance algorithms |
+| `mission_planning` | Waypoint navigation & survey pattern generation |
+| `telemetry` | Health monitoring, alerts & status tracking |
+| `failsafe` | Safety failsafe behaviors (RTL, land, geofence) |
+| `task_allocation` | Task distribution & priority management |
 
 ---
 
@@ -162,6 +179,9 @@ The interactive GUI provides real-time visualization of:
 - **Algorithm Visualization** - PSO particles, ACO pheromone trails, GWO wolf hierarchy
 - **Network Topology** - Link quality, routing paths, mesh connectivity
 - **Metrics Dashboard** - Convergence graphs, FPS, drone statistics
+- **Safety Panel** - Collision avoidance zones, geofence boundaries, failsafe status
+- **Mission Planning** - Waypoints, paths, survey patterns (lawnmower, spiral, square)
+- **Telemetry Monitoring** - Battery levels, health status, alerts
 
 ```bash
 cargo run -p drone-swarm-visualization --release

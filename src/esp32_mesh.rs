@@ -135,8 +135,10 @@ pub struct MeshStats {
 impl MeshNode {
     /// Create a new mesh node
     pub fn new(node_id: MeshNodeId) -> Self {
-        let mut config = MeshConfig::default();
-        config.node_id = node_id;
+        let config = MeshConfig {
+            node_id,
+            ..MeshConfig::default()
+        };
 
         Self {
             config,
@@ -364,8 +366,8 @@ impl MeshNode {
 
         self.stats.rx_count += 1;
 
-        // Check if message is for us
-        let _is_for_us = msg.destination.map_or(true, |d| d == self.config.node_id);
+        // Check if message is for us (broadcast or addressed to us)
+        let _is_for_us = msg.destination.is_none() || msg.destination == Some(self.config.node_id);
         let is_from_us = msg.source == self.config.node_id;
 
         // Don't process our own messages
