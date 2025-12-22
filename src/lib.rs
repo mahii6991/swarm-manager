@@ -22,16 +22,8 @@
 #![forbid(unsafe_code)]
 #![deny(warnings)]
 #![allow(missing_docs)] // Gradually adding docs - see Week 2-3 goals
-// Standard clippy allows
-#![allow(clippy::manual_range_contains)]
-#![allow(clippy::needless_borrow)]
-#![allow(clippy::excessive_precision)]
-#![allow(clippy::manual_find)]
-#![allow(clippy::manual_is_multiple_of)]
-#![allow(clippy::should_implement_trait)]
-#![allow(clippy::needless_range_loop)]
-#![allow(clippy::default_trait_access)]
-#![allow(clippy::manual_div_ceil)]
+// Standard clippy allows removed
+
 // Pedantic clippy allows (style preferences, not bugs)
 #![allow(clippy::must_use_candidate)] // Many pure functions don't need #[must_use]
 #![allow(clippy::missing_errors_doc)] // Docs will be added in Phase 1 Week 3

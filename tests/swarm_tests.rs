@@ -239,7 +239,7 @@ mod swarm_controller_tests {
     #[test]
     fn test_collision_avoidance_no_peers() {
         let pos = create_position(0.0, 0.0, 10.0);
-        let controller = SwarmController::new(DroneId::new(1), pos);
+        let mut controller = SwarmController::new(DroneId::new(1), pos);
 
         let avoidance = controller.compute_collision_avoidance();
         assert_eq!(avoidance.vx, 0.0);
@@ -320,7 +320,7 @@ mod swarm_controller_tests {
     #[test]
     fn test_compute_control_velocity() {
         let pos = create_position(0.0, 0.0, 10.0);
-        let controller = SwarmController::new(DroneId::new(1), pos);
+        let mut controller = SwarmController::new(DroneId::new(1), pos);
 
         let vel = controller.compute_control_velocity(10.0);
 

@@ -9,6 +9,7 @@
 
 // Consensus, federated, and network types available for integration
 use crate::types::*;
+use crate::collision_avoidance::{CollisionAvoidance, AvoidanceConfig};
 use heapless::{FnvIndexMap, Vec};
 
 /// Swarm formation types
@@ -59,6 +60,8 @@ pub struct SwarmController {
     tasks: Vec<SwarmTask, 100>,
     /// Target position (if any)
     target_position: Option<Position>,
+    /// Collision avoidance system
+    collision_avoidance: CollisionAvoidance,
 }
 
 impl SwarmController {
@@ -82,6 +85,7 @@ impl SwarmController {
             behavior: BehaviorMode::Exploration,
             tasks: Vec::new(),
             target_position: None,
+            collision_avoidance: CollisionAvoidance::new(AvoidanceConfig::default()),
         }
     }
 
@@ -193,39 +197,39 @@ impl SwarmController {
         }
     }
 
-    /// Collision avoidance using artificial potential fields
-    pub fn compute_collision_avoidance(&self) -> Velocity {
-        const REPULSION_DISTANCE: f32 = 10.0; // meters
-        const REPULSION_STRENGTH: f32 = 5.0;
-
-        let mut avoidance = Velocity {
-            vx: 0.0,
-            vy: 0.0,
-            vz: 0.0,
-        };
-
-        // Compute repulsion from nearby drones
-        for peer_state in self.swarm_states.values() {
-            let distance = self.local_state.position.distance_to(&peer_state.position);
-
-            if distance < REPULSION_DISTANCE && distance > 0.01 {
-                // Repulsion force (inverse square law)
-                let force = REPULSION_STRENGTH / (distance * distance);
-
-                // Direction away from peer
-                let dx = self.local_state.position.x - peer_state.position.x;
-                let dy = self.local_state.position.y - peer_state.position.y;
-                let dz = self.local_state.position.z - peer_state.position.z;
-
-                // Normalize and apply force
-                let norm = libm::sqrtf(dx * dx + dy * dy + dz * dz);
-                avoidance.vx += (dx / norm) * force;
-                avoidance.vy += (dy / norm) * force;
-                avoidance.vz += (dz / norm) * force;
-            }
+    /// Update collision avoidance obstacles from swarm state
+    fn update_avoidance_obstacles(&mut self) {
+        self.collision_avoidance.clear_obstacles();
+        for state in self.swarm_states.values() {
+            let _ = self.collision_avoidance.add_obstacle(
+                [state.position.x, state.position.y, -state.position.z],
+                [state.velocity.vx, state.velocity.vy, -state.velocity.vz],
+                0.5 // Default drone radius, could be configurable
+            );
         }
+    }
 
-        avoidance
+    /// Compute collision avoidance velocity (deprecated, wraps new system)
+    /// Returns escape velocity if in danger, otherwise zero
+    pub fn compute_collision_avoidance(&mut self) -> Velocity {
+        self.update_avoidance_obstacles();
+        
+        let current_pos = [
+            self.local_state.position.x,
+            self.local_state.position.y,
+            -self.local_state.position.z
+        ];
+        
+        let safe_vel = self.collision_avoidance.compute_safe_velocity(
+            current_pos,
+            [0.0, 0.0, 0.0] // Zero desired velocity
+        );
+
+        Velocity {
+            vx: safe_vel[0],
+            vy: safe_vel[1],
+            vz: -safe_vel[2],
+        }
     }
 
     /// Compute desired velocity to reach target
@@ -255,15 +259,15 @@ impl SwarmController {
     }
 
     /// Combine velocities for final control output
-    pub fn compute_control_velocity(&self, max_speed: f32) -> Velocity {
+    pub fn compute_control_velocity(&mut self, max_speed: f32) -> Velocity {
+        // Update obstacles first
+        self.update_avoidance_obstacles();
+
         // Get formation position
         let formation_pos = self.compute_formation_position();
 
         // Attraction to formation position
         let formation_vel = self.compute_target_velocity(formation_pos, max_speed);
-
-        // Collision avoidance
-        let avoidance_vel = self.compute_collision_avoidance();
 
         // Target tracking (if target exists)
         let target_vel = if let Some(target) = self.target_position {
@@ -276,27 +280,31 @@ impl SwarmController {
             }
         };
 
-        // Weighted combination
-        const FORMATION_WEIGHT: f32 = 0.4;
-        const AVOIDANCE_WEIGHT: f32 = 0.4;
-        const TARGET_WEIGHT: f32 = 0.2;
+        // Combine desired velocities
+        // Prioritize formation and target
+        let desired_vx = (formation_vel.vx + target_vel.vx).clamp(-max_speed, max_speed);
+        let desired_vy = (formation_vel.vy + target_vel.vy).clamp(-max_speed, max_speed);
+        let desired_vz = (formation_vel.vz + target_vel.vz).clamp(-max_speed, max_speed);
+
+        let current_pos = [
+            self.local_state.position.x,
+            self.local_state.position.y,
+            -self.local_state.position.z
+        ];
+
+        // Apply advanced collision avoidance
+        let safe_vel_array = self.collision_avoidance.compute_safe_velocity(
+            current_pos,
+            [desired_vx, desired_vy, -desired_vz]
+        );
 
         let mut final_vel = Velocity {
-            vx: (formation_vel.vx * FORMATION_WEIGHT
-                + avoidance_vel.vx * AVOIDANCE_WEIGHT
-                + target_vel.vx * TARGET_WEIGHT)
-                .clamp(-100.0, 100.0),
-            vy: (formation_vel.vy * FORMATION_WEIGHT
-                + avoidance_vel.vy * AVOIDANCE_WEIGHT
-                + target_vel.vy * TARGET_WEIGHT)
-                .clamp(-100.0, 100.0),
-            vz: (formation_vel.vz * FORMATION_WEIGHT
-                + avoidance_vel.vz * AVOIDANCE_WEIGHT
-                + target_vel.vz * TARGET_WEIGHT)
-                .clamp(-100.0, 100.0),
+            vx: safe_vel_array[0],
+            vy: safe_vel_array[1],
+            vz: -safe_vel_array[2],
         };
 
-        // Limit to max speed
+        // Limit to max speed (safety check)
         let speed = libm::sqrtf(
             final_vel.vx * final_vel.vx + final_vel.vy * final_vel.vy + final_vel.vz * final_vel.vz,
         );
@@ -416,7 +424,7 @@ mod tests {
             y: 0.0,
             z: 10.0,
         };
-        let controller = SwarmController::new(DroneId::new(1), pos);
+        let mut controller = SwarmController::new(DroneId::new(1), pos);
 
         let avoidance = controller.compute_collision_avoidance();
         // Should be zero with no nearby drones

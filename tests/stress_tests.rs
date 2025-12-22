@@ -758,7 +758,7 @@ fn stress_integration_full_system_under_load() {
         y: 0.0,
         z: 10.0,
     };
-    let swarm = SwarmController::new(DroneId::new(1), pos);
+    let mut swarm = SwarmController::new(DroneId::new(1), pos);
 
     println!("\n  Phase 1: Adding neighbors...");
     for i in 0..20 {
