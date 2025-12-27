@@ -450,10 +450,10 @@ fn gamma_function(z: f32) -> f32 {
         f32::consts::PI / ((f32::consts::PI * z).sin() * gamma_function(1.0 - z))
     } else {
         let z = z - 1.0;
-        let x = 0.999_999_999_970_92
-            + 0.577_215_664_901_53 / (z + 1.0)
-            + (-0.655_878_071_520_26) / (z + 2.0)
-            + 0.420_026_350_340_95 / (z + 3.0);
+        let x = 0.999_999_97
+            + 0.577_215_7 / (z + 1.0)
+            + (-0.655_878_07) / (z + 2.0)
+            + 0.420_026_36 / (z + 3.0);
         (2.0 * f32::consts::PI).sqrt() / z.exp() * (z / f32::consts::E).powf(z + 0.5) * x
     }
 }
@@ -543,10 +543,12 @@ mod tests {
 
     #[test]
     fn test_gwo_optimization_sphere() {
-        let mut config = GWOConfig::default();
-        config.dimensions = 5;
-        config.max_iterations = 50;
-        config.num_wolves = 20;
+        let config = GWOConfig {
+            dimensions: 5,
+            max_iterations: 50,
+            num_wolves: 20,
+            ..Default::default()
+        };
 
         let bounds = Bounds::uniform(config.dimensions, -100.0, 100.0).unwrap();
         let mut optimizer = GWOOptimizer::new(config, bounds).unwrap();
@@ -561,10 +563,12 @@ mod tests {
 
     #[test]
     fn test_hybrid_gwo() {
-        let mut config = GWOConfig::default();
-        config.variant = GWOVariant::Hybrid;
-        config.dimensions = 3;
-        config.max_iterations = 30;
+        let config = GWOConfig {
+            variant: GWOVariant::Hybrid,
+            dimensions: 3,
+            max_iterations: 30,
+            ..Default::default()
+        };
 
         let bounds = Bounds::uniform(config.dimensions, -10.0, 10.0).unwrap();
         let mut optimizer = GWOOptimizer::new(config, bounds).unwrap();

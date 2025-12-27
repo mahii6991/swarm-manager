@@ -137,9 +137,8 @@ pub struct PSOOptions {
     pub use_constriction: bool,
 }
 
-impl PSOOptions {
-    /// Default PSO parameters (standard PSO)
-    pub fn default() -> Self {
+impl Default for PSOOptions {
+    fn default() -> Self {
         Self {
             cognitive: 2.05,
             social: 2.05,
@@ -148,6 +147,9 @@ impl PSOOptions {
             use_constriction: false,
         }
     }
+}
+
+impl PSOOptions {
 
     /// Parameters with constriction coefficient
     pub fn constriction() -> Self {
@@ -268,6 +270,7 @@ impl GlobalBestPSO {
     }
 
     /// Update particle velocity (standard PSO update)
+    #[allow(clippy::needless_range_loop)]
     fn update_velocity(
         particle: &mut Particle,
         options: PSOOptions,
@@ -454,6 +457,7 @@ impl LocalBestPSO {
     }
 
     /// Update velocity for local-best PSO
+    #[allow(clippy::needless_range_loop)]
     fn update_velocity_local(&mut self, particle_idx: usize, lbest: &[f32]) -> Result<()> {
         let particle = &mut self.particles[particle_idx];
 

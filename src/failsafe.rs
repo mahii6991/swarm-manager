@@ -646,9 +646,11 @@ mod tests {
     #[test]
     fn test_low_battery_warning() {
         let mut fsm = FailsafeManager::default();
-        let mut state = FailsafeState::default();
-        state.battery_percent = 25; // Below warning, above critical
-        state.distance_to_home = 200.0; // Far from home
+        let state = FailsafeState {
+            battery_percent: 25, // Below warning, above critical
+            distance_to_home: 200.0, // Far from home
+            ..Default::default()
+        };
         fsm.update_state(state);
 
         let result = fsm.evaluate();
@@ -659,8 +661,10 @@ mod tests {
     #[test]
     fn test_critical_battery() {
         let mut fsm = FailsafeManager::default();
-        let mut state = FailsafeState::default();
-        state.battery_percent = 10; // Critical
+        let state = FailsafeState {
+            battery_percent: 10, // Critical
+            ..Default::default()
+        };
         fsm.update_state(state);
 
         let result = fsm.evaluate();
@@ -671,8 +675,10 @@ mod tests {
     #[test]
     fn test_gps_lost() {
         let mut fsm = FailsafeManager::default();
-        let mut state = FailsafeState::default();
-        state.gps_satellites = 3; // Below minimum
+        let state = FailsafeState {
+            gps_satellites: 3, // Below minimum
+            ..Default::default()
+        };
         fsm.update_state(state);
 
         let result = fsm.evaluate();
@@ -682,8 +688,10 @@ mod tests {
     #[test]
     fn test_geofence_breach() {
         let mut fsm = FailsafeManager::default();
-        let mut state = FailsafeState::default();
-        state.inside_geofence = false;
+        let state = FailsafeState {
+            inside_geofence: false,
+            ..Default::default()
+        };
         fsm.update_state(state);
 
         let result = fsm.evaluate();
@@ -710,11 +718,12 @@ mod tests {
     #[test]
     fn test_priority() {
         let mut fsm = FailsafeManager::default();
-        let mut state = FailsafeState::default();
-
         // Multiple conditions
-        state.battery_percent = 10; // Critical battery (priority 90)
-        state.gps_satellites = 3; // GPS lost (priority 80)
+        let state = FailsafeState {
+            battery_percent: 10, // Critical battery (priority 90)
+            gps_satellites: 3,   // GPS lost (priority 80)
+            ..Default::default()
+        };
         fsm.update_state(state);
 
         let result = fsm.evaluate();
@@ -725,16 +734,23 @@ mod tests {
     #[test]
     fn test_rtl_safety_check() {
         let mut fsm = FailsafeManager::default();
-        let mut state = FailsafeState::default();
-        state.altitude = 50.0;
-        state.battery_percent = 50;
-        state.gps_fix = 3;
+        let state = FailsafeState {
+            altitude: 50.0,
+            battery_percent: 50,
+            gps_fix: 3,
+            ..Default::default()
+        };
         fsm.update_state(state);
 
         assert!(fsm.is_rtl_safe());
 
         // Low altitude
-        state.altitude = 5.0;
+        let state = FailsafeState {
+            altitude: 5.0,
+            battery_percent: 50,
+            gps_fix: 3,
+            ..Default::default()
+        };
         fsm.update_state(state);
         assert!(!fsm.is_rtl_safe());
     }

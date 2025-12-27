@@ -283,7 +283,7 @@ impl FlightController {
             }
             MavMessage::SYS_STATUS(status) => {
                 self.state.battery_voltage = status.voltage_battery as f32 / 1000.0;
-                self.state.battery_percent = status.battery_remaining as i8;
+                self.state.battery_percent = status.battery_remaining;
             }
             _ => {}
         }

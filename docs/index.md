@@ -125,9 +125,72 @@ cargo run --example simple_swarm
 - **Issues**: Report bugs or request features
 - **Pull Requests**: Contribute code improvements
 
+---
+
+## For Companies
+
+### Ready-to-Deploy Autonomous Drone Swarm Infrastructure
+
+#### What You Get
+
+| Component | Description |
+|:----------|:------------|
+| **Rust Swarm Core** | Battle-tested, memory-safe foundation with 13,500+ lines of production code |
+| **Mesh Networking** | Self-healing, multi-hop communication supporting 100+ drones |
+| **Distributed Consensus** | SwarmRaft protocol with Byzantine fault tolerance |
+| **Collision Avoidance** | 4 algorithms (VO, RVO, ORCA, APF) + geofencing |
+| **PX4/SITL Integration** | Ready for hardware-in-the-loop testing and real deployments |
+| **Interactive GUI** | Real-time visualization dashboard for monitoring and control |
+| **Mission Planning** | Waypoint navigation with survey patterns (lawnmower, spiral, grid) |
+| **Failsafe Systems** | RTL, emergency land, altitude hold with configurable triggers |
+| **Cryptographic Security** | ChaCha20-Poly1305 + Ed25519 for secure communications |
+
+#### Who It's For
+
+| Industry | Use Cases |
+|:---------|:----------|
+| **Drone Manufacturers** | Integrate swarm intelligence into your UAV product line |
+| **Defense & Dual-Use** | Tactical reconnaissance, perimeter security, ISR missions |
+| **Security & Surveillance** | Automated patrol, crowd monitoring, critical infrastructure |
+| **Inspection & Mapping** | Solar farms, pipelines, power lines, agricultural surveys |
+| **Research Labs** | Academic research, algorithm development, swarm behavior studies |
+| **Search & Rescue** | Coordinated search patterns, area coverage optimization |
+
+#### Enterprise Features
+
+- **Priority Support** - Direct engineering support with guaranteed response times
+- **Custom Integration** - Tailored integration with your existing drone fleet
+- **Hardware Optimization** - Embedded systems tuning for your specific platforms
+- **Training & Onboarding** - Technical workshops for your engineering team
+- **Source Code Access** - Full source with modification rights for enterprise
+- **Compliance Assistance** - Help with aviation regulatory requirements
+
+### Get Started
+
+<p align="center">
+<strong>Ready to deploy autonomous drone swarms?</strong>
+</p>
+
+<p align="center">
+<a href="mailto:m.s.rajpoot20@gmail.com">Contact for Commercial Licensing</a>
+</p>
+
+<p align="center">
+<a href="mailto:m.s.rajpoot20@gmail.com?subject=Drone%20Swarm%20System%20Demo%20Request&body=Hi%2C%0A%0AI%27m%20interested%20in%20learning%20more%20about%20the%20Drone%20Swarm%20System%20for%20our%20organization.%0A%0ACompany%3A%20%0AUse%20Case%3A%20%0ATimeline%3A%20%0A%0APlease%20contact%20me%20to%20schedule%20a%20demo.%0A%0AThanks!">Schedule a Demo</a>
+</p>
+
+---
+
 ## License
 
+| Component | License |
+|:----------|:--------|
+| Core algorithms (PSO, ACO, GWO, WOA, etc.) | Apache 2.0 (Open Source) |
+| Enterprise features | Commercial license available |
+
 This project is licensed under the Apache License 2.0 - see [LICENSE](https://github.com/mahii6991/drone-swarm-system/blob/main/LICENSE) for details.
+
+**Enterprise Licensing:** For commercial deployments requiring dedicated support, custom integrations, or proprietary features, contact: **m.s.rajpoot20@gmail.com**
 
 ## Citation
 

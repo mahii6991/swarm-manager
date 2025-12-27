@@ -644,8 +644,10 @@ mod tests {
 
     #[test]
     fn test_speed_calculations() {
-        let mut status = DroneStatus::default();
-        status.velocity = [3.0, 4.0, 0.0];
+        let status = DroneStatus {
+            velocity: [3.0, 4.0, 0.0],
+            ..Default::default()
+        };
 
         assert!((status.ground_speed() - 5.0).abs() < 0.001);
         assert!((status.speed_3d() - 5.0).abs() < 0.001);
@@ -669,8 +671,10 @@ mod tests {
         let mut monitor = TelemetryMonitor::new();
         monitor.set_time(1000);
 
-        let mut status = DroneStatus::default();
-        status.battery_percent = 10; // Critical
+        let status = DroneStatus {
+            battery_percent: 10, // Critical
+            ..Default::default()
+        };
         monitor.update_drone(1, status);
 
         let alerts = monitor.check_alerts();
@@ -684,9 +688,11 @@ mod tests {
         monitor.set_time(1000);
 
         for i in 0..3 {
-            let mut status = DroneStatus::default();
-            status.position = [i as f32 * 10.0, 0.0, -10.0];
-            status.battery_percent = 80;
+            let status = DroneStatus {
+                position: [i as f32 * 10.0, 0.0, -10.0],
+                battery_percent: 80,
+                ..Default::default()
+            };
             monitor.update_drone(i, status);
         }
 
@@ -701,17 +707,21 @@ mod tests {
         monitor.set_time(1000);
 
         // Healthy drone (with proper GPS)
-        let mut status = DroneStatus::default();
-        status.gps_satellites = 10;
-        status.gps_fix = 3;
+        let status = DroneStatus {
+            gps_satellites: 10,
+            gps_fix: 3,
+            ..Default::default()
+        };
         monitor.update_drone(1, status);
         assert_eq!(monitor.get_drone(1).unwrap().health, HealthStatus::Healthy);
 
         // Low battery drone
-        let mut status2 = DroneStatus::default();
-        status2.battery_percent = 20;
-        status2.gps_satellites = 10;
-        status2.gps_fix = 3;
+        let status2 = DroneStatus {
+            battery_percent: 20,
+            gps_satellites: 10,
+            gps_fix: 3,
+            ..Default::default()
+        };
         monitor.update_drone(2, status2);
         assert_eq!(monitor.get_drone(2).unwrap().health, HealthStatus::Degraded);
     }

@@ -512,9 +512,9 @@ impl SecureAggregation {
         }
 
         let mut result = Vec::new();
-        for i in 0..param_count {
+        for param in summed_params.iter().take(param_count) {
             result
-                .push(summed_params[i] / valid_count as f32)
+                .push(*param / valid_count as f32)
                 .map_err(|_| SwarmError::BufferFull)?;
         }
 

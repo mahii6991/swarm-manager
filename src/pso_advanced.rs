@@ -407,8 +407,8 @@ impl ConstraintHandler {
     /// Repair mechanism: project infeasible solution to feasible space
     pub fn repair(&self, position: &mut [f32], bounds: &Bounds) {
         // Boundary repair (clamping)
-        for i in 0..position.len() {
-            position[i] = position[i].clamp(bounds.lower[i], bounds.upper[i]);
+        for (i, pos) in position.iter_mut().enumerate() {
+            *pos = pos.clamp(bounds.lower[i], bounds.upper[i]);
         }
 
         // No-fly zone repair: push away if inside
@@ -549,7 +549,7 @@ impl MultiSwarmCoordinator {
         }
 
         // Step 2: Information sharing
-        if self.iteration % self.migration_frequency == 0 {
+        if self.iteration.is_multiple_of(self.migration_frequency) {
             self.share_information()?;
         }
 
@@ -649,7 +649,7 @@ mod tests {
     fn test_topology_ring() {
         let topo = TopologyManager::new(Topology::Ring, 10).unwrap();
         // Each node should have 2 neighbors (k=3, so 1 on each side typically)
-        assert!(topo.get_neighbors(5).len() > 0);
+        assert!(!topo.get_neighbors(5).is_empty());
     }
 
     #[test]

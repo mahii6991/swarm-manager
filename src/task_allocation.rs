@@ -71,12 +71,9 @@ impl TaskAllocator {
 
     /// Get task assignment for drone
     pub fn get_assignment(&self, drone_id: DroneId) -> Option<&SwarmTask> {
-        for task in &self.tasks {
-            if task.assigned_drones.contains(&drone_id) && !task.completed {
-                return Some(task);
-            }
-        }
-        None
+        self.tasks
+            .iter()
+            .find(|task| task.assigned_drones.contains(&drone_id) && !task.completed)
     }
 }
 

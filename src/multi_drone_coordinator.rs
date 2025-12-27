@@ -237,7 +237,7 @@ impl SwarmCoordinator {
                         (0.0, 0.0) // Leader at center
                     } else {
                         let side = if i % 2 == 1 { 1.0 } else { -1.0 };
-                        let row = ((i + 1) / 2) as f32;
+                        let row = (i.div_ceil(2)) as f32;
                         let x = -row * spacing * angle.cos(); // Behind leader
                         let y = side * row * spacing * angle.sin(); // Left or right
                         (x, y)
@@ -274,7 +274,7 @@ impl SwarmCoordinator {
 
             SwarmFormation::Grid { spacing } => {
                 let cols = ((num_drones as f32).sqrt().ceil()) as usize;
-                let rows = (num_drones + cols - 1) / cols;
+                let rows = num_drones.div_ceil(cols);
 
                 let x_offset = -spacing * (cols - 1) as f32 / 2.0;
                 let y_offset = -spacing * (rows - 1) as f32 / 2.0;

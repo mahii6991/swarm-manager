@@ -187,8 +187,8 @@ impl SwarmController {
                 z: self.local_state.position.z,
             }
         } else {
-            let side = if id % 2 == 0 { -1.0 } else { 1.0 };
-            let row = (id + 1) / 2;
+            let side = if id.is_multiple_of(2) { -1.0 } else { 1.0 };
+            let row = id.div_ceil(2);
             Position {
                 x: side * row as f32 * spacing as f32,
                 y: -(row as f32 * spacing as f32),

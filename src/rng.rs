@@ -90,7 +90,7 @@ mod tests {
         let mut rng = SecureRng::new().unwrap();
         for _ in 0..100 {
             let val = rng.next_f32().unwrap();
-            assert!(val >= 0.0 && val < 1.0);
+            assert!((0.0..1.0).contains(&val));
         }
     }
 
@@ -99,7 +99,7 @@ mod tests {
         let mut rng = SecureRng::new().unwrap();
         for _ in 0..100 {
             let val = rng.next_f32_range(-10.0, 10.0).unwrap();
-            assert!(val >= -10.0 && val < 10.0);
+            assert!((-10.0..10.0).contains(&val));
         }
     }
 
