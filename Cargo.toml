@@ -3,10 +3,17 @@ members = [".", "visualization"]
 
 [package]
 name = "drone-swarm-system"
-version = "0.1.0"
+version = "0.2.0"
 edition = "2021"
 authors = ["Drone Swarm Team"]
 description = "Ultra-secure drone swarm communication system with federated learning"
+license = "Apache-2.0"
+repository = "https://github.com/mahii6991/drone-swarm-system"
+documentation = "https://mahii6991.github.io/drone-swarm-system/"
+homepage = "https://github.com/mahii6991/drone-swarm-system"
+readme = "README.md"
+keywords = ["drone", "swarm", "embedded", "mesh-network", "cryptography"]
+categories = ["embedded", "aerospace", "cryptography", "network-programming"]
 
 [dependencies]
 # Core embedded support

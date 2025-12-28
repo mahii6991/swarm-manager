@@ -267,8 +267,8 @@ mod public_api_tests {
 
         let elapsed = get_time_us() - start;
 
-        // Should measure some non-zero time
-        assert!(elapsed >= 0, "Elapsed time should be non-negative");
+        // Elapsed time is valid (u64 is always non-negative)
+        let _ = elapsed; // Verify elapsed was computed
     }
 }
 
@@ -286,7 +286,8 @@ mod time_source_trait_tests {
         let source = StdTimeSource::new();
         let time = use_time_source(&source);
 
-        assert!(time >= 0, "Time source trait object should work");
+        // Time was successfully retrieved via trait object
+        let _ = time;
     }
 
     /// Test that TimeSource can be stored in a vector

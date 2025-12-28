@@ -118,9 +118,8 @@ mod rate_limiter_tests {
 
     #[test]
     fn test_new() {
-        let limiter = RateLimiter::new(100, 1000);
-        // Just verify it creates without panic
-        assert!(true);
+        let _limiter = RateLimiter::new(100, 1000);
+        // Construction succeeded without panic
     }
 
     #[test]

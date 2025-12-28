@@ -137,10 +137,7 @@ mod penalty_method_tests {
     #[test]
     fn test_static_penalty() {
         let method = PenaltyMethod::Static;
-        match method {
-            PenaltyMethod::Static => assert!(true),
-            _ => panic!("Wrong method"),
-        }
+        assert!(matches!(method, PenaltyMethod::Static));
     }
 
     #[test]

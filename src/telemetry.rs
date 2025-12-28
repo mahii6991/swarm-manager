@@ -166,9 +166,9 @@ pub struct DroneStatus {
     pub health: HealthStatus,
     /// CPU temperature (Celsius)
     pub cpu_temp: f32,
-    /// Motor temperatures [4]
+    /// Motor temperatures (array of 4)
     pub motor_temps: [f32; 4],
-    /// Vibration levels [x, y, z]
+    /// Vibration levels (x, y, z)
     pub vibration: [f32; 3],
 }
 

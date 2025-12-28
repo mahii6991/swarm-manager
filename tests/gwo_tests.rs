@@ -41,10 +41,10 @@ mod gwo_variant_tests {
     }
 
     #[test]
-    fn test_variant_clone() {
+    fn test_variant_copy() {
         let variant = GWOVariant::Hybrid;
-        let cloned = variant.clone();
-        assert_eq!(variant, cloned);
+        let copied = variant; // Copy trait
+        assert_eq!(variant, copied);
     }
 }
 

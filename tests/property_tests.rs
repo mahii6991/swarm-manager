@@ -311,7 +311,7 @@ mod math_properties {
             let result = a.saturating_add(b);
             prop_assert!(result >= a);
             prop_assert!(result >= b);
-            prop_assert!(result <= u64::MAX);
+            // saturating_add guarantees no overflow (result is always valid u64)
         }
 
         #[test]
@@ -321,7 +321,7 @@ mod math_properties {
         ) {
             let result = a.saturating_sub(b);
             prop_assert!(result <= a);
-            prop_assert!(result >= 0);
+            // saturating_sub guarantees no underflow (result is always valid u64)
         }
 
         #[test]
@@ -513,8 +513,9 @@ mod telemetry_properties {
         }
 
         #[test]
-        fn alert_count_non_negative(count in 0usize..1000) {
-            prop_assert!(count >= 0, "Alert count cannot be negative");
+        fn alert_count_bounded(count in 0usize..1000) {
+            // usize is always non-negative; verify count is within expected range
+            prop_assert!(count < 1000, "Alert count should be bounded");
         }
 
         #[test]

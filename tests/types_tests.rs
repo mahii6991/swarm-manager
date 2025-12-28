@@ -32,9 +32,9 @@ mod drone_id_tests {
     }
 
     #[test]
-    fn test_drone_id_clone() {
+    fn test_drone_id_traits() {
         let id1 = DroneId::new(999);
-        let id2 = id1.clone();
+        let id2 = id1; // Copy semantics
 
         assert_eq!(id1, id2);
     }
@@ -187,13 +187,13 @@ mod position_tests {
     }
 
     #[test]
-    fn test_position_clone() {
+    fn test_position_traits() {
         let pos1 = Position {
             x: 1.0,
             y: 2.0,
             z: 3.0,
         };
-        let pos2 = pos1.clone();
+        let pos2 = pos1; // Copy semantics
 
         assert_eq!(pos1, pos2);
     }
@@ -277,13 +277,13 @@ mod velocity_tests {
     }
 
     #[test]
-    fn test_velocity_clone() {
+    fn test_velocity_traits() {
         let vel1 = Velocity {
             vx: 5.5,
             vy: 6.6,
             vz: 7.7,
         };
-        let vel2 = vel1.clone();
+        let vel2 = vel1; // Copy semantics
 
         assert_eq!(vel1, vel2);
     }
@@ -360,7 +360,7 @@ mod drone_state_tests {
             timestamp: 3000,
         };
 
-        let state2 = state1.clone();
+        let state2 = state1; // Copy semantics
 
         assert_eq!(state1.id, state2.id);
         assert_eq!(state1.battery, state2.battery);
@@ -385,9 +385,9 @@ mod mission_status_tests {
     }
 
     #[test]
-    fn test_mission_status_clone() {
+    fn test_mission_status_traits() {
         let status1 = MissionStatus::Active;
-        let status2 = status1.clone();
+        let status2 = status1; // Copy semantics
 
         assert_eq!(status1, status2);
     }
@@ -412,7 +412,7 @@ mod mission_status_tests {
 
         // Should be able to create and use all statuses
         for status in &statuses {
-            let _cloned = status.clone();
+            let _copied = *status; // Copy semantics
         }
     }
 }
@@ -541,9 +541,9 @@ mod swarm_error_tests {
     }
 
     #[test]
-    fn test_swarm_error_clone() {
+    fn test_swarm_error_traits() {
         let error1 = SwarmError::NetworkError;
-        let error2 = error1.clone();
+        let error2 = error1; // Copy semantics
 
         assert_eq!(error1, error2);
     }
@@ -552,14 +552,14 @@ mod swarm_error_tests {
     fn test_result_type_ok() {
         let result: Result<u32> = Ok(42);
         assert!(result.is_ok());
-        assert_eq!(result.unwrap(), 42);
+        assert_eq!(result, Ok(42));
     }
 
     #[test]
     fn test_result_type_err() {
         let result: Result<u32> = Err(SwarmError::Timeout);
         assert!(result.is_err());
-        assert_eq!(result.unwrap_err(), SwarmError::Timeout);
+        assert_eq!(result, Err(SwarmError::Timeout));
     }
 }
 
@@ -599,9 +599,9 @@ mod network_address_tests {
     }
 
     #[test]
-    fn test_network_address_clone() {
+    fn test_network_address_traits() {
         let addr1 = NetworkAddress::new([0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 192, 168, 1, 1], 3000);
-        let addr2 = addr1.clone();
+        let addr2 = addr1; // Copy semantics
 
         assert_eq!(addr1, addr2);
     }
@@ -640,9 +640,9 @@ mod security_level_tests {
     }
 
     #[test]
-    fn test_security_level_clone() {
+    fn test_security_level_traits() {
         let level1 = SecurityLevel::Sensitive;
-        let level2 = level1.clone();
+        let level2 = level1; // Copy semantics
 
         assert_eq!(level1, level2);
     }
@@ -675,9 +675,9 @@ mod task_priority_tests {
     }
 
     #[test]
-    fn test_task_priority_clone() {
+    fn test_task_priority_traits() {
         let priority1 = TaskPriority::High;
-        let priority2 = priority1.clone();
+        let priority2 = priority1; // Copy semantics
 
         assert_eq!(priority1, priority2);
     }
