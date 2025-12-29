@@ -80,6 +80,17 @@ hardware-crypto = []  # Enable hardware crypto accelerators
 post-quantum = []     # Enable post-quantum cryptography
 simulation = ["std", "mavlink"]  # Enable SITL simulation support
 
+# Hierarchical consensus for large swarms (500-5000+ drones)
+hierarchical_consensus = []
+
+# Predictive ML-based routing with Kalman filtering
+predictive_routing = []
+
+# Chaos engineering for resilience testing (NEVER enable in production)
+chaos_testing = ["std"]
+# Deterministic chaos testing with seeded RNG (for reproducible tests)
+chaos_deterministic = ["chaos_testing"]
+
 # MAVLink protocol support (optional, requires std)
 [dependencies.mavlink]
 version = "0.13"

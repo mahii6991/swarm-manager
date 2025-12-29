@@ -1,0 +1,1116 @@
+
+================================================================================
+GOD LEVEL ENHANCEMENT PROMPTS FOR DRONE SWARM SYSTEM
+Comprehensive AI Implementation Guide
+================================================================================
+
+OVERVIEW
+--------
+This document contains 10 detailed implementation prompts to enhance the 
+Ultra-Secure Drone Swarm Communication System to "God Level" quality.
+
+Total Effort: 92-116 weeks (23-29 months)
+Total Changes: 82 individual enhancements
+Total Categories: 10 major enhancement areas
+
+USAGE INSTRUCTIONS
+------------------
+1. Provide each prompt to an AI model (GPT-4, Claude, Gemini, etc.)
+2. Review the generated implementation thoroughly
+3. Test comprehensively before integration
+4. Follow the recommended implementation phases
+
+================================================================================
+
+
+
+================================================================================
+PROMPT 1/10: 1. CODE QUALITY & BUG ELIMINATION
+================================================================================
+
+# ENHANCEMENT TASK: CODE QUALITY & BUG ELIMINATION
+
+## CONTEXT
+You are enhancing a Rust-based ultra-secure drone swarm communication system.
+
+**Current State:** 3.31 bugs/file, 1 critical bug remaining, 12 high severity
+**Target State:** Zero critical bugs, <0.1 bugs/file (aerospace-grade)
+**Priority:** CRITICAL
+**Estimated Effort:** 4-6 weeks
+**Risk Level:** LOW
+
+## REQUIREMENTS
+Implement the following 10 enhancements:
+
+1. Fix remaining 1 critical bug immediately
+2. Resolve all 12 high-severity issues
+3. Implement comprehensive unit test coverage (>95%)
+4. Add integration tests for all consensus scenarios
+5. Implement fuzz testing for all network protocols
+6. Add property-based testing (QuickCheck/Proptest)
+7. Implement static analysis with Clippy (pedantic mode)
+8. Add MIRI (Rust undefined behavior detector)
+9. Implement continuous mutation testing
+10. Add formal verification for critical paths (Prusti/Creusot)
+
+## TECHNICAL CONSTRAINTS
+- Must maintain no_std compatibility for embedded systems
+- Must preserve memory safety (zero unsafe code unless absolutely necessary)
+- Must maintain bounded memory usage (heapless data structures)
+- Must be compatible with existing architecture (7-layer design)
+- Must not break existing functionality or tests
+
+## TOOLS & DEPENDENCIES
+Required tools/crates:
+  - cargo-fuzz for fuzzing
+  - proptest for property-based testing
+  - cargo-tarpaulin for coverage
+  - cargo-mutants for mutation testing
+  - Prusti/Creusot for formal verification
+  - MIRI for UB detection
+
+## DELIVERABLES
+1. Complete Rust implementation with:
+   - Full source code for all modules
+   - Comprehensive unit tests (>90% coverage)
+   - Integration tests for critical paths
+   - Documentation (rustdoc comments)
+
+2. Design document explaining:
+   - Architecture decisions
+   - Trade-offs made
+   - Performance characteristics
+   - Security implications
+
+3. Verification evidence:
+   - Test results showing all requirements met
+   - Benchmark results (if applicable)
+   - Security analysis (if applicable)
+
+4. Migration guide:
+   - How to integrate with existing codebase
+   - Configuration changes needed
+   - Backwards compatibility notes
+
+## SUCCESS CRITERIA
+- All 10 requirements fully implemented
+- Zero critical bugs or security vulnerabilities
+- Performance meets or exceeds target state
+- Full test coverage with passing tests
+- Complete documentation
+- Code review ready
+
+## EXAMPLE STRUCTURE (if applicable)
+```rust
+// Example: For cryptographic enhancements
+#![no_std]
+
+use core::...;
+use heapless::...;
+
+/// Documentation here
+pub struct NewFeature {
+    // fields
+}
+
+impl NewFeature {
+    pub fn new() -> Self {
+        // implementation
+    }
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn test_feature() {
+        // tests
+    }
+}
+```
+
+Begin implementation now.
+
+
+================================================================================
+
+
+================================================================================
+PROMPT 2/10: 2. FORMAL VERIFICATION
+================================================================================
+
+# ENHANCEMENT TASK: FORMAL VERIFICATION
+
+## CONTEXT
+You are enhancing a Rust-based ultra-secure drone swarm communication system.
+
+**Current State:** No formal verification, rely on Rust type system
+**Target State:** Formally verified cryptography, consensus, and safety properties
+**Priority:** CRITICAL
+**Estimated Effort:** 12-16 weeks
+**Risk Level:** MEDIUM
+
+## REQUIREMENTS
+Implement the following 8 enhancements:
+
+1. Formally verify all cryptographic operations using hacspec/Coq
+2. Verify consensus algorithm correctness (Raft/PBFT)
+3. Prove memory safety properties beyond Rust guarantees
+4. Verify real-time constraints mathematically
+5. Prove deadlock-freedom in concurrent operations
+6. Verify Byzantine fault tolerance properties
+7. Prove information flow security properties
+8. Verify denial-of-service resistance
+
+## TECHNICAL CONSTRAINTS
+- Must maintain no_std compatibility for embedded systems
+- Must preserve memory safety (zero unsafe code unless absolutely necessary)
+- Must maintain bounded memory usage (heapless data structures)
+- Must be compatible with existing architecture (7-layer design)
+- Must not break existing functionality or tests
+
+## TOOLS & DEPENDENCIES
+Required tools/crates:
+  - Prusti (Rust formal verification)
+  - Creusot (deductive verification)
+  - hacspec (cryptographic specifications)
+  - TLA+ for protocol specification
+  - Coq/Isabelle for theorem proving
+  - UPPAAL for real-time verification
+
+## DELIVERABLES
+1. Complete Rust implementation with:
+   - Full source code for all modules
+   - Comprehensive unit tests (>90% coverage)
+   - Integration tests for critical paths
+   - Documentation (rustdoc comments)
+
+2. Design document explaining:
+   - Architecture decisions
+   - Trade-offs made
+   - Performance characteristics
+   - Security implications
+
+3. Verification evidence:
+   - Test results showing all requirements met
+   - Benchmark results (if applicable)
+   - Security analysis (if applicable)
+
+4. Migration guide:
+   - How to integrate with existing codebase
+   - Configuration changes needed
+   - Backwards compatibility notes
+
+## SUCCESS CRITERIA
+- All 8 requirements fully implemented
+- Zero critical bugs or security vulnerabilities
+- Performance meets or exceeds target state
+- Full test coverage with passing tests
+- Complete documentation
+- Code review ready
+
+## EXAMPLE STRUCTURE (if applicable)
+```rust
+// Example: For cryptographic enhancements
+#![no_std]
+
+use core::...;
+use heapless::...;
+
+/// Documentation here
+pub struct NewFeature {
+    // fields
+}
+
+impl NewFeature {
+    pub fn new() -> Self {
+        // implementation
+    }
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn test_feature() {
+        // tests
+    }
+}
+```
+
+Begin implementation now.
+
+
+================================================================================
+
+
+================================================================================
+PROMPT 3/10: 3. POST-QUANTUM CRYPTOGRAPHY
+================================================================================
+
+# ENHANCEMENT TASK: POST-QUANTUM CRYPTOGRAPHY
+
+## CONTEXT
+You are enhancing a Rust-based ultra-secure drone swarm communication system.
+
+**Current State:** Post-quantum ready architecture but classical crypto only
+**Target State:** Full hybrid classical+post-quantum implementation
+**Priority:** HIGH
+**Estimated Effort:** 8-10 weeks
+**Risk Level:** MEDIUM
+
+## REQUIREMENTS
+Implement the following 8 enhancements:
+
+1. Implement CRYSTALS-Kyber for key encapsulation
+2. Implement CRYSTALS-Dilithium for digital signatures
+3. Add hybrid mode: classical + PQ (defense in depth)
+4. Implement post-quantum AEAD (if available)
+5. Add algorithm agility for future PQ upgrades
+6. Optimize PQ algorithms for embedded systems
+7. Implement constant-time PQ operations
+8. Add side-channel resistance tests
+
+## TECHNICAL CONSTRAINTS
+- Must maintain no_std compatibility for embedded systems
+- Must preserve memory safety (zero unsafe code unless absolutely necessary)
+- Must maintain bounded memory usage (heapless data structures)
+- Must be compatible with existing architecture (7-layer design)
+- Must not break existing functionality or tests
+
+## TOOLS & DEPENDENCIES
+Required tools/crates:
+  - pqcrypto-rust crate
+  - liboqs bindings
+  - constant-time verification tools
+  - side-channel analysis tools (e.g., dudect)
+
+## DELIVERABLES
+1. Complete Rust implementation with:
+   - Full source code for all modules
+   - Comprehensive unit tests (>90% coverage)
+   - Integration tests for critical paths
+   - Documentation (rustdoc comments)
+
+2. Design document explaining:
+   - Architecture decisions
+   - Trade-offs made
+   - Performance characteristics
+   - Security implications
+
+3. Verification evidence:
+   - Test results showing all requirements met
+   - Benchmark results (if applicable)
+   - Security analysis (if applicable)
+
+4. Migration guide:
+   - How to integrate with existing codebase
+   - Configuration changes needed
+   - Backwards compatibility notes
+
+## SUCCESS CRITERIA
+- All 8 requirements fully implemented
+- Zero critical bugs or security vulnerabilities
+- Performance meets or exceeds target state
+- Full test coverage with passing tests
+- Complete documentation
+- Code review ready
+
+## EXAMPLE STRUCTURE (if applicable)
+```rust
+// Example: For cryptographic enhancements
+#![no_std]
+
+use core::...;
+use heapless::...;
+
+/// Documentation here
+pub struct NewFeature {
+    // fields
+}
+
+impl NewFeature {
+    pub fn new() -> Self {
+        // implementation
+    }
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn test_feature() {
+        // tests
+    }
+}
+```
+
+Begin implementation now.
+
+
+================================================================================
+
+
+================================================================================
+PROMPT 4/10: 4. HARDWARE SECURITY MODULE INTEGRATION
+================================================================================
+
+# ENHANCEMENT TASK: HARDWARE SECURITY MODULE INTEGRATION
+
+## CONTEXT
+You are enhancing a Rust-based ultra-secure drone swarm communication system.
+
+**Current State:** Software-only cryptography
+**Target State:** Hardware-backed key storage and crypto acceleration
+**Priority:** HIGH
+**Estimated Effort:** 10-12 weeks
+**Risk Level:** HIGH
+
+## REQUIREMENTS
+Implement the following 8 enhancements:
+
+1. Integrate ARM TrustZone for secure key storage
+2. Add RISC-V Physical Memory Protection (PMP)
+3. Implement secure boot chain
+4. Add hardware crypto acceleration (AES-NI equivalent)
+5. Implement secure random number generation (TRNG)
+6. Add tamper detection and response
+7. Implement secure firmware updates
+8. Add hardware-based attestation
+
+## TECHNICAL CONSTRAINTS
+- Must maintain no_std compatibility for embedded systems
+- Must preserve memory safety (zero unsafe code unless absolutely necessary)
+- Must maintain bounded memory usage (heapless data structures)
+- Must be compatible with existing architecture (7-layer design)
+- Must not break existing functionality or tests
+
+## TOOLS & DEPENDENCIES
+Required tools/crates:
+  - ARM TrustZone SDK
+  - OP-TEE (Open Portable TEE)
+  - RISC-V PMP extensions
+  - Hardware crypto accelerators
+  - TRNG hardware
+
+## DELIVERABLES
+1. Complete Rust implementation with:
+   - Full source code for all modules
+   - Comprehensive unit tests (>90% coverage)
+   - Integration tests for critical paths
+   - Documentation (rustdoc comments)
+
+2. Design document explaining:
+   - Architecture decisions
+   - Trade-offs made
+   - Performance characteristics
+   - Security implications
+
+3. Verification evidence:
+   - Test results showing all requirements met
+   - Benchmark results (if applicable)
+   - Security analysis (if applicable)
+
+4. Migration guide:
+   - How to integrate with existing codebase
+   - Configuration changes needed
+   - Backwards compatibility notes
+
+## SUCCESS CRITERIA
+- All 8 requirements fully implemented
+- Zero critical bugs or security vulnerabilities
+- Performance meets or exceeds target state
+- Full test coverage with passing tests
+- Complete documentation
+- Code review ready
+
+## EXAMPLE STRUCTURE (if applicable)
+```rust
+// Example: For cryptographic enhancements
+#![no_std]
+
+use core::...;
+use heapless::...;
+
+/// Documentation here
+pub struct NewFeature {
+    // fields
+}
+
+impl NewFeature {
+    pub fn new() -> Self {
+        // implementation
+    }
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn test_feature() {
+        // tests
+    }
+}
+```
+
+Begin implementation now.
+
+
+================================================================================
+
+
+================================================================================
+PROMPT 5/10: 5. HIERARCHICAL CONSENSUS ARCHITECTURE
+================================================================================
+
+# ENHANCEMENT TASK: HIERARCHICAL CONSENSUS ARCHITECTURE
+
+## CONTEXT
+You are enhancing a Rust-based ultra-secure drone swarm communication system.
+
+**Current State:** Flat PBFT/Raft, limited to 100 drones
+**Target State:** Hierarchical consensus supporting 10,000+ drones
+**Priority:** HIGH
+**Estimated Effort:** 12-14 weeks
+**Risk Level:** HIGH
+
+## REQUIREMENTS
+Implement the following 8 enhancements:
+
+1. Implement cluster-based hierarchy (groups of 20-50 drones)
+2. Add local cluster consensus (Raft for speed)
+3. Implement global inter-cluster consensus (PBFT for security)
+4. Add adaptive quorum sizing based on network conditions
+5. Implement consensus sharding for parallel processing
+6. Add dynamic cluster reformation on topology changes
+7. Optimize for <100ms consensus even at 10K scale
+8. Add consensus monitoring and metrics
+
+## TECHNICAL CONSTRAINTS
+- Must maintain no_std compatibility for embedded systems
+- Must preserve memory safety (zero unsafe code unless absolutely necessary)
+- Must maintain bounded memory usage (heapless data structures)
+- Must be compatible with existing architecture (7-layer design)
+- Must not break existing functionality or tests
+
+## TOOLS & DEPENDENCIES
+Required tools/crates:
+  - Distributed systems simulator
+  - Network topology analysis tools
+  - Performance profiling tools
+  - TLA+ for protocol verification
+
+## DELIVERABLES
+1. Complete Rust implementation with:
+   - Full source code for all modules
+   - Comprehensive unit tests (>90% coverage)
+   - Integration tests for critical paths
+   - Documentation (rustdoc comments)
+
+2. Design document explaining:
+   - Architecture decisions
+   - Trade-offs made
+   - Performance characteristics
+   - Security implications
+
+3. Verification evidence:
+   - Test results showing all requirements met
+   - Benchmark results (if applicable)
+   - Security analysis (if applicable)
+
+4. Migration guide:
+   - How to integrate with existing codebase
+   - Configuration changes needed
+   - Backwards compatibility notes
+
+## SUCCESS CRITERIA
+- All 8 requirements fully implemented
+- Zero critical bugs or security vulnerabilities
+- Performance meets or exceeds target state
+- Full test coverage with passing tests
+- Complete documentation
+- Code review ready
+
+## EXAMPLE STRUCTURE (if applicable)
+```rust
+// Example: For cryptographic enhancements
+#![no_std]
+
+use core::...;
+use heapless::...;
+
+/// Documentation here
+pub struct NewFeature {
+    // fields
+}
+
+impl NewFeature {
+    pub fn new() -> Self {
+        // implementation
+    }
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn test_feature() {
+        // tests
+    }
+}
+```
+
+Begin implementation now.
+
+
+================================================================================
+
+
+================================================================================
+PROMPT 6/10: 6. NEUROMORPHIC AI & ADVANCED ML
+================================================================================
+
+# ENHANCEMENT TASK: NEUROMORPHIC AI & ADVANCED ML
+
+## CONTEXT
+You are enhancing a Rust-based ultra-secure drone swarm communication system.
+
+**Current State:** Federated learning + swarm optimization
+**Target State:** Spiking neural networks + online learning + genetic algorithms
+**Priority:** MEDIUM
+**Estimated Effort:** 16-20 weeks
+**Risk Level:** HIGH
+
+## REQUIREMENTS
+Implement the following 8 enhancements:
+
+1. Implement Spiking Neural Networks (SNNs) for edge inference
+2. Add online learning for real-time adaptation
+3. Implement genetic algorithms for protocol evolution
+4. Add reinforcement learning for swarm coordination
+5. Implement transfer learning across missions
+6. Add model compression (quantization, pruning)
+7. Optimize for <10mW power consumption
+8. Add adversarial robustness testing
+
+## TECHNICAL CONSTRAINTS
+- Must maintain no_std compatibility for embedded systems
+- Must preserve memory safety (zero unsafe code unless absolutely necessary)
+- Must maintain bounded memory usage (heapless data structures)
+- Must be compatible with existing architecture (7-layer design)
+- Must not break existing functionality or tests
+
+## TOOLS & DEPENDENCIES
+Required tools/crates:
+  - BindsNET or Norse (SNN frameworks)
+  - tch-rs (PyTorch Rust bindings)
+  - Genetic algorithm libraries
+  - ONNX runtime for embedded
+  - Model quantization tools
+
+## DELIVERABLES
+1. Complete Rust implementation with:
+   - Full source code for all modules
+   - Comprehensive unit tests (>90% coverage)
+   - Integration tests for critical paths
+   - Documentation (rustdoc comments)
+
+2. Design document explaining:
+   - Architecture decisions
+   - Trade-offs made
+   - Performance characteristics
+   - Security implications
+
+3. Verification evidence:
+   - Test results showing all requirements met
+   - Benchmark results (if applicable)
+   - Security analysis (if applicable)
+
+4. Migration guide:
+   - How to integrate with existing codebase
+   - Configuration changes needed
+   - Backwards compatibility notes
+
+## SUCCESS CRITERIA
+- All 8 requirements fully implemented
+- Zero critical bugs or security vulnerabilities
+- Performance meets or exceeds target state
+- Full test coverage with passing tests
+- Complete documentation
+- Code review ready
+
+## EXAMPLE STRUCTURE (if applicable)
+```rust
+// Example: For cryptographic enhancements
+#![no_std]
+
+use core::...;
+use heapless::...;
+
+/// Documentation here
+pub struct NewFeature {
+    // fields
+}
+
+impl NewFeature {
+    pub fn new() -> Self {
+        // implementation
+    }
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn test_feature() {
+        // tests
+    }
+}
+```
+
+Begin implementation now.
+
+
+================================================================================
+
+
+================================================================================
+PROMPT 7/10: 7. ADVANCED REAL-TIME PERFORMANCE
+================================================================================
+
+# ENHANCEMENT TASK: ADVANCED REAL-TIME PERFORMANCE
+
+## CONTEXT
+You are enhancing a Rust-based ultra-secure drone swarm communication system.
+
+**Current State:** <50ms operations, no hard real-time guarantees
+**Target State:** Deterministic hard real-time with mathematical bounds
+**Priority:** HIGH
+**Estimated Effort:** 8-10 weeks
+**Risk Level:** MEDIUM
+
+## REQUIREMENTS
+Implement the following 8 enhancements:
+
+1. Implement RTIC (Real-Time Interrupt-driven Concurrency)
+2. Add worst-case execution time (WCET) analysis
+3. Implement priority-based task scheduling
+4. Add deadline monitoring and violation detection
+5. Implement jitter reduction techniques
+6. Add real-time memory allocator (deterministic)
+7. Implement time-triggered architecture for critical paths
+8. Add formal timing verification
+
+## TECHNICAL CONSTRAINTS
+- Must maintain no_std compatibility for embedded systems
+- Must preserve memory safety (zero unsafe code unless absolutely necessary)
+- Must maintain bounded memory usage (heapless data structures)
+- Must be compatible with existing architecture (7-layer design)
+- Must not break existing functionality or tests
+
+## TOOLS & DEPENDENCIES
+Required tools/crates:
+  - RTIC framework
+  - aiT WCET analyzer
+  - Timing analysis tools
+  - Real-time profilers
+  - TLA+ for timing properties
+
+## DELIVERABLES
+1. Complete Rust implementation with:
+   - Full source code for all modules
+   - Comprehensive unit tests (>90% coverage)
+   - Integration tests for critical paths
+   - Documentation (rustdoc comments)
+
+2. Design document explaining:
+   - Architecture decisions
+   - Trade-offs made
+   - Performance characteristics
+   - Security implications
+
+3. Verification evidence:
+   - Test results showing all requirements met
+   - Benchmark results (if applicable)
+   - Security analysis (if applicable)
+
+4. Migration guide:
+   - How to integrate with existing codebase
+   - Configuration changes needed
+   - Backwards compatibility notes
+
+## SUCCESS CRITERIA
+- All 8 requirements fully implemented
+- Zero critical bugs or security vulnerabilities
+- Performance meets or exceeds target state
+- Full test coverage with passing tests
+- Complete documentation
+- Code review ready
+
+## EXAMPLE STRUCTURE (if applicable)
+```rust
+// Example: For cryptographic enhancements
+#![no_std]
+
+use core::...;
+use heapless::...;
+
+/// Documentation here
+pub struct NewFeature {
+    // fields
+}
+
+impl NewFeature {
+    pub fn new() -> Self {
+        // implementation
+    }
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn test_feature() {
+        // tests
+    }
+}
+```
+
+Begin implementation now.
+
+
+================================================================================
+
+
+================================================================================
+PROMPT 8/10: 8. CHAOS ENGINEERING & RESILIENCE
+================================================================================
+
+# ENHANCEMENT TASK: CHAOS ENGINEERING & RESILIENCE
+
+## CONTEXT
+You are enhancing a Rust-based ultra-secure drone swarm communication system.
+
+**Current State:** Byzantine fault tolerance, no chaos testing
+**Target State:** 99.9999% uptime with proven resilience
+**Priority:** MEDIUM
+**Estimated Effort:** 6-8 weeks
+**Risk Level:** LOW
+
+## REQUIREMENTS
+Implement the following 8 enhancements:
+
+1. Implement chaos monkey for automated failure injection
+2. Add network partition simulation and recovery
+3. Implement Byzantine node simulation
+4. Add resource exhaustion testing (CPU, memory, bandwidth)
+5. Implement cascading failure prevention
+6. Add automated recovery verification
+7. Implement circuit breaker patterns
+8. Add degraded mode operation
+
+## TECHNICAL CONSTRAINTS
+- Must maintain no_std compatibility for embedded systems
+- Must preserve memory safety (zero unsafe code unless absolutely necessary)
+- Must maintain bounded memory usage (heapless data structures)
+- Must be compatible with existing architecture (7-layer design)
+- Must not break existing functionality or tests
+
+## TOOLS & DEPENDENCIES
+Required tools/crates:
+  - Chaos engineering framework
+  - Network simulator (ns-3 or similar)
+  - Load testing tools
+  - Failure injection tools
+  - Monitoring and observability stack
+
+## DELIVERABLES
+1. Complete Rust implementation with:
+   - Full source code for all modules
+   - Comprehensive unit tests (>90% coverage)
+   - Integration tests for critical paths
+   - Documentation (rustdoc comments)
+
+2. Design document explaining:
+   - Architecture decisions
+   - Trade-offs made
+   - Performance characteristics
+   - Security implications
+
+3. Verification evidence:
+   - Test results showing all requirements met
+   - Benchmark results (if applicable)
+   - Security analysis (if applicable)
+
+4. Migration guide:
+   - How to integrate with existing codebase
+   - Configuration changes needed
+   - Backwards compatibility notes
+
+## SUCCESS CRITERIA
+- All 8 requirements fully implemented
+- Zero critical bugs or security vulnerabilities
+- Performance meets or exceeds target state
+- Full test coverage with passing tests
+- Complete documentation
+- Code review ready
+
+## EXAMPLE STRUCTURE (if applicable)
+```rust
+// Example: For cryptographic enhancements
+#![no_std]
+
+use core::...;
+use heapless::...;
+
+/// Documentation here
+pub struct NewFeature {
+    // fields
+}
+
+impl NewFeature {
+    pub fn new() -> Self {
+        // implementation
+    }
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn test_feature() {
+        // tests
+    }
+}
+```
+
+Begin implementation now.
+
+
+================================================================================
+
+
+================================================================================
+PROMPT 9/10: 9. OBSERVABILITY & TELEMETRY
+================================================================================
+
+# ENHANCEMENT TASK: OBSERVABILITY & TELEMETRY
+
+## CONTEXT
+You are enhancing a Rust-based ultra-secure drone swarm communication system.
+
+**Current State:** Basic logging with defmt
+**Target State:** Comprehensive observability with real-time monitoring
+**Priority:** MEDIUM
+**Estimated Effort:** 6-8 weeks
+**Risk Level:** LOW
+
+## REQUIREMENTS
+Implement the following 8 enhancements:
+
+1. Implement distributed tracing (OpenTelemetry)
+2. Add real-time metrics collection and visualization
+3. Implement anomaly detection and alerting
+4. Add performance profiling infrastructure
+5. Implement security event monitoring (SIEM)
+6. Add network topology visualization
+7. Implement predictive maintenance alerts
+8. Add mission replay and debugging capabilities
+
+## TECHNICAL CONSTRAINTS
+- Must maintain no_std compatibility for embedded systems
+- Must preserve memory safety (zero unsafe code unless absolutely necessary)
+- Must maintain bounded memory usage (heapless data structures)
+- Must be compatible with existing architecture (7-layer design)
+- Must not break existing functionality or tests
+
+## TOOLS & DEPENDENCIES
+Required tools/crates:
+  - OpenTelemetry for embedded
+  - Prometheus + Grafana
+  - Jaeger for distributed tracing
+  - ELK stack or similar
+  - Custom visualization tools
+
+## DELIVERABLES
+1. Complete Rust implementation with:
+   - Full source code for all modules
+   - Comprehensive unit tests (>90% coverage)
+   - Integration tests for critical paths
+   - Documentation (rustdoc comments)
+
+2. Design document explaining:
+   - Architecture decisions
+   - Trade-offs made
+   - Performance characteristics
+   - Security implications
+
+3. Verification evidence:
+   - Test results showing all requirements met
+   - Benchmark results (if applicable)
+   - Security analysis (if applicable)
+
+4. Migration guide:
+   - How to integrate with existing codebase
+   - Configuration changes needed
+   - Backwards compatibility notes
+
+## SUCCESS CRITERIA
+- All 8 requirements fully implemented
+- Zero critical bugs or security vulnerabilities
+- Performance meets or exceeds target state
+- Full test coverage with passing tests
+- Complete documentation
+- Code review ready
+
+## EXAMPLE STRUCTURE (if applicable)
+```rust
+// Example: For cryptographic enhancements
+#![no_std]
+
+use core::...;
+use heapless::...;
+
+/// Documentation here
+pub struct NewFeature {
+    // fields
+}
+
+impl NewFeature {
+    pub fn new() -> Self {
+        // implementation
+    }
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn test_feature() {
+        // tests
+    }
+}
+```
+
+Begin implementation now.
+
+
+================================================================================
+
+
+================================================================================
+PROMPT 10/10: 10. ADVANCED NETWORK OPTIMIZATION
+================================================================================
+
+# ENHANCEMENT TASK: ADVANCED NETWORK OPTIMIZATION
+
+## CONTEXT
+You are enhancing a Rust-based ultra-secure drone swarm communication system.
+
+**Current State:** AODV-inspired routing, reactive mesh
+**Target State:** ML-based predictive routing with QoS guarantees
+**Priority:** MEDIUM
+**Estimated Effort:** 10-12 weeks
+**Risk Level:** MEDIUM
+
+## REQUIREMENTS
+Implement the following 8 enhancements:
+
+1. Implement ML-based trajectory prediction
+2. Add predictive link quality assessment
+3. Implement QoS routing with latency/bandwidth guarantees
+4. Add multi-path routing with load balancing
+5. Implement cognitive radio for spectrum efficiency
+6. Add beamforming for directional communication
+7. Implement network coding for efficiency
+8. Add SDN-like programmable routing
+
+## TECHNICAL CONSTRAINTS
+- Must maintain no_std compatibility for embedded systems
+- Must preserve memory safety (zero unsafe code unless absolutely necessary)
+- Must maintain bounded memory usage (heapless data structures)
+- Must be compatible with existing architecture (7-layer design)
+- Must not break existing functionality or tests
+
+## TOOLS & DEPENDENCIES
+Required tools/crates:
+  - ML inference engine (embedded)
+  - Network simulation tools
+  - SDR (Software-Defined Radio) support
+  - Network coding libraries
+  - Optimization solvers
+
+## DELIVERABLES
+1. Complete Rust implementation with:
+   - Full source code for all modules
+   - Comprehensive unit tests (>90% coverage)
+   - Integration tests for critical paths
+   - Documentation (rustdoc comments)
+
+2. Design document explaining:
+   - Architecture decisions
+   - Trade-offs made
+   - Performance characteristics
+   - Security implications
+
+3. Verification evidence:
+   - Test results showing all requirements met
+   - Benchmark results (if applicable)
+   - Security analysis (if applicable)
+
+4. Migration guide:
+   - How to integrate with existing codebase
+   - Configuration changes needed
+   - Backwards compatibility notes
+
+## SUCCESS CRITERIA
+- All 8 requirements fully implemented
+- Zero critical bugs or security vulnerabilities
+- Performance meets or exceeds target state
+- Full test coverage with passing tests
+- Complete documentation
+- Code review ready
+
+## EXAMPLE STRUCTURE (if applicable)
+```rust
+// Example: For cryptographic enhancements
+#![no_std]
+
+use core::...;
+use heapless::...;
+
+/// Documentation here
+pub struct NewFeature {
+    // fields
+}
+
+impl NewFeature {
+    pub fn new() -> Self {
+        // implementation
+    }
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn test_feature() {
+        // tests
+    }
+}
+```
+
+Begin implementation now.
+
+
+================================================================================

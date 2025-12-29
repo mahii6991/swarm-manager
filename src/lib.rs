@@ -98,6 +98,58 @@ pub mod types;
 /// Whale Optimization Algorithm (WOA) for advanced path planning
 pub mod woa;
 
+// ═══════════════════════════════════════════════════════════════════════════
+// HIERARCHICAL CONSENSUS (Feature-gated for 500-5000+ drone swarms)
+// ═══════════════════════════════════════════════════════════════════════════
+
+/// Core types for hierarchical consensus (clusters, regions, PBFT)
+#[cfg(feature = "hierarchical_consensus")]
+pub mod hierarchy_types;
+
+/// Cluster management for large swarms
+#[cfg(feature = "hierarchical_consensus")]
+pub mod cluster_manager;
+
+/// PBFT (Practical Byzantine Fault Tolerance) protocol
+#[cfg(feature = "hierarchical_consensus")]
+pub mod pbft;
+
+/// Hierarchical consensus coordinator
+#[cfg(feature = "hierarchical_consensus")]
+pub mod hierarchical_consensus;
+
+// ═══════════════════════════════════════════════════════════════════════════
+// PREDICTIVE ROUTING (ML-based proactive routing)
+// ═══════════════════════════════════════════════════════════════════════════
+
+/// Kalman filter for trajectory prediction
+#[cfg(feature = "predictive_routing")]
+pub mod trajectory_predictor;
+
+/// Link quality prediction
+#[cfg(feature = "predictive_routing")]
+pub mod link_predictor;
+
+/// Proactive route management
+#[cfg(feature = "predictive_routing")]
+pub mod proactive_routing;
+
+// ═══════════════════════════════════════════════════════════════════════════
+// CHAOS ENGINEERING (Testing only - NEVER enable in production)
+// ═══════════════════════════════════════════════════════════════════════════
+
+/// Chaos engineering controller
+#[cfg(feature = "chaos_testing")]
+pub mod chaos_monkey;
+
+/// Fault injection engine
+#[cfg(feature = "chaos_testing")]
+pub mod fault_injector;
+
+/// Resilience scoring and metrics
+#[cfg(feature = "chaos_testing")]
+pub mod resilience_scorer;
+
 // Re-export configuration types for convenience
 pub use config::*;
 // Re-export time functions for easy access
@@ -108,12 +160,25 @@ pub use types::*;
 pub use esp32_mesh::{MeshConfig, MeshNode, NodeState, ProcessResult};
 pub use mesh_protocol::{CommandAction, CommandTarget, MeshMessage, MeshMessageType, MeshNodeId};
 
-/// Maximum number of drones in a swarm.
+/// Maximum number of drones in a swarm (flat consensus mode).
 ///
 /// This limit ensures bounded memory usage in embedded systems.
 /// Increasing this value requires more heap/stack space for neighbor tables,
 /// routing information, and consensus state.
+///
+/// For larger swarms (500-5000+), use the `hierarchical_consensus` feature
+/// which organizes drones into clusters with PBFT-based coordination.
 pub const MAX_SWARM_SIZE: usize = 100;
+
+/// Maximum swarm size with hierarchical consensus enabled.
+///
+/// When using 3-tier hierarchy:
+/// - Tier 1: 8 drones per cluster (Raft)
+/// - Tier 2: 10 clusters per region (PBFT)
+/// - Tier 3: 50 regions (vote aggregation)
+/// Total: 8 × 10 × 50 = 4000 drones (practical limit ~5000)
+#[cfg(feature = "hierarchical_consensus")]
+pub const MAX_HIERARCHICAL_SWARM_SIZE: usize = 5000;
 
 /// Maximum message size in bytes.
 ///

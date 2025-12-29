@@ -1,0 +1,221 @@
+
+================================================================================
+MASTER IMPLEMENTATION PROMPT: DRONE SWARM SYSTEM GOD LEVEL UPGRADE
+================================================================================
+
+# PROJECT OVERVIEW
+
+You are tasked with upgrading an Ultra-Secure Drone Swarm Communication System 
+from industry-grade (83.6% quality) to "God Level" (aerospace/military-grade).
+
+## CURRENT STATE
+- **Architecture**: 7-layer Rust-based embedded system
+- **Quality Score**: 83.6% (58.5/70)
+- **Bugs**: 1 critical, 12 high-severity issues remaining
+- **Defect Rate**: 3.31 bugs/file (professional grade)
+- **Scalability**: Limited to 100 drones
+- **Crypto**: Classical only (ChaCha20, Ed25519)
+- **ML**: Basic federated learning
+- **Real-time**: <50ms operations (soft real-time)
+
+## TARGET STATE (GOD LEVEL)
+- **Quality Score**: >95% (aerospace-grade)
+- **Defect Rate**: <0.1 bugs/KLOC (zero critical bugs)
+- **Scalability**: 10,000+ drones with <100ms consensus
+- **Crypto**: Hybrid classical + post-quantum, formally verified
+- **ML**: Neuromorphic AI with self-adaptive protocols
+- **Real-time**: Hard real-time guarantees with WCET proofs
+- **Reliability**: 99.9999% uptime (six nines)
+
+## COMPREHENSIVE ENHANCEMENT REQUIREMENTS
+
+### Total Scope
+- **Enhancement Categories**: 10 major areas
+- **Individual Changes**: 82 specific enhancements
+- **New Files to Create**: 36+ new Rust modules
+- **Tools Required**: 50+ specialized tools/libraries
+- **Estimated Effort**: 92-116 weeks (23-29 months)
+- **Team Size**: 8-12 engineers recommended
+
+### CRITICAL PATH (Phases 1-2, Weeks 1-50)
+
+#### PHASE 1: FOUNDATION (Weeks 1-20)
+**Priority: CRITICAL | Risk: LOW-MEDIUM**
+
+1. **CODE QUALITY & BUG ELIMINATION** (4-6 weeks)
+   - Fix 1 remaining critical bug + 12 high-severity issues immediately
+   - Achieve >95% unit test coverage (cargo-tarpaulin)
+   - Implement fuzz testing for all network protocols (cargo-fuzz)
+   - Add property-based testing (proptest)
+   - Enable Clippy pedantic mode + MIRI undefined behavior detection
+   - Implement continuous mutation testing (cargo-mutants)
+
+2. **FORMAL VERIFICATION** (12-16 weeks)
+   - Formally verify cryptographic operations (hacspec/Coq)
+   - Verify consensus correctness with TLA+
+   - Prove memory safety beyond Rust guarantees (Prusti/Creusot)
+   - Verify real-time constraints and deadlock-freedom
+   - Prove Byzantine fault tolerance properties
+   - Verify information flow security
+
+#### PHASE 2: SECURITY HARDENING (Weeks 21-50)
+**Priority: HIGH | Risk: MEDIUM-HIGH**
+
+3. **POST-QUANTUM CRYPTOGRAPHY** (8-10 weeks)
+   - Implement CRYSTALS-Kyber (KEM) + CRYSTALS-Dilithium (signatures)
+   - Create hybrid mode: classical + PQ (defense in depth)
+   - Optimize for embedded systems with constant-time operations
+   - Add side-channel resistance (dudect verification)
+   - Implement cryptographic agility for future upgrades
+
+4. **HARDWARE SECURITY MODULE INTEGRATION** (10-12 weeks)
+   - Integrate ARM TrustZone secure enclaves for key storage
+   - Add RISC-V Physical Memory Protection (PMP)
+   - Implement secure boot chain with attestation
+   - Add hardware crypto acceleration (5-10x speedup)
+   - Implement TRNG for cryptographic entropy
+   - Add tamper detection and response
+
+5. **ADVANCED REAL-TIME PERFORMANCE** (8-10 weeks)
+   - Implement RTIC (Real-Time Interrupt-driven Concurrency)
+   - Add worst-case execution time (WCET) analysis
+   - Implement priority-based task scheduling with deadline monitoring
+   - Add jitter reduction and deterministic memory allocation
+   - Prove formal timing properties
+
+### HIGH PRIORITY (Phase 3, Weeks 51-80)
+
+6. **HIERARCHICAL CONSENSUS ARCHITECTURE** (12-14 weeks)
+   - Redesign from flat to hierarchical (clusters of 20-50 drones)
+   - Local cluster consensus (Raft) + global inter-cluster (PBFT)
+   - Adaptive quorum sizing based on network conditions
+   - Consensus sharding for parallel processing
+   - Scale to 10,000+ drones with <100ms consensus
+
+7. **NEUROMORPHIC AI & ADVANCED ML** (16-20 weeks)
+   - Implement Spiking Neural Networks (SNNs) for ultra-low power
+   - Add online learning for real-time adaptation
+   - Implement genetic algorithms for protocol evolution
+   - Add reinforcement learning for swarm coordination
+   - Model compression (quantization, pruning) for embedded
+   - Target <10mW power consumption for ML inference
+
+### MEDIUM PRIORITY (Phases 4-5, Weeks 81-116)
+
+8. **CHAOS ENGINEERING & RESILIENCE** (6-8 weeks)
+   - Implement chaos monkey for automated failure injection
+   - Add Byzantine node simulation and network partition recovery
+   - Implement circuit breaker patterns and graceful degradation
+   - Prove 99.9999% uptime through extensive testing
+
+9. **OBSERVABILITY & TELEMETRY** (6-8 weeks)
+   - Implement distributed tracing (OpenTelemetry)
+   - Add real-time metrics (Prometheus + Grafana)
+   - Implement anomaly detection and SIEM
+   - Add mission replay and debugging capabilities
+
+10. **ADVANCED NETWORK OPTIMIZATION** (10-12 weeks)
+    - Implement ML-based trajectory prediction for routing
+    - Add QoS routing with latency/bandwidth guarantees
+    - Multi-path routing with load balancing
+    - Implement cognitive radio and beamforming
+    - Add network coding for efficiency
+
+## LAYER-BY-LAYER IMPLEMENTATION GUIDE
+
+### Layer 1: Hardware Abstraction Layer (HAL)
+**New Files**: src/hal/trustzone.rs, trng.rs, crypto_accel.rs, secure_boot.rs, tamper_detect.rs
+**Key Changes**: ARM TrustZone integration, TRNG driver, hardware crypto, secure boot, MPU config
+
+### Layer 2: Network Layer
+**New Files**: src/network/ml_routing.rs, qos.rs, multipath.rs, link_prediction.rs, network_coding.rs
+**Key Changes**: ML-based routing, QoS classes, multi-path, predictive links, cognitive radio
+
+### Layer 3: Security & Cryptography Layer
+**New Files**: src/crypto/pq_kem.rs, pq_signature.rs, hybrid_crypto.rs, verified_ops.rs, constant_time.rs
+**Key Changes**: Post-quantum crypto, hybrid mode, formal verification, constant-time, side-channel resistance
+
+### Layer 4: Consensus Layer
+**New Files**: src/consensus/hierarchical.rs, adaptive_quorum.rs, sharding.rs, cluster_manager.rs, metrics.rs
+**Key Changes**: Hierarchical consensus, adaptive quorum, sharding, dynamic clustering, monitoring
+
+### Layer 5: Federated Learning Layer
+**New Files**: src/ml/snn.rs, online_learning.rs, quantization.rs, adversarial.rs, transfer_learning.rs, privacy.rs
+**Key Changes**: SNNs, online learning, quantization, adversarial testing, transfer learning, differential privacy
+
+### Layer 6: Swarm Coordination Layer
+**New Files**: src/swarm/genetic_algorithms.rs, reinforcement.rs, energy_aware.rs, mission_optimizer.rs, formation.rs
+**Key Changes**: Genetic algorithms, RL, energy-harvesting routing, mission optimization, formation control
+
+### Layer 7: Fault Tolerance Layer
+**New Files**: src/fault_tolerance/chaos_monkey.rs, failure_injection.rs, circuit_breaker.rs, degradation.rs, recovery.rs
+**Key Changes**: Chaos engineering, failure injection, circuit breakers, degradation modes, automated recovery
+
+## CERTIFICATION COMPLIANCE
+
+This enhancement roadmap aligns with the following standards:
+
+- **DO-178C Level A** (Aerospace): Enhancements #1, #2, #5, #7, #9
+- **Common Criteria EAL7** (Security): Enhancements #2, #3, #4
+- **MIL-STD-882E** (Military Safety): Enhancements #3, #4, #7, #8, #10
+- **IEC 61508 SIL 3** (Functional Safety): Enhancements #5, #6, #7, #8, #10
+- **NASA Software Safety Class A**: Enhancements #1, #2, #7, #9
+
+## TECHNICAL CONSTRAINTS
+
+1. **Must maintain no_std compatibility** for embedded systems
+2. **Preserve memory safety** (minimize unsafe code)
+3. **Bounded memory usage** (heapless data structures)
+4. **Compatible with 7-layer architecture** (no breaking changes)
+5. **Backwards compatible** where possible
+6. **Zero tolerance for critical bugs** in production code
+
+## DELIVERABLES
+
+For each enhancement category, provide:
+
+1. **Complete Rust implementation**
+   - Full source code for all 36+ new modules
+   - Comprehensive unit tests (>90% coverage)
+   - Integration tests for critical paths
+   - Complete rustdoc documentation
+
+2. **Design documentation**
+   - Architecture decisions and trade-offs
+   - Performance characteristics and benchmarks
+   - Security analysis and threat models
+   - Compliance mapping to relevant standards
+
+3. **Verification evidence**
+   - All tests passing (unit, integration, fuzz, property-based)
+   - Formal verification proofs (where applicable)
+   - WCET analysis results (real-time components)
+   - Security audit results
+
+4. **Migration guides**
+   - Integration instructions for existing codebase
+   - Configuration changes required
+   - Backwards compatibility notes
+   - Deployment procedures
+
+## SUCCESS CRITERIA
+
+✓ Zero critical bugs or security vulnerabilities
+✓ All 82 enhancements fully implemented and tested
+✓ >95% test coverage across all modules
+✓ Formal verification completed for critical paths
+✓ Performance meets or exceeds all target states
+✓ Documentation complete and review-ready
+✓ Ready for aerospace/military-grade certification
+
+## PRIORITY ORDERING
+
+**CRITICAL (Start Immediately)**: Enhancements #1, #2
+**HIGH (Weeks 21-80)**: Enhancements #3, #4, #5, #6, #7
+**MEDIUM (Weeks 81-116)**: Enhancements #8, #9, #10
+
+Note: Phases can be parallelized with separate teams working on independent enhancements simultaneously.
+
+================================================================================
+BEGIN IMPLEMENTATION
+================================================================================
