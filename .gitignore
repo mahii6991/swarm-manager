@@ -85,6 +85,9 @@ credentials.json
 Documentation/
 docs/internal/
 
+# Knowledge base (local AI/research notes)
+knowledge base/
+
 # Markdown files (keep locally, not in repo)
 # Exception: README.md and docs/ are allowed
 *.md
