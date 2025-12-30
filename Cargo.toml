@@ -91,6 +91,12 @@ chaos_testing = ["std"]
 # Deterministic chaos testing with seeded RNG (for reproducible tests)
 chaos_deterministic = ["chaos_testing"]
 
+# Unified meta-heuristic interface for algorithm switching
+hybrid_metaheuristic = []
+
+# Deep reinforcement learning for algorithm selection (Q-learning)
+deep_rl = ["hybrid_metaheuristic"]
+
 # MAVLink protocol support (optional, requires std)
 [dependencies.mavlink]
 version = "0.13"
@@ -141,3 +147,8 @@ required-features = ["simulation"]
 name = "swarm_formation_sitl"
 path = "examples/swarm_formation_sitl.rs"
 required-features = ["simulation"]
+
+[[example]]
+name = "deep_rl_optimization"
+path = "examples/deep_rl_optimization.rs"
+required-features = ["deep_rl"]

@@ -150,6 +150,26 @@ pub mod fault_injector;
 #[cfg(feature = "chaos_testing")]
 pub mod resilience_scorer;
 
+// ═══════════════════════════════════════════════════════════════════════════
+// HYBRID META-HEURISTICS (Unified algorithm interface)
+// ═══════════════════════════════════════════════════════════════════════════
+
+/// Unified meta-heuristic trait and algorithm adapters
+#[cfg(feature = "hybrid_metaheuristic")]
+pub mod meta_heuristic;
+
+// ═══════════════════════════════════════════════════════════════════════════
+// DEEP REINFORCEMENT LEARNING (Q-learning algorithm selection)
+// ═══════════════════════════════════════════════════════════════════════════
+
+/// Q-learning based algorithm selector
+#[cfg(feature = "deep_rl")]
+pub mod algorithm_selector;
+
+/// Hybrid optimizer with RL-based algorithm switching
+#[cfg(feature = "deep_rl")]
+pub mod hybrid_optimizer;
+
 // Re-export configuration types for convenience
 pub use config::*;
 // Re-export time functions for easy access
