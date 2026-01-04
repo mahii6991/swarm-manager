@@ -24,6 +24,8 @@
 //! let action = fsm.evaluate();
 //! ```
 
+use log::warn;
+
 /// Failsafe actions ordered by severity
 #[derive(Debug, Clone, Copy, PartialEq, Eq, PartialOrd, Ord)]
 pub enum FailsafeAction {
@@ -425,6 +427,10 @@ impl FailsafeManager {
         // Update active failsafe if higher priority
         if result.priority > self.active_failsafe.priority {
             if result.action != FailsafeAction::None {
+                warn!(
+                    "FAILSAFE TRIGGERED: {:?} due to {:?} - {}",
+                    result.action, result.trigger, result.message
+                );
                 self.trigger_count += 1;
             }
             self.active_failsafe = result.clone();

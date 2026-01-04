@@ -11,6 +11,97 @@ use core::f32;
 use heapless::{FnvIndexMap, Vec};
 
 // ═══════════════════════════════════════════════════════════════════════════
+// SPATIAL HASHING FOR O(n) COLLISION DETECTION
+// ═══════════════════════════════════════════════════════════════════════════
+
+/// Grid cell size for spatial hashing
+const SPATIAL_CELL_SIZE: f32 = 10.0;
+/// Maximum cells in spatial grid (8x8x8 = 512 cells)
+const MAX_SPATIAL_CELLS: usize = 512;
+/// Maximum particles per cell
+const MAX_PARTICLES_PER_CELL: usize = 16;
+
+/// Spatial hash grid for O(n) average collision detection
+/// Instead of checking all n² particle pairs, we only check particles
+/// in the same or adjacent grid cells.
+pub struct SpatialGrid {
+    /// Cell contents: maps cell_id -> list of particle indices
+    cells: FnvIndexMap<u32, Vec<usize, MAX_PARTICLES_PER_CELL>, MAX_SPATIAL_CELLS>,
+    /// Cell size (should be >= min_distance for correct collision detection)
+    cell_size: f32,
+}
+
+impl SpatialGrid {
+    /// Create new spatial grid with given cell size
+    pub fn new(cell_size: f32) -> Self {
+        Self {
+            cells: FnvIndexMap::new(),
+            cell_size: if cell_size > 0.0 { cell_size } else { SPATIAL_CELL_SIZE },
+        }
+    }
+
+    /// Hash 3D position to cell ID
+    fn hash_position(&self, x: f32, y: f32, z: f32) -> u32 {
+        // Offset to handle negative coordinates
+        let offset = 1000.0;
+        let cx = ((x + offset) / self.cell_size) as i32;
+        let cy = ((y + offset) / self.cell_size) as i32;
+        let cz = ((z + offset) / self.cell_size) as i32;
+
+        // Combine into single hash (8 bits each, wrapping for out-of-range)
+        let hx = (cx & 0xFF) as u32;
+        let hy = (cy & 0xFF) as u32;
+        let hz = (cz & 0xFF) as u32;
+
+        (hx << 16) | (hy << 8) | hz
+    }
+
+    /// Clear and rebuild grid from particle positions
+    pub fn rebuild(&mut self, positions: &[Vec<f32, MAX_DIMENSIONS>]) {
+        self.cells.clear();
+
+        for (idx, pos) in positions.iter().enumerate() {
+            if pos.len() >= 3 {
+                let cell_id = self.hash_position(pos[0], pos[1], pos[2]);
+                if let Some(cell) = self.cells.get_mut(&cell_id) {
+                    let _ = cell.push(idx);
+                } else {
+                    let mut new_cell = Vec::new();
+                    let _ = new_cell.push(idx);
+                    let _ = self.cells.insert(cell_id, new_cell);
+                }
+            }
+        }
+    }
+
+    /// Get particles in same and adjacent cells for collision checking
+    /// Returns indices of particles that might collide with particle at given position
+    pub fn get_nearby_particles(&self, x: f32, y: f32, z: f32) -> Vec<usize, 128> {
+        let mut nearby = Vec::new();
+
+        // Check 3x3x3 neighborhood of cells
+        for dx in -1i32..=1 {
+            for dy in -1i32..=1 {
+                for dz in -1i32..=1 {
+                    let nx = x + (dx as f32) * self.cell_size;
+                    let ny = y + (dy as f32) * self.cell_size;
+                    let nz = z + (dz as f32) * self.cell_size;
+                    let cell_id = self.hash_position(nx, ny, nz);
+
+                    if let Some(cell) = self.cells.get(&cell_id) {
+                        for &idx in cell.iter() {
+                            let _ = nearby.push(idx);
+                        }
+                    }
+                }
+            }
+        }
+
+        nearby
+    }
+}
+
+// ═══════════════════════════════════════════════════════════════════════════
 // FEATURE 1: ADVANCED TOPOLOGY SUPPORT
 // ═══════════════════════════════════════════════════════════════════════════
 
@@ -245,6 +336,8 @@ pub struct ConstraintHandler {
     iteration: u32,
     /// Particle positions for collision checking (BUG-007 FIX)
     particle_positions: Vec<Vec<f32, MAX_DIMENSIONS>, MAX_PARTICLES>,
+    /// Spatial grid for O(n) collision detection (performance optimization)
+    spatial_grid: SpatialGrid,
 }
 
 #[derive(Debug, Clone, Copy)]
@@ -265,15 +358,26 @@ impl ConstraintHandler {
             penalty_method,
             iteration: 0,
             particle_positions: Vec::new(),
+            spatial_grid: SpatialGrid::new(SPATIAL_CELL_SIZE),
         }
     }
 
     /// Set particle positions for collision checking (BUG-007 FIX)
+    /// Also rebuilds the spatial grid for O(n) collision detection
     pub fn set_particle_positions(&mut self, positions: &[Vec<f32, MAX_DIMENSIONS>]) {
         self.particle_positions.clear();
         for pos in positions {
             let _ = self.particle_positions.push(pos.clone());
         }
+        // Rebuild spatial grid for fast collision queries
+        self.spatial_grid.rebuild(&self.particle_positions);
+    }
+
+    /// Update spatial grid cell size based on collision min_distance
+    pub fn set_collision_cell_size(&mut self, min_distance: f32) {
+        // Cell size should be >= min_distance to ensure all potential
+        // collisions are found within the 3x3x3 cell neighborhood
+        self.spatial_grid = SpatialGrid::new(min_distance.max(1.0));
     }
 
     /// Add constraint
@@ -328,21 +432,35 @@ impl ConstraintHandler {
                     weight,
                 } => {
                     // BUG-007 FIX: Implement collision detection
+                    // PERF: Use spatial grid for O(n) average case instead of O(n²)
                     let mut collision_penalty = 0.0;
 
-                    // Check distance to all other particles
-                    for (j, other_pos) in self.particle_positions.iter().enumerate() {
-                        if j != particle_id && position.len() >= 3 && other_pos.len() >= 3 {
-                            // Calculate Euclidean distance in 3D space
-                            let dx = position[0] - other_pos[0];
-                            let dy = position[1] - other_pos[1];
-                            let dz = position[2] - other_pos[2];
-                            let distance = libm::sqrtf(dx * dx + dy * dy + dz * dz);
+                    if position.len() >= 3 {
+                        // Query spatial grid for nearby particles only
+                        let nearby = self.spatial_grid.get_nearby_particles(
+                            position[0],
+                            position[1],
+                            position[2],
+                        );
 
-                            // Penalize if too close
-                            if distance < *min_distance {
-                                let violation = min_distance - distance;
-                                collision_penalty += weight * violation * violation;
+                        // Only check particles in nearby cells
+                        for j in nearby {
+                            if j != particle_id {
+                                if let Some(other_pos) = self.particle_positions.get(j) {
+                                    if other_pos.len() >= 3 {
+                                        // Calculate Euclidean distance in 3D space
+                                        let dx = position[0] - other_pos[0];
+                                        let dy = position[1] - other_pos[1];
+                                        let dz = position[2] - other_pos[2];
+                                        let distance = libm::sqrtf(dx * dx + dy * dy + dz * dz);
+
+                                        // Penalize if too close
+                                        if distance < *min_distance {
+                                            let violation = min_distance - distance;
+                                            collision_penalty += weight * violation * violation;
+                                        }
+                                    }
+                                }
                             }
                         }
                     }

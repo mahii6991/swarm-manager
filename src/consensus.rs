@@ -10,6 +10,7 @@
 use crate::merkle::MerkleTree;
 use crate::types::*;
 use heapless::{FnvIndexMap, Vec};
+use log::{info, trace};
 use serde::{Deserialize, Serialize};
 
 /// Raft node states
@@ -271,6 +272,11 @@ impl ConsensusEngine {
         self.voted_for = Some(self.node_id);
         self.votes_received = 1; // Vote for self
         self.election_timer = Self::get_time();
+        info!(
+            "Node {} starting election for term {}",
+            self.node_id.as_u64(),
+            self.current_term
+        );
         Ok(())
     }
 
@@ -428,12 +434,14 @@ impl ConsensusEngine {
         }
 
         if success {
+            // Update match_index - propagate error if map is full
             self.match_index
                 .insert(follower_id.as_u64(), match_idx)
-                .ok();
+                .map_err(|_| SwarmError::ResourceExhausted)?;
+            // Update next_index - propagate error if map is full
             self.next_index
                 .insert(follower_id.as_u64(), match_idx + 1)
-                .ok();
+                .map_err(|_| SwarmError::ResourceExhausted)?;
 
             // Update commit index
             self.update_commit_index()?;
@@ -459,17 +467,35 @@ impl ConsensusEngine {
     }
 
     /// Become leader
+    ///
+    /// This operation is idempotent - calling it multiple times when already
+    /// leader is a no-op to prevent reinitializing tracking state.
     fn become_leader(&mut self) -> Result<()> {
+        // Idempotency guard: if already leader, do nothing
+        if self.state == NodeState::Leader && self.current_leader == Some(self.node_id) {
+            trace!("Node {} already leader, skipping initialization", self.node_id.as_u64());
+            return Ok(());
+        }
+
         self.state = NodeState::Leader;
         self.current_leader = Some(self.node_id);
+
+        info!(
+            "Node {} elected as leader for term {} with {} members",
+            self.node_id.as_u64(),
+            self.current_term,
+            self.swarm_members.len()
+        );
 
         // Initialize next_index and match_index
         for member in &self.swarm_members {
             if *member != self.node_id {
                 self.next_index
                     .insert(member.as_u64(), self.log.len() as u64 + 1)
-                    .ok();
-                self.match_index.insert(member.as_u64(), 0).ok();
+                    .map_err(|_| SwarmError::ResourceExhausted)?;
+                self.match_index
+                    .insert(member.as_u64(), 0)
+                    .map_err(|_| SwarmError::ResourceExhausted)?;
             }
         }
 
@@ -564,14 +590,17 @@ impl ConsensusEngine {
             // Limit to 100 for stack safety
             let mut buf = Vec::<u8, 256>::new();
             if postcard::to_slice(&entry.command, &mut buf).is_ok() {
-                serialized_log.push(buf).ok();
+                serialized_log
+                    .push(buf)
+                    .map_err(|_| SwarmError::ResourceExhausted)?;
             }
         }
 
         // Now create references
         let mut refs: Vec<&[u8], 100> = Vec::new();
         for buf in &serialized_log {
-            refs.push(buf).ok();
+            refs.push(buf)
+                .map_err(|_| SwarmError::ResourceExhausted)?;
         }
 
         tree.compute_root(&refs)

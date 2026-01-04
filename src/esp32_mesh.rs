@@ -440,8 +440,14 @@ impl MeshNode {
         if msg.should_forward(self.config.node_id) {
             let mut forward_msg = msg.clone();
             if forward_msg.decrement_ttl() {
-                self.tx_queue.push(forward_msg).ok();
-                self.stats.forward_count += 1;
+                // Try to queue for forwarding; if queue is full, increment drop count
+                if self.tx_queue.push(forward_msg).is_err() {
+                    self.stats.drop_count += 1;
+                    // Note: We don't return error here to avoid blocking message processing
+                    // when forward queue is full. The message was already processed locally.
+                } else {
+                    self.stats.forward_count += 1;
+                }
             }
         }
 
@@ -466,19 +472,26 @@ impl MeshNode {
             neighbor.update_from_heartbeat(position, battery_percent, rssi, current_time_ms);
 
             if self.neighbors.push(neighbor).is_err() {
-                // Remove oldest inactive neighbor
+                // Remove oldest inactive neighbor to make room
                 if let Some(idx) = self.neighbors.iter().position(|n| !n.is_active) {
                     self.neighbors.swap_remove(idx);
-                    // Try again
-                    let mut neighbor = MeshNeighbor::new(node_id);
-                    neighbor.update_from_heartbeat(
+                    // Try again with fresh neighbor
+                    let mut new_neighbor = MeshNeighbor::new(node_id);
+                    new_neighbor.update_from_heartbeat(
                         position,
                         battery_percent,
                         rssi,
                         current_time_ms,
                     );
-                    self.neighbors.push(neighbor).ok();
+                    // If this still fails, log it in stats (neighbor table is completely full of active nodes)
+                    if self.neighbors.push(new_neighbor).is_err() {
+                        // All neighbors are active, can't add new one - this is not an error,
+                        // just means we're at capacity with all active neighbors
+                        self.stats.drop_count += 1;
+                    }
                 }
+                // If no inactive neighbor found, the table is full of active neighbors
+                // This is acceptable - we just can't track more neighbors
             }
         }
 
@@ -534,10 +547,18 @@ impl MeshNode {
     }
 
     /// Get neighbor positions for swarm algorithms
+    ///
+    /// Returns positions of all active neighbors. If the output buffer is full,
+    /// remaining positions are silently dropped (this is acceptable as the buffer
+    /// matches MAX_NEIGHBORS and we can't have more active neighbors than that).
     pub fn get_neighbor_positions(&self) -> Vec<[f32; 3], MAX_NEIGHBORS> {
         let mut positions = Vec::new();
         for neighbor in self.neighbors.iter().filter(|n| n.is_active) {
-            positions.push(neighbor.position).ok();
+            // This should never fail since we can't have more neighbors than MAX_NEIGHBORS
+            // but we handle it gracefully by stopping early
+            if positions.push(neighbor.position).is_err() {
+                break;
+            }
         }
         positions
     }

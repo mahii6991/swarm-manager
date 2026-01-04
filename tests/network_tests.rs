@@ -314,6 +314,7 @@ mod network_stats_tests {
             messages_sent: 100,
             messages_received: 95,
             messages_dropped: 5,
+            messages_retried: 3,
             avg_rtt_ms: 50,
         };
 
@@ -322,6 +323,7 @@ mod network_stats_tests {
         assert_eq!(stats1.messages_sent, stats2.messages_sent);
         assert_eq!(stats1.messages_received, stats2.messages_received);
         assert_eq!(stats1.messages_dropped, stats2.messages_dropped);
+        assert_eq!(stats1.messages_retried, stats2.messages_retried);
         assert_eq!(stats1.avg_rtt_ms, stats2.avg_rtt_ms);
     }
 
@@ -331,12 +333,14 @@ mod network_stats_tests {
             messages_sent: 200,
             messages_received: 190,
             messages_dropped: 10,
+            messages_retried: 5,
             avg_rtt_ms: 75,
         };
 
         let stats2 = stats1; // Copy semantics
 
         assert_eq!(stats1.messages_sent, stats2.messages_sent);
+        assert_eq!(stats1.messages_retried, stats2.messages_retried);
     }
 }
 

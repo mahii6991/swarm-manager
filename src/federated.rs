@@ -168,7 +168,10 @@ impl FederatedCoordinator {
                 .insert(Vec::new())
                 .map_err(|_| SwarmError::ResourceExhausted)?,
         };
-        history.push(update.round).ok();
+        // Propagate history tracking errors - important for Byzantine detection
+        history
+            .push(update.round)
+            .map_err(|_| SwarmError::ResourceExhausted)?;
 
         Ok(())
     }
@@ -238,7 +241,11 @@ impl FederatedCoordinator {
             let mut values: Vec<f32, 100> = Vec::new();
             for existing in &self.pending_updates {
                 if let Some(&val) = existing.parameters.get(i) {
-                    values.push(val).ok();
+                    // If we can't collect all values, stop early but continue with what we have
+                    // This is acceptable for Byzantine detection (statistical comparison)
+                    if values.push(val).is_err() {
+                        break;
+                    }
                 }
             }
 

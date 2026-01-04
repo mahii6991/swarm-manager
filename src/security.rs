@@ -36,7 +36,9 @@ impl SecurityMonitor {
                 *o.get()
             }
             Entry::Vacant(v) => {
-                v.insert(1).ok();
+                // If we can't track auth failures due to capacity, deny access
+                // This is a security-safe default: fail closed
+                v.insert(1).map_err(|_| SwarmError::ResourceExhausted)?;
                 1
             }
         };
@@ -194,7 +196,9 @@ impl IntrusionDetectionSystem {
                     *o.get()
                 }
                 Entry::Vacant(v) => {
-                    v.insert(1).ok();
+                    // If we can't track suspicious activity, treat as an attack
+                    // Security-safe default: fail closed
+                    v.insert(1).map_err(|_| SwarmError::ResourceExhausted)?;
                     1
                 }
             };

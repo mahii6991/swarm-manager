@@ -288,23 +288,55 @@ pub struct SubsystemHealth {
 
 impl SubsystemHealth {
     /// Create new subsystem health tracker
+    ///
+    /// # Panics
+    /// Panics if the FnvIndexMap capacity is less than 7 (the number of subsystems).
+    /// This should never happen with the configured capacity of 16.
     pub fn new() -> Self {
         let mut health = FnvIndexMap::new();
         // Initialize all subsystems as healthy
-        health.insert(Subsystem::Communication as u8, true).ok();
-        health.insert(Subsystem::Navigation as u8, true).ok();
-        health.insert(Subsystem::Sensors as u8, true).ok();
-        health.insert(Subsystem::Actuators as u8, true).ok();
-        health.insert(Subsystem::Power as u8, true).ok();
-        health.insert(Subsystem::Computing as u8, true).ok();
-        health.insert(Subsystem::Consensus as u8, true).ok();
+        // These insertions should never fail since we have capacity for 16 entries
+        // and only insert 7. We use expect() here since this is initialization code
+        // that runs once and a failure indicates a severe configuration error.
+        health
+            .insert(Subsystem::Communication as u8, true)
+            .expect("SubsystemHealth capacity exceeded during init");
+        health
+            .insert(Subsystem::Navigation as u8, true)
+            .expect("SubsystemHealth capacity exceeded during init");
+        health
+            .insert(Subsystem::Sensors as u8, true)
+            .expect("SubsystemHealth capacity exceeded during init");
+        health
+            .insert(Subsystem::Actuators as u8, true)
+            .expect("SubsystemHealth capacity exceeded during init");
+        health
+            .insert(Subsystem::Power as u8, true)
+            .expect("SubsystemHealth capacity exceeded during init");
+        health
+            .insert(Subsystem::Computing as u8, true)
+            .expect("SubsystemHealth capacity exceeded during init");
+        health
+            .insert(Subsystem::Consensus as u8, true)
+            .expect("SubsystemHealth capacity exceeded during init");
 
         Self { health }
     }
 
     /// Update subsystem health
+    ///
+    /// Updates always succeed since we only update existing entries (initialized in new())
+    /// or add entries within our 16-entry capacity for 7 subsystems.
     pub fn update(&mut self, subsystem: Subsystem, healthy: bool) {
-        self.health.insert(subsystem as u8, healthy).ok();
+        // This should never fail since:
+        // 1. We're updating an existing key (all 7 are pre-initialized), OR
+        // 2. We have capacity for 16 entries and only 7 subsystems exist
+        // We still handle the error gracefully to avoid silent failures
+        if self.health.insert(subsystem as u8, healthy).is_err() {
+            // This indicates a programming error - log it in debug builds
+            #[cfg(debug_assertions)]
+            panic!("SubsystemHealth: unexpected capacity error");
+        }
     }
 
     /// Check if subsystem is healthy

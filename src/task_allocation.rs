@@ -28,6 +28,9 @@ impl TaskAllocator {
     }
 
     /// Allocate tasks to drones (greedy nearest-neighbor)
+    ///
+    /// Returns Ok(()) if all tasks were successfully allocated,
+    /// or Err if resource exhaustion prevented allocation.
     pub fn allocate_tasks(&mut self, drone_states: &[DroneState]) -> Result<()> {
         // Sort tasks by priority
         self.tasks.sort_by(|a, b| b.priority.cmp(&a.priority));
@@ -42,8 +45,14 @@ impl TaskAllocator {
                 let nearest = self.find_nearest_drone(&target, drone_states);
                 if let Some(drone_id) = nearest {
                     self.tasks[i].assigned_drones.clear();
-                    self.tasks[i].assigned_drones.push(drone_id).ok();
-                    self.assignments.insert(task_id, drone_id.as_u64()).ok();
+                    // Propagate errors - task assignment is mission-critical
+                    self.tasks[i]
+                        .assigned_drones
+                        .push(drone_id)
+                        .map_err(|_| SwarmError::ResourceExhausted)?;
+                    self.assignments
+                        .insert(task_id, drone_id.as_u64())
+                        .map_err(|_| SwarmError::ResourceExhausted)?;
                 }
             }
         }

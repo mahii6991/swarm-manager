@@ -49,8 +49,9 @@ fugit = "0.3"
 # Math library for no_std
 libm = "0.2"
 
-# Optional logging for debugging
+# Logging
 defmt = "0.3"
+log = { version = "0.4", default-features = false }
 
 [profile.release]
 opt-level = "z"      # Optimize for size
@@ -70,6 +71,9 @@ quickcheck_macros = "1.0"
 
 # Fuzzing support (use with cargo-fuzz)
 arbitrary = { version = "1.3", features = ["derive"] }
+
+# Logging for tests
+env_logger = "0.11"
 
 [features]
 default = ["std"]

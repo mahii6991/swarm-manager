@@ -9,6 +9,7 @@
 
 use crate::types::*;
 use heapless::{FnvIndexMap, Vec};
+use log::{debug, trace, warn};
 use serde::{Deserialize, Serialize};
 
 /// Maximum number of neighbors in mesh network (must be power of 2 for FnvIndexMap)
@@ -118,20 +119,51 @@ pub struct MeshNetwork {
     routes: FnvIndexMap<u64, Route, MAX_ROUTES>,
     /// Sequence number for route updates
     sequence_number: u32,
-    /// Message queue
+    /// Message queue (includes pending and retry messages)
     message_queue: Vec<QueuedMessage, 100>,
     /// Network statistics
     stats: NetworkStats,
+    /// Retry configuration
+    retry_config: RetryConfig,
 }
 
+/// Queued message waiting for delivery or retry
 #[derive(Debug, Clone)]
 struct QueuedMessage {
+    /// Destination drone ID
     destination: DroneId,
+    /// Message payload
     payload: Vec<u8, 1024>,
-    #[allow(dead_code)] // Reserved for retry logic
+    /// Number of retry attempts made
     retry_count: u8,
-    #[allow(dead_code)] // Reserved for timeout handling
-    timestamp: u64,
+    /// Timestamp when message was queued (ms)
+    queued_at: u64,
+    /// Next retry time (ms) - used for exponential backoff
+    next_retry_at: u64,
+}
+
+/// Configuration for network retry behavior
+#[derive(Debug, Clone, Copy)]
+pub struct RetryConfig {
+    /// Maximum number of retry attempts
+    pub max_retries: u8,
+    /// Base delay for exponential backoff (ms)
+    pub base_delay_ms: u64,
+    /// Maximum delay cap (ms)
+    pub max_delay_ms: u64,
+    /// Message timeout - drop after this duration (ms)
+    pub timeout_ms: u64,
+}
+
+impl Default for RetryConfig {
+    fn default() -> Self {
+        Self {
+            max_retries: 3,
+            base_delay_ms: 100,
+            max_delay_ms: 5000,
+            timeout_ms: 30000,
+        }
+    }
 }
 
 #[derive(Debug, Clone, Copy, Default)]
@@ -142,6 +174,8 @@ pub struct NetworkStats {
     pub messages_received: u64,
     /// Messages dropped
     pub messages_dropped: u64,
+    /// Messages retried
+    pub messages_retried: u64,
     /// Average RTT in milliseconds
     pub avg_rtt_ms: u32,
 }
@@ -156,7 +190,164 @@ impl MeshNetwork {
             sequence_number: 0,
             message_queue: Vec::new(),
             stats: NetworkStats::default(),
+            retry_config: RetryConfig::default(),
         }
+    }
+
+    /// Create a new mesh network instance with custom retry configuration
+    pub fn with_retry_config(local_id: DroneId, retry_config: RetryConfig) -> Self {
+        Self {
+            local_id,
+            neighbors: FnvIndexMap::new(),
+            routes: FnvIndexMap::new(),
+            sequence_number: 0,
+            message_queue: Vec::new(),
+            stats: NetworkStats::default(),
+            retry_config,
+        }
+    }
+
+    /// Process message retry queue
+    ///
+    /// Call this periodically (e.g., every 100ms) to retry failed messages
+    /// with exponential backoff. Returns the number of messages retried.
+    pub fn process_retries(&mut self) -> Result<u32> {
+        let current_time = Self::get_time();
+        let mut retried = 0u32;
+        let mut i = 0;
+
+        while i < self.message_queue.len() {
+            // Extract values we need before doing mutable operations
+            let (queued_at, retry_count, next_retry_at, destination) = {
+                let msg = &self.message_queue[i];
+                (msg.queued_at, msg.retry_count, msg.next_retry_at, msg.destination)
+            };
+
+            // Check if message has timed out
+            if current_time.saturating_sub(queued_at) > self.retry_config.timeout_ms {
+                warn!(
+                    "Message to drone {} timed out after {}ms",
+                    destination.as_u64(),
+                    current_time.saturating_sub(queued_at)
+                );
+                self.message_queue.swap_remove(i);
+                self.stats.messages_dropped += 1;
+                continue;
+            }
+
+            // Check if message exceeded max retries
+            if retry_count >= self.retry_config.max_retries {
+                warn!(
+                    "Message to drone {} dropped after {} retries",
+                    destination.as_u64(),
+                    retry_count
+                );
+                self.message_queue.swap_remove(i);
+                self.stats.messages_dropped += 1;
+                continue;
+            }
+
+            // Check if it's time to retry
+            if current_time >= next_retry_at {
+                // Check if we now have a route
+                if self.routes.contains_key(&destination.as_u64()) {
+                    let msg = self.message_queue.swap_remove(i);
+                    // Attempt to send - if it fails, it will be re-queued with incremented retry
+                    if self.send_message_internal(msg.destination, msg.payload.clone(), msg.retry_count + 1).is_ok() {
+                        debug!(
+                            "Retry {} succeeded for message to drone {}",
+                            msg.retry_count + 1,
+                            msg.destination.as_u64()
+                        );
+                        retried += 1;
+                        self.stats.messages_retried += 1;
+                    }
+                    continue;
+                } else {
+                    // Still no route - initiate discovery and update retry time
+                    trace!("No route to drone {}, initiating discovery", destination.as_u64());
+                    self.initiate_route_discovery(destination)?;
+
+                    // Update next retry time with exponential backoff
+                    let delay = self.calculate_backoff_delay(retry_count);
+                    if let Some(msg) = self.message_queue.get_mut(i) {
+                        msg.retry_count += 1;
+                        msg.next_retry_at = current_time + delay;
+                    }
+                }
+            }
+
+            i += 1;
+        }
+
+        Ok(retried)
+    }
+
+    /// Calculate exponential backoff delay with jitter
+    fn calculate_backoff_delay(&self, retry_count: u8) -> u64 {
+        // Exponential backoff: base_delay * 2^retry_count
+        let exp_delay = self.retry_config.base_delay_ms
+            .saturating_mul(1u64 << retry_count.min(6)); // Cap at 2^6 to prevent overflow
+
+        // Add jitter (±25% of delay) - use modulo for simple pseudo-random jitter
+        let jitter = Self::get_time() % (exp_delay / 4 + 1);
+
+        // Cap at max delay
+        exp_delay.saturating_add(jitter).min(self.retry_config.max_delay_ms)
+    }
+
+    /// Internal send that tracks retry count
+    fn send_message_internal(
+        &mut self,
+        destination: DroneId,
+        payload: Vec<u8, 1024>,
+        retry_count: u8,
+    ) -> Result<()> {
+        if let Some(_route) = self.routes.get(&destination.as_u64()) {
+            let _msg = NetworkMessage::Data {
+                source: self.local_id,
+                destination,
+                payload,
+                hop_count: 0,
+            };
+            self.stats.messages_sent += 1;
+
+            #[cfg(feature = "hardware")]
+            unimplemented!("Hardware radio transmission not yet implemented");
+
+            #[cfg(not(feature = "hardware"))]
+            Ok(())
+        } else {
+            // No route - queue for retry
+            self.queue_message_with_retry(destination, payload, retry_count)?;
+            self.initiate_route_discovery(destination)?;
+            Ok(())
+        }
+    }
+
+    /// Queue message with retry tracking
+    fn queue_message_with_retry(
+        &mut self,
+        destination: DroneId,
+        payload: Vec<u8, 1024>,
+        retry_count: u8,
+    ) -> Result<()> {
+        let current_time = Self::get_time();
+        let delay = self.calculate_backoff_delay(retry_count);
+
+        let msg = QueuedMessage {
+            destination,
+            payload,
+            retry_count,
+            queued_at: current_time,
+            next_retry_at: current_time + delay,
+        };
+
+        self.message_queue
+            .push(msg)
+            .map_err(|_| SwarmError::BufferFull)?;
+
+        Ok(())
     }
 
     /// Process incoming network message
@@ -444,18 +635,7 @@ impl MeshNetwork {
 
     /// Queue message for later delivery
     fn queue_message(&mut self, destination: DroneId, payload: Vec<u8, 1024>) -> Result<()> {
-        let msg = QueuedMessage {
-            destination,
-            payload,
-            retry_count: 0,
-            timestamp: Self::get_time(),
-        };
-
-        self.message_queue
-            .push(msg)
-            .map_err(|_| SwarmError::BufferFull)?;
-
-        Ok(())
+        self.queue_message_with_retry(destination, payload, 0)
     }
 
     /// Send queued messages to a destination
