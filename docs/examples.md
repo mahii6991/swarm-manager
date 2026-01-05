@@ -15,9 +15,12 @@ Complete, runnable examples demonstrating key features of the drone swarm system
 The most basic example showing system initialization and formation control.
 
 ```rust
-use drone_swarm_system::*;
+use drone_swarm_system::{
+    types::{DroneId, Position},
+    control::swarm::{SwarmController, Formation},
+};
 
-fn main() -> Result<()> {
+fn main() {
     // Initialize drone with ID
     let drone_id = DroneId::new(1);
 
@@ -26,14 +29,12 @@ fn main() -> Result<()> {
     let mut swarm = SwarmController::new(drone_id, position);
 
     // Set formation
-    swarm.set_formation(Formation::Circle { radius: 50.0 });
+    swarm.set_formation(Formation::Circle { radius: 50 });
 
-    // Compute control velocity
-    let velocity = swarm.compute_control_velocity(5.0);
-    println!("Control velocity: ({:.2}, {:.2}, {:.2})",
-             velocity.vx, velocity.vy, velocity.vz);
-
-    Ok(())
+    // Compute formation position
+    let target = swarm.compute_formation_position();
+    println!("Target position: ({:.2}, {:.2}, {:.2})",
+             target.x, target.y, target.z);
 }
 ```
 
@@ -46,26 +47,24 @@ fn main() -> Result<()> {
 Demonstrates military-grade encryption and digital signatures.
 
 ```rust
-use drone_swarm_system::crypto::*;
+use drone_swarm_system::safety::crypto::CryptoContext;
 
-fn main() -> Result<()> {
+fn main() {
     // Initialize crypto context
     let seed = [42u8; 32]; // Use hardware RNG in production
-    let mut crypto = CryptoContext::new(seed);
+    let crypto = CryptoContext::new(seed);
 
-    // Encrypt and sign a message
+    // Encrypt a message
     let message = b"Drone 1 reporting: Target located at (100, 200, 50)";
-    let aad = b"mission_id_12345"; // Associated data
+    let nonce = [0u8; 12];
 
-    let encrypted = crypto.encrypt_and_sign(message, aad)?;
+    let encrypted = crypto.encrypt(message, &nonce);
     println!("Encrypted {} bytes -> {} bytes", message.len(), encrypted.len());
 
-    // Decrypt and verify
-    let decrypted = crypto.decrypt_and_verify(&encrypted, aad)?;
+    // Decrypt
+    let decrypted = crypto.decrypt(&encrypted, &nonce).unwrap();
     assert_eq!(message, &decrypted[..]);
     println!("Decryption successful!");
-
-    Ok(())
 }
 ```
 
@@ -80,7 +79,7 @@ fn main() -> Result<()> {
 Multi-waypoint path planning using Particle Swarm Optimization.
 
 ```rust
-use drone_swarm_system::pso::*;
+use drone_swarm_system::algorithms::pso::basic::*;
 
 fn main() -> Result<()> {
     let start = Position { x: 0.0, y: 0.0, z: 10.0 };

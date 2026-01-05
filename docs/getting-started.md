@@ -104,10 +104,10 @@ Create `examples/my_first_swarm.rs`:
 
 ```rust
 use drone_swarm_system::{
-    crypto::CryptoContext,
-    network::MeshNetwork,
-    consensus::ConsensusEngine,
-    swarm::{SwarmController, Formation},
+    safety::crypto::CryptoContext,
+    network::core::MeshNetwork,
+    consensus::raft::ConsensusEngine,
+    control::swarm::{SwarmController, Formation},
     types::{DroneId, Position},
 };
 
@@ -159,7 +159,7 @@ Drone 3 ready at position: Position { x: 5.0, y: 8.66, z: 10.0 }
 ### Swarm Configuration
 
 ```rust
-use drone_swarm_system::config::SwarmConfig;
+use drone_swarm_system::system::config::SwarmConfig;
 use drone_swarm_system::types::DroneId;
 
 let drone_id = DroneId::new(1);
@@ -185,7 +185,7 @@ config.learning_rate = 0.01;
 ### Cryptographic Setup
 
 ```rust
-use drone_swarm_system::crypto::CryptoContext;
+use drone_swarm_system::safety::crypto::CryptoContext;
 
 // IMPORTANT: Use hardware RNG in production!
 let seed = [42u8; 32]; // For testing only
@@ -204,7 +204,7 @@ assert_eq!(message, decrypted.as_slice());
 ### Network Setup
 
 ```rust
-use drone_swarm_system::network::MeshNetwork;
+use drone_swarm_system::network::core::MeshNetwork;
 use drone_swarm_system::types::DroneId;
 
 let drone_id = DroneId::new(1);
@@ -269,7 +269,13 @@ Demonstrates ACO, PSO, and GWO algorithms for optimal path finding.
 Here's a typical workflow for using the system:
 
 ```rust
-use drone_swarm_system::*;
+use drone_swarm_system::{
+    types::{DroneId, Position},
+    safety::crypto::CryptoContext,
+    network::core::MeshNetwork,
+    consensus::raft::ConsensusEngine,
+    control::swarm::{SwarmController, Formation},
+};
 
 fn main() {
     // 1. Initialize drone
@@ -290,11 +296,7 @@ fn main() {
     let mut swarm = SwarmController::new(drone_id, position);
 
     // 6. Set formation
-    swarm.set_formation(Formation::Grid {
-        spacing: 20.0,
-        rows: 3,
-        cols: 3,
-    });
+    swarm.set_formation(Formation::Grid { spacing: 20 });
 
     // 7. Main loop
     loop {

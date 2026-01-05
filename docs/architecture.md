@@ -324,15 +324,17 @@ fn krum_aggregate(updates: &[ModelUpdate]) -> ModelUpdate {
 
 ## Core Modules
 
-### Module: `crypto`
+The codebase is organized into logical module groups under `src/`:
 
-**Location**: `src/crypto/`
+### Module Group: `safety/`
 
-**Responsibilities**:
-- Message encryption/decryption
-- Digital signatures
-- Key management
-- Hash computations
+**Location**: `src/safety/`
+
+**Submodules**:
+- `crypto.rs` - Encryption & signatures
+- `security.rs` - Intrusion detection
+- `failsafe.rs` - Safety behaviors
+- `fault_tolerance.rs` - Self-healing
 
 **Key Types**:
 ```rust
@@ -343,15 +345,16 @@ pub struct CryptoContext {
 }
 ```
 
-### Module: `network`
+### Module Group: `network/`
 
 **Location**: `src/network/`
 
-**Responsibilities**:
-- Mesh network management
-- Routing
-- Message delivery
-- Neighbor discovery
+**Submodules**:
+- `core.rs` - Mesh network management
+- `mesh.rs` - ESP32 mesh protocol
+- `mavlink.rs` - MAVLink interface
+- `esp32.rs` - ESP32-specific networking
+- `routing/` - Proactive routing & link prediction
 
 **Key Types**:
 ```rust
@@ -362,14 +365,15 @@ pub struct MeshNetwork {
 }
 ```
 
-### Module: `consensus`
+### Module Group: `consensus/`
 
 **Location**: `src/consensus/`
 
-**Responsibilities**:
-- Leader election
-- Log replication
-- State machine management
+**Submodules**:
+- `raft.rs` - SwarmRaft protocol
+- `pbft.rs` - Byzantine fault tolerance
+- `hierarchical.rs` - Hierarchical consensus
+- `merkle.rs` - Merkle tree logging
 
 **Key Types**:
 ```rust
@@ -381,14 +385,12 @@ pub struct ConsensusEngine {
 }
 ```
 
-### Module: `federated`
+### Module Group: `ml/`
 
-**Location**: `src/federated/`
+**Location**: `src/ml/`
 
-**Responsibilities**:
-- Model training
-- Gradient aggregation
-- Byzantine detection
+**Submodules**:
+- `federated.rs` - Federated learning
 
 **Key Types**:
 ```rust
@@ -399,15 +401,16 @@ pub struct FederatedLearner {
 }
 ```
 
-### Module: `swarm`
+### Module Group: `control/`
 
-**Location**: `src/swarm/`
+**Location**: `src/control/`
 
-**Responsibilities**:
-- Formation control
-- Task allocation
-- Collision avoidance
-- Path planning
+**Submodules**:
+- `swarm.rs` - Formation control
+- `collision.rs` - Collision avoidance (VO, RVO, ORCA, APF)
+- `mission.rs` - Mission planning & waypoints
+- `coordinator.rs` - Multi-drone coordination
+- `task.rs` - Task allocation
 
 **Key Types**:
 ```rust
@@ -418,6 +421,28 @@ pub struct SwarmController {
     path_planner: PathPlanner,
 }
 ```
+
+### Module Group: `algorithms/`
+
+**Location**: `src/algorithms/`
+
+**Submodules**:
+- `pso/` - Particle Swarm Optimization (basic & advanced)
+- `aco.rs` - Ant Colony Optimization
+- `gwo.rs` - Grey Wolf Optimizer
+- `woa.rs` - Whale Optimization Algorithm
+- `hybrid.rs` - Hybrid optimizer
+- `selector.rs` - Deep RL algorithm selection
+
+### Module Group: `system/`
+
+**Location**: `src/system/`
+
+**Submodules**:
+- `config.rs` - Configuration management
+- `telemetry.rs` - Health monitoring
+- `time.rs` - Time abstraction
+- `clustering.rs` - Cluster management
 
 ## Data Flow
 

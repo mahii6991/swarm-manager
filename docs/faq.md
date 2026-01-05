@@ -613,7 +613,7 @@ echo 1000 > /sys/module/i2c_bcm2835/parameters/debug
 
 ### How do I report a bug?
 
-1. **Check existing issues**: [GitHub Issues](https://github.com/mahii6991/drone-swarm-system/issues)
+1. **Check existing issues**: [GitHub Issues](https://github.com/mahii6991/swarm-manager/issues)
 2. **Provide details**:
    - Rust version: `rustc --version`
    - OS and architecture
@@ -630,8 +630,8 @@ echo 1000 > /sys/module/i2c_bcm2835/parameters/debug
 
 ### Where can I get help?
 
-- **GitHub Discussions**: [Community forum](https://github.com/mahii6991/drone-swarm-system/discussions)
-- **GitHub Issues**: [Report bugs](https://github.com/mahii6991/drone-swarm-system/issues)
+- **GitHub Discussions**: [Community forum](https://github.com/mahii6991/swarm-manager/discussions)
+- **GitHub Issues**: [Report bugs](https://github.com/mahii6991/swarm-manager/issues)
 - **Email**: m.s.rajpoot20@gmail.com (critical security issues only)
 
 ---
@@ -676,7 +676,7 @@ We follow **responsible disclosure**:
 
 ## Still Have Questions?
 
-- [Join GitHub Discussions](https://github.com/mahii6991/drone-swarm-system/discussions)
+- [Join GitHub Discussions](https://github.com/mahii6991/swarm-manager/discussions)
 - [Read the Full Documentation](./index.html)
 - [Check Examples](./examples.html)
 - [Review API Reference](./api-reference.html)

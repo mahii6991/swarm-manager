@@ -14,7 +14,7 @@ A world-class, safety-critical drone swarm communication system written in **Rus
 
 ## Quick Links
 
-- [GitHub Repository](https://github.com/mahii6991/drone-swarm-system)
+- [GitHub Repository](https://github.com/mahii6991/swarm-manager)
 - [Getting Started](./getting-started.html)
 - [Architecture](./architecture.html)
 - [API Reference](./api-reference.html)
@@ -104,8 +104,8 @@ Disaster area assessment, communication relay networks, and resource coordinatio
 
 ```bash
 # Clone the repository
-git clone https://github.com/mahii6991/drone-swarm-system.git
-cd drone-swarm-system
+git clone https://github.com/mahii6991/swarm-manager.git
+cd swarm-manager
 
 # Build the project
 cargo build --release

@@ -5,7 +5,7 @@
 ### Industrial-Grade Autonomous Drone Swarm Communication & Intelligence
 
 [![Rust](https://img.shields.io/badge/Rust-1.70%2B-orange?style=flat-square&logo=rust)](https://www.rust-lang.org/)
-[![Build](https://img.shields.io/github/actions/workflow/status/mahii6991/drone-swarm-system/ci.yml?branch=main&style=flat-square)](https://github.com/mahii6991/drone-swarm-system/actions)
+[![Build](https://img.shields.io/github/actions/workflow/status/mahii6991/drone-swarm-system/ci.yml?branch=main&style=flat-square)](https://github.com/mahii6991/swarm-manager/actions)
 [![License](https://img.shields.io/badge/License-Apache%202.0-blue?style=flat-square)](LICENSE)
 [![Docs](https://img.shields.io/badge/Docs-GitHub%20Pages-green?style=flat-square)](https://mahii6991.github.io/drone-swarm-system/)
 
@@ -58,7 +58,7 @@
 
 ```bash
 # Clone the repository
-git clone https://github.com/mahii6991/drone-swarm-system.git
+git clone https://github.com/mahii6991/swarm-manager.git
 cd drone-swarm-system
 
 # Build the project
@@ -98,7 +98,11 @@ cargo run -p drone-swarm-visualization --release
 ## Usage
 
 ```rust
-use drone_swarm_system::*;
+use drone_swarm_system::{
+    types::{DroneId, Position},
+    control::swarm::{SwarmController, Formation},
+    network::core::MeshNetwork,
+};
 
 // Initialize a drone
 let drone_id = DroneId::new(1);
@@ -112,7 +116,6 @@ swarm.set_formation(Formation::Circle { radius: 50 });
 
 // Initialize mesh network
 let mut network = MeshNetwork::new(drone_id);
-network.update_position(position);
 ```
 
 ---
@@ -144,30 +147,65 @@ network.update_position(position);
 
 ## Modules
 
+The codebase is organized into logical module groups:
+
+### `algorithms/` - Swarm Intelligence & Optimization
+| Module | Description |
+|:-------|:------------|
+| `pso` | Particle Swarm Optimization (basic & advanced variants) |
+| `aco` | Ant Colony Optimization for path planning |
+| `gwo` | Grey Wolf Optimizer for swarm coordination |
+| `woa` | Whale Optimization Algorithm |
+| `hybrid` | Hybrid optimization combining multiple algorithms |
+| `selector` | Deep RL-based algorithm selection |
+
+### `consensus/` - Distributed Agreement
+| Module | Description |
+|:-------|:------------|
+| `raft` | SwarmRaft distributed consensus protocol |
+| `pbft` | Practical Byzantine Fault Tolerance |
+| `hierarchical` | Hierarchical consensus for large swarms |
+| `merkle` | Merkle tree for tamper-evident logging |
+
+### `network/` - Communication
+| Module | Description |
+|:-------|:------------|
+| `core` | Adaptive mesh routing with multi-hop support |
+| `mesh` | ESP32 WiFi mesh protocol |
+| `mavlink` | MAVLink flight controller interface |
+| `esp32` | ESP32-specific networking |
+| `routing` | Proactive routing & link prediction |
+
+### `control/` - Flight Control & Planning
+| Module | Description |
+|:-------|:------------|
+| `swarm` | Formation control & collective behavior |
+| `collision` | VO, RVO, ORCA, APF collision avoidance |
+| `mission` | Waypoint navigation & survey patterns |
+| `coordinator` | Multi-drone SITL coordination |
+| `task` | Task distribution & priority management |
+
+### `safety/` - Security & Fault Tolerance
 | Module | Description |
 |:-------|:------------|
 | `crypto` | ChaCha20-Poly1305 encryption & Ed25519 signatures |
-| `network` | Adaptive mesh routing with multi-hop support |
-| `consensus` | SwarmRaft distributed consensus protocol |
-| `merkle` | Merkle tree for tamper-evident logging |
-| `swarm` | Formation control & collective behavior |
-| `pso` | Particle Swarm Optimization |
-| `pso_advanced` | Advanced PSO with adaptive parameters |
-| `aco` | Ant Colony Optimization for path planning |
-| `gwo` | Grey Wolf Optimizer for swarm coordination |
-| `woa` | Whale Optimization Algorithm for path planning |
-| `federated` | Decentralized federated learning |
-| `fault_tolerance` | Self-healing & automatic failover |
 | `security` | Intrusion detection & threat mitigation |
-| `time_abstraction` | Hardware-agnostic time abstraction layer |
-| `esp32_mesh` | ESP32 WiFi mesh with auto-discovery & self-healing |
-| `mavlink_controller` | MAVLink flight controller interface (PX4/ArduPilot) |
-| `multi_drone_coordinator` | Multi-drone SITL coordination & formations |
-| `collision_avoidance` | VO, RVO, ORCA, APF collision avoidance algorithms |
-| `mission_planning` | Waypoint navigation & survey pattern generation |
-| `telemetry` | Health monitoring, alerts & status tracking |
-| `failsafe` | Safety failsafe behaviors (RTL, land, geofence) |
-| `task_allocation` | Task distribution & priority management |
+| `failsafe` | RTL, land, geofence protection |
+| `fault_tolerance` | Self-healing & automatic failover |
+| `chaos_monkey` | Fault injection for testing |
+
+### `ml/` - Machine Learning
+| Module | Description |
+|:-------|:------------|
+| `federated` | Privacy-preserving decentralized learning |
+
+### `system/` - Infrastructure
+| Module | Description |
+|:-------|:------------|
+| `config` | System configuration management |
+| `telemetry` | Health monitoring, alerts & status |
+| `time` | Hardware-agnostic time abstraction |
+| `clustering` | Drone cluster management |
 
 ---
 
@@ -218,23 +256,43 @@ cargo run -p drone-swarm-visualization --release
 
 ```
 drone-swarm-system/
-├── src/                    # Core library (18 modules)
-│   ├── crypto.rs           # Encryption & signatures
-│   ├── network.rs          # Mesh networking
-│   ├── consensus.rs        # SwarmRaft protocol
-│   ├── merkle.rs           # Merkle tree logging
-│   ├── swarm.rs            # Formation control
-│   ├── pso.rs              # Particle Swarm Optimization
-│   ├── pso_advanced.rs     # Advanced PSO variants
-│   ├── aco.rs              # Ant Colony Optimization
-│   ├── gwo.rs              # Grey Wolf Optimizer
-│   ├── woa.rs              # Whale Optimization Algorithm
-│   ├── time_abstraction.rs # Hardware-agnostic time
-│   └── ...
+├── src/
+│   ├── algorithms/         # Optimization algorithms
+│   │   ├── pso/            # Particle Swarm (basic + advanced)
+│   │   ├── aco.rs          # Ant Colony Optimization
+│   │   ├── gwo.rs          # Grey Wolf Optimizer
+│   │   ├── woa.rs          # Whale Optimization
+│   │   ├── hybrid.rs       # Hybrid optimizer
+│   │   └── selector.rs     # Deep RL algorithm selection
+│   ├── consensus/          # Distributed consensus
+│   │   ├── raft.rs         # SwarmRaft protocol
+│   │   ├── pbft.rs         # Byzantine fault tolerance
+│   │   ├── hierarchical.rs # Hierarchical consensus
+│   │   └── merkle.rs       # Merkle tree logging
+│   ├── network/            # Communication layer
+│   │   ├── core.rs         # Mesh networking
+│   │   ├── mesh.rs         # ESP32 mesh protocol
+│   │   ├── mavlink.rs      # MAVLink interface
+│   │   └── routing/        # Proactive routing
+│   ├── control/            # Flight control
+│   │   ├── swarm.rs        # Formation control
+│   │   ├── collision.rs    # Collision avoidance
+│   │   ├── mission.rs      # Mission planning
+│   │   └── coordinator.rs  # Multi-drone coordination
+│   ├── safety/             # Security & fault tolerance
+│   │   ├── crypto.rs       # Encryption & signatures
+│   │   ├── security.rs     # Intrusion detection
+│   │   ├── failsafe.rs     # Safety behaviors
+│   │   └── fault_tolerance.rs
+│   ├── ml/                 # Machine learning
+│   │   └── federated.rs    # Federated learning
+│   ├── system/             # Infrastructure
+│   │   ├── config.rs       # Configuration
+│   │   ├── telemetry.rs    # Health monitoring
+│   │   └── time.rs         # Time abstraction
+│   ├── lib.rs              # Library root
+│   └── types.rs            # Core types
 ├── visualization/          # Interactive GUI
-│   └── src/
-│       ├── panels/         # UI panels
-│       └── renderers/      # Algorithm visualizers
 ├── examples/               # Usage examples
 ├── tests/                  # Comprehensive tests
 ├── fuzz/                   # Security fuzzing
@@ -318,6 +376,6 @@ drone-swarm-system/
 
 **Built with :heart: in Rust**
 
-[:star: Star this repo](https://github.com/mahii6991/drone-swarm-system) | [:book: Documentation](https://mahii6991.github.io/drone-swarm-system/) | [:bug: Report Issues](https://github.com/mahii6991/drone-swarm-system/issues)
+[:star: Star this repo](https://github.com/mahii6991/swarm-manager) | [:book: Documentation](https://mahii6991.github.io/drone-swarm-system/) | [:bug: Report Issues](https://github.com/mahii6991/swarm-manager/issues)
 
 </div>
