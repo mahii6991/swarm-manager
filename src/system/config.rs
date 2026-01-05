@@ -1,7 +1,7 @@
 //! Configuration management for the drone swarm system
 
 use crate::types::*;
-use crate::{KEY_SIZE, MAX_SWARM_SIZE};
+use crate::types::{KEY_SIZE, MAX_SWARM_SIZE};
 
 /// System configuration
 #[derive(Debug, Clone)]

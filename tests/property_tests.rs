@@ -444,7 +444,7 @@ mod mission_planning_properties {
 
         #[test]
         fn spiral_pattern_radius_increases(
-            turns in 1.0_f32..5.0,
+            _turns in 1.0_f32..5.0,
             points in 10usize..50,
         ) {
             let mut prev_radius = 0.0_f32;

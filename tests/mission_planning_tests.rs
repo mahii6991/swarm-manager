@@ -6,7 +6,7 @@
 //! - Survey pattern generation
 //! - Edge cases and boundary conditions
 
-use drone_swarm_system::mission_planning::{
+use drone_swarm_system::control::mission::{
     generate_survey_mission, survey_to_mission, AcceptanceMode, Mission, MissionState,
     SurveyArea, SurveyPattern, Waypoint, WaypointAction, WaypointType, MAX_WAYPOINTS,
 };

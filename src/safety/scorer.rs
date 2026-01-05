@@ -10,7 +10,7 @@
 //! - Availability metrics
 //! - Comprehensive resilience scoring
 
-use crate::fault_injector::{FaultId, FaultSeverity, FaultType};
+use crate::safety::injector::{FaultId, FaultSeverity, FaultType};
 use crate::types::DroneId;
 use heapless::{FnvIndexMap, Vec};
 use serde::{Deserialize, Serialize};

@@ -7,6 +7,7 @@
 //! - Participate in consensus
 //! - Coordinate with other drones
 
+use drone_swarm_system::config::SwarmConfig;
 use drone_swarm_system::consensus::ConsensusEngine;
 use drone_swarm_system::crypto::{CryptoContext, KeyStore};
 use drone_swarm_system::fault_tolerance::FaultTolerance;

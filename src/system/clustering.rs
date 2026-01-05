@@ -4,7 +4,7 @@
 //! Supports cluster formation, leader election, membership tracking,
 //! and dynamic rebalancing.
 
-use crate::hierarchy_types::{
+use crate::system::hierarchy::{
     ClusterId, ClusterMembership, HierarchyConfig, HierarchyTier, RegionId, MAX_CLUSTER_SIZE,
 };
 use crate::types::{DroneId, Position, Result, SwarmError};

@@ -4,6 +4,12 @@ use core::fmt;
 use heapless::Vec;
 use serde::{Deserialize, Serialize};
 
+/// Size of the encryption key in bytes
+pub const KEY_SIZE: usize = 32;
+
+/// Maximum supported swarm size
+pub const MAX_SWARM_SIZE: usize = 100;
+
 /// Result type for swarm operations
 pub type Result<T> = core::result::Result<T, SwarmError>;
 
@@ -198,7 +204,7 @@ pub struct SwarmTask {
     /// Task identifier
     pub task_id: u64,
     /// Target position or area
-    pub target: Position,
+    pub destination: Position,
     /// Task priority
     pub priority: TaskPriority,
     /// Assigned drones

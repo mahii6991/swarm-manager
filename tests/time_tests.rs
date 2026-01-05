@@ -2,7 +2,7 @@
 //!
 //! Tests the platform-agnostic time API and StdTimeSource implementation
 
-use drone_swarm_system::time_abstraction::*;
+use drone_swarm_system::system::time::*;
 
 #[cfg(feature = "std")]
 mod std_time_source_tests {

@@ -9,7 +9,7 @@
 //! - Scenario scheduling and management
 //! - Integration with fault injector and resilience scorer
 
-use crate::fault_injector::{
+use crate::safety::injector::{
     FaultId, FaultInjector, FaultInjectorConfig, FaultSeverity, FaultType,
 };
 use crate::types::{DroneId, Result, SwarmError};
@@ -29,8 +29,8 @@ pub enum ChaosScenario {
     MultipleDroneFailure,
     /// Network partition between groups
     NetworkPartition,
-    /// Byzantine node attack
-    ByzantineAttack,
+    /// Byzantine node fault
+    ByzantineFault,
     /// Cascading failure simulation
     CascadingFailure,
     /// Gradual degradation
@@ -52,7 +52,7 @@ impl ChaosScenario {
             ChaosScenario::SingleDroneFailure => "Single drone experiences complete failure",
             ChaosScenario::MultipleDroneFailure => "Multiple drones fail simultaneously",
             ChaosScenario::NetworkPartition => "Network splits into isolated partitions",
-            ChaosScenario::ByzantineAttack => "Byzantine node sends conflicting messages",
+            ChaosScenario::ByzantineFault => "Byzantine node sends conflicting messages",
             ChaosScenario::CascadingFailure => "Failure spreads through the swarm",
             ChaosScenario::GradualDegradation => "System slowly degrades over time",
             ChaosScenario::LeaderFailure => "Cluster leader fails during operation",
@@ -68,7 +68,7 @@ impl ChaosScenario {
             ChaosScenario::SingleDroneFailure => 10000,
             ChaosScenario::MultipleDroneFailure => 15000,
             ChaosScenario::NetworkPartition => 20000,
-            ChaosScenario::ByzantineAttack => 30000,
+            ChaosScenario::ByzantineFault => 30000,
             ChaosScenario::CascadingFailure => 30000,
             ChaosScenario::GradualDegradation => 60000,
             ChaosScenario::LeaderFailure => 15000,
@@ -84,7 +84,7 @@ impl ChaosScenario {
             ChaosScenario::SingleDroneFailure => FaultSeverity::Major,
             ChaosScenario::MultipleDroneFailure => FaultSeverity::Critical,
             ChaosScenario::NetworkPartition => FaultSeverity::Critical,
-            ChaosScenario::ByzantineAttack => FaultSeverity::Critical,
+            ChaosScenario::ByzantineFault => FaultSeverity::Critical,
             ChaosScenario::CascadingFailure => FaultSeverity::Critical,
             ChaosScenario::GradualDegradation => FaultSeverity::Moderate,
             ChaosScenario::LeaderFailure => FaultSeverity::Major,
@@ -111,7 +111,7 @@ pub struct ChaosConfig {
     /// Deterministic seed (None for random)
     pub deterministic_seed: Option<u64>,
     /// Target drones (empty = all drones)
-    pub target_drones: Vec<DroneId, 16>,
+    pub affected_drones: Vec<DroneId, 16>,
     /// Excluded drones (never target these)
     pub excluded_drones: Vec<DroneId, 16>,
     /// Auto-expire faults
@@ -127,7 +127,7 @@ impl Default for ChaosConfig {
             injection_rate: 0.1, // 1 fault per 10 seconds
             max_concurrent_faults: 5,
             deterministic_seed: None,
-            target_drones: Vec::new(),
+            affected_drones: Vec::new(),
             excluded_drones: Vec::new(),
             auto_expire: true,
             default_fault_duration_ms: 5000,
@@ -159,8 +159,8 @@ pub struct InjectionEvent {
     pub fault_id: FaultId,
     /// Fault type
     pub fault_type: FaultType,
-    /// Target drone
-    pub target: Option<DroneId>,
+    /// Subject drone
+    pub subject: Option<DroneId>,
     /// Timestamp
     pub timestamp_ms: u64,
     /// Scenario that triggered this
@@ -240,14 +240,14 @@ impl ChaosController {
         Self::new(ChaosConfig::default())
     }
 
-    /// Register a drone as a potential target
+    /// Register a drone as a potential fault candidate
     pub fn register_drone(&mut self, drone_id: DroneId) {
         if !self.known_drones.contains(&drone_id) {
             self.known_drones.push(drone_id).ok();
         }
     }
 
-    /// Remove a drone from targets
+    /// Remove a drone from fault candidates
     pub fn unregister_drone(&mut self, drone_id: DroneId) {
         if let Some(pos) = self.known_drones.iter().position(|&d| d == drone_id) {
             self.known_drones.remove(pos);
@@ -383,8 +383,8 @@ impl ChaosController {
             ChaosScenario::NetworkPartition => {
                 self.execute_network_partition(timestamp_ms)?;
             }
-            ChaosScenario::ByzantineAttack => {
-                self.execute_byzantine_attack(timestamp_ms)?;
+            ChaosScenario::ByzantineFault => {
+                self.execute_byzantine_fault(timestamp_ms)?;
             }
             ChaosScenario::CascadingFailure => {
                 self.execute_cascading_failure(timestamp_ms)?;
@@ -415,19 +415,15 @@ impl ChaosController {
 
     fn execute_single_drone_failure(&mut self, timestamp_ms: u64) -> Result<()> {
         let phase = self.get_scenario_phase();
-        if phase > 0 {
-            return Ok(()); // Already executed
-        }
-
-        if let Some(target) = self.select_random_target() {
+        if let Some(drone_id) = self.select_random_drone() {
             let fault_id = self.injector.inject_fault(
                 FaultType::CommunicationFailure,
                 FaultSeverity::Critical,
-                Some(target),
+                Some(drone_id),
                 timestamp_ms,
             )?;
 
-            self.record_injection(fault_id, FaultType::CommunicationFailure, Some(target), timestamp_ms);
+            self.record_injection(fault_id, FaultType::CommunicationFailure, Some(drone_id), timestamp_ms);
             self.advance_phase();
         }
 
@@ -442,14 +438,14 @@ impl ChaosController {
 
         // Fail 3 drones
         for _ in 0..3 {
-            if let Some(target) = self.select_random_target() {
+            if let Some(drone_id) = self.select_random_drone() {
                 let fault_id = self.injector.inject_fault(
                     FaultType::CommunicationFailure,
                     FaultSeverity::Critical,
-                    Some(target),
+                    Some(drone_id),
                     timestamp_ms,
                 )?;
-                self.record_injection(fault_id, FaultType::CommunicationFailure, Some(target), timestamp_ms);
+                self.record_injection(fault_id, FaultType::CommunicationFailure, Some(drone_id), timestamp_ms);
             }
         }
 
@@ -477,15 +473,15 @@ impl ChaosController {
         Ok(())
     }
 
-    fn execute_byzantine_attack(&mut self, timestamp_ms: u64) -> Result<()> {
+    fn execute_byzantine_fault(&mut self, timestamp_ms: u64) -> Result<()> {
         let phase = self.get_scenario_phase();
         if phase > 0 {
             return Ok(());
         }
 
-        if let Some(target) = self.select_random_target() {
-            let fault_id = self.injector.inject_byzantine_behavior(target, timestamp_ms)?;
-            self.record_injection(fault_id, FaultType::Byzantine, Some(target), timestamp_ms);
+        if let Some(drone_id) = self.select_random_drone() {
+            let fault_id = self.injector.inject_byzantine_behavior(drone_id, timestamp_ms)?;
+            self.record_injection(fault_id, FaultType::Byzantine, Some(drone_id), timestamp_ms);
             self.advance_phase();
         }
 
@@ -507,14 +503,14 @@ impl ChaosController {
             return Ok(()); // Already caught up or max phases reached
         }
 
-        if let Some(target) = self.select_random_target() {
+        if let Some(drone_id) = self.select_random_drone() {
             let fault_id = self.injector.inject_fault(
                 FaultType::CommunicationFailure,
                 FaultSeverity::Major,
-                Some(target),
+                Some(drone_id),
                 timestamp_ms,
             )?;
-            self.record_injection(fault_id, FaultType::CommunicationFailure, Some(target), timestamp_ms);
+            self.record_injection(fault_id, FaultType::CommunicationFailure, Some(drone_id), timestamp_ms);
             self.advance_phase();
         }
 
@@ -541,14 +537,14 @@ impl ChaosController {
             _ => FaultSeverity::Major,
         };
 
-        if let Some(target) = self.select_random_target() {
+        if let Some(drone_id) = self.select_random_drone() {
             let fault_id = self.injector.inject_fault(
                 FaultType::SensorMalfunction,
                 severity,
-                Some(target),
+                Some(drone_id),
                 timestamp_ms,
             )?;
-            self.record_injection(fault_id, FaultType::SensorMalfunction, Some(target), timestamp_ms);
+            self.record_injection(fault_id, FaultType::SensorMalfunction, Some(drone_id), timestamp_ms);
             self.advance_phase();
         }
 
@@ -562,14 +558,14 @@ impl ChaosController {
         }
 
         // Target first drone (assume it's the leader for testing)
-        if let Some(&target) = self.known_drones.first() {
+        if let Some(&drone_id) = self.known_drones.first() {
             let fault_id = self.injector.inject_fault(
                 FaultType::CommunicationFailure,
                 FaultSeverity::Critical,
-                Some(target),
+                Some(drone_id),
                 timestamp_ms,
             )?;
-            self.record_injection(fault_id, FaultType::CommunicationFailure, Some(target), timestamp_ms);
+            self.record_injection(fault_id, FaultType::CommunicationFailure, Some(drone_id), timestamp_ms);
             self.advance_phase();
         }
 
@@ -595,14 +591,14 @@ impl ChaosController {
         let phase = self.get_scenario_phase() as usize;
         let fault_type = fault_types[phase % fault_types.len()];
 
-        if let Some(target) = self.select_random_target() {
+        if let Some(drone_id) = self.select_random_drone() {
             let fault_id = self.injector.inject_fault(
                 fault_type,
                 FaultSeverity::Moderate,
-                Some(target),
+                Some(drone_id),
                 timestamp_ms,
             )?;
-            self.record_injection(fault_id, fault_type, Some(target), timestamp_ms);
+            self.record_injection(fault_id, fault_type, Some(drone_id), timestamp_ms);
             self.last_injection_ms = timestamp_ms;
             self.advance_phase();
         }
@@ -622,14 +618,14 @@ impl ChaosController {
         // Phase 0: Inject faults (first 5 seconds)
         if phase == 0 && elapsed < 5000 {
             for _ in 0..3 {
-                if let Some(target) = self.select_random_target() {
+                if let Some(drone_id) = self.select_random_drone() {
                     let fault_id = self.injector.inject_fault(
                         FaultType::CommunicationFailure,
                         FaultSeverity::Major,
-                        Some(target),
+                        Some(drone_id),
                         timestamp_ms,
                     )?;
-                    self.record_injection(fault_id, FaultType::CommunicationFailure, Some(target), timestamp_ms);
+                    self.record_injection(fault_id, FaultType::CommunicationFailure, Some(drone_id), timestamp_ms);
                 }
             }
             self.advance_phase();
@@ -684,15 +680,15 @@ impl ChaosController {
             _ => FaultSeverity::Major,
         };
 
-        if let Some(target) = self.select_random_target() {
+        if let Some(drone_id) = self.select_random_drone() {
             let fault_id = self.injector.inject_fault(
                 fault_type,
                 severity,
-                Some(target),
+                Some(drone_id),
                 timestamp_ms,
             )?;
 
-            self.record_injection(fault_id, fault_type, Some(target), timestamp_ms);
+            self.record_injection(fault_id, fault_type, Some(drone_id), timestamp_ms);
             self.last_injection_ms = timestamp_ms;
         }
 
@@ -703,13 +699,13 @@ impl ChaosController {
     // HELPER METHODS
     // ═══════════════════════════════════════════════════════════════════════
 
-    fn select_random_target(&mut self) -> Option<DroneId> {
+    fn select_random_drone(&mut self) -> Option<DroneId> {
         let eligible: Vec<DroneId, 64> = self.known_drones
             .iter()
             .filter(|d| {
                 // Check if in target list (if specified)
-                let in_targets = self.config.target_drones.is_empty()
-                    || self.config.target_drones.contains(d);
+                let in_targets = self.config.affected_drones.is_empty()
+                    || self.config.affected_drones.contains(d);
 
                 // Check if not excluded
                 let not_excluded = !self.config.excluded_drones.contains(d);
@@ -741,13 +737,13 @@ impl ChaosController {
         &mut self,
         fault_id: FaultId,
         fault_type: FaultType,
-        target: Option<DroneId>,
+        subject: Option<DroneId>,
         timestamp_ms: u64,
     ) {
         let event = InjectionEvent {
             fault_id,
             fault_type,
-            target,
+            subject,
             timestamp_ms,
             scenario: self.active_scenario.as_ref().map(|c| c.scenario),
         };
@@ -905,7 +901,7 @@ mod tests {
     fn test_byzantine_scenario() {
         let mut controller = setup_controller();
 
-        controller.start_scenario(ChaosScenario::ByzantineAttack, 0).unwrap();
+        controller.start_scenario(ChaosScenario::ByzantineFault, 0).unwrap();
         assert_eq!(controller.active_fault_count(), 1);
     }
 
@@ -1007,8 +1003,8 @@ mod tests {
 
         // Check that excluded drones were never targeted
         for event in controller.get_history() {
-            if let Some(target) = event.target {
-                assert!(target.0 != 1 && target.0 != 2);
+            if let Some(drone_id) = event.subject {
+                assert!(drone_id.0 != 1 && drone_id.0 != 2);
             }
         }
     }

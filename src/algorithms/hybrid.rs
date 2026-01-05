@@ -6,7 +6,7 @@
 //!
 //! This module is feature-gated under `deep_rl`.
 
-use crate::algorithm_selector::{
+use crate::algorithms::selector::{
     calculate_reward, AlgorithmSelector, OptimizationState, QLearningConfig,
 };
 use crate::meta_heuristic::{

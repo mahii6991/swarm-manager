@@ -5,8 +5,8 @@
 //! - Tier 2: Regional PBFT consensus across cluster leaders
 //! - Tier 3: Global vote aggregation for large-scale decisions
 
-use crate::cluster_manager::{ClusterInfo, ClusterManager, JoinRequest, LocalRole, RebalanceAction};
-use crate::hierarchy_types::{
+use crate::system::clustering::{ClusterInfo, ClusterManager, JoinRequest, LocalRole, RebalanceAction};
+use crate::system::hierarchy::{
     ClusterId, HierarchicalMessage, HierarchyCommand, HierarchyConfig, HierarchyDecision,
     HierarchyProposal, HierarchyTier, RegionId,
 };

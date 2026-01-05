@@ -383,7 +383,7 @@ impl SwarmController {
     pub fn get_position(&self) -> Position
 
     /// Sets target position
-    pub fn set_target(&mut self, target: Position)
+    pub fn set_destination(&mut self, destination: Position)
 
     /// Checks for collisions with other drones
     pub fn check_collision(&self, other_positions: &[Position]) -> bool

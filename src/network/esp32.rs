@@ -20,7 +20,7 @@
 //! node.broadcast_heartbeat(current_time_ms);
 //! ```
 
-use crate::mesh_protocol::*;
+use crate::network::mesh::*;
 use crate::types::*;
 use heapless::Vec;
 

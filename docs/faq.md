@@ -14,7 +14,7 @@ Common questions and troubleshooting guide for the drone swarm system.
 
 A production-ready Rust library for autonomous drone swarm coordination, featuring:
 - Multi-drone formation control and path planning
-- Military-grade end-to-end encryption
+- Enterprise-grade end-to-end encryption
 - Swarm intelligence algorithms (PSO, ACO, GWO)
 - Federated learning for collaborative AI
 - Embedded systems support (no_std compatible)
@@ -23,7 +23,7 @@ A production-ready Rust library for autonomous drone swarm coordination, featuri
 
 - **Researchers**: Academic swarm robotics and multi-agent systems research
 - **Developers**: Building commercial drone applications (agriculture, delivery, monitoring)
-- **Defense contractors**: Secure military swarm systems
+- **Defense contractors**: Secure autonomous swarm systems
 - **Hobbyists**: DIY drone swarm projects and educational purposes
 - **Embedded engineers**: Real-time systems on STM32/ESP32/nRF52
 
@@ -114,7 +114,7 @@ See `Position` struct documentation for coordinate system details.
 
 ### How secure is the encryption?
 
-**Military-grade security**:
+**Enterprise-grade security**:
 - **Encryption**: ChaCha20-Poly1305 AEAD (256-bit keys)
 - **Signatures**: Ed25519 (128-bit security)
 - **Key exchange**: ECDH with Curve25519
@@ -654,7 +654,7 @@ You do **NOT** need to:
 **Potentially**, depending on your country and use case:
 
 - **Encryption**: ChaCha20 is generally export-controlled (check local laws)
-- **Drone technology**: Some countries restrict autonomous weapons
+- **Drone technology**: Some countries restrict autonomous systems
 - **Dual-use**: Swarm tech may be subject to ITAR/EAR in USA
 
 **Recommendation**: Consult legal counsel for commercial/defense applications.

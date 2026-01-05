@@ -3,14 +3,14 @@
 //! Tests system behavior at scale (50, 75, 100+ drones)
 
 use drone_swarm_system::types::{DroneId, DroneState, MissionStatus, Position, Velocity, NetworkAddress};
-use drone_swarm_system::swarm::{SwarmController, Formation};
-use drone_swarm_system::consensus::{ConsensusEngine, ConsensusMessage, SwarmCommand, NodeState};
-use drone_swarm_system::pso::{GlobalBestPSO, PSOOptions, Bounds as PSOBounds};
-use drone_swarm_system::gwo::{GWOOptimizer, GWOConfig, Bounds as GWOBounds};
-use drone_swarm_system::mission_planning::{Mission, Waypoint, MissionState, SurveyArea, SurveyPattern, generate_survey_mission, survey_to_mission, MAX_WAYPOINTS};
-use drone_swarm_system::telemetry::{TelemetryMonitor, DroneStatus, HealthStatus};
-use drone_swarm_system::mesh_protocol::{MeshNodeId, MeshMessage, MeshNeighbor, MessagePriority, EmergencyType, CommandAction, CommandTarget, MAX_MESH_NODES, MAX_HOPS};
-use drone_swarm_system::network::MeshNetwork;
+use drone_swarm_system::control::swarm::{SwarmController, Formation};
+use drone_swarm_system::consensus::raft::{ConsensusEngine, ConsensusMessage, SwarmCommand, NodeState};
+use drone_swarm_system::algorithms::pso::basic::{GlobalBestPSO, PSOOptions, Bounds as PSOBounds};
+use drone_swarm_system::algorithms::gwo::{GWOOptimizer, GWOConfig, Bounds as GWOBounds};
+use drone_swarm_system::control::mission::{Mission, Waypoint, MissionState, SurveyArea, SurveyPattern, generate_survey_mission, survey_to_mission, MAX_WAYPOINTS};
+use drone_swarm_system::system::telemetry::{TelemetryMonitor, DroneStatus, HealthStatus};
+use drone_swarm_system::network::mesh::{MeshNodeId, MeshMessage, MeshNeighbor, MessagePriority, EmergencyType, CommandAction, CommandTarget, MAX_MESH_NODES, MAX_HOPS};
+use drone_swarm_system::network::core::MeshNetwork;
 use std::collections::HashSet;
 use std::time::Instant;
 

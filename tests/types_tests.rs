@@ -695,7 +695,7 @@ mod swarm_task_tests {
 
         let task = SwarmTask {
             task_id: 100,
-            target: Position {
+            destination: Position {
                 x: 50.0,
                 y: 60.0,
                 z: 70.0,
@@ -715,7 +715,7 @@ mod swarm_task_tests {
     fn test_swarm_task_completion() {
         let task = SwarmTask {
             task_id: 200,
-            target: Position {
+            destination: Position {
                 x: 0.0,
                 y: 0.0,
                 z: 0.0,
@@ -738,7 +738,7 @@ mod swarm_task_tests {
 
         let task = SwarmTask {
             task_id: 300,
-            target: Position {
+            destination: Position {
                 x: 100.0,
                 y: 200.0,
                 z: 300.0,
@@ -759,7 +759,7 @@ mod swarm_task_tests {
 
         let task1 = SwarmTask {
             task_id: 400,
-            target: Position {
+            destination: Position {
                 x: 10.0,
                 y: 20.0,
                 z: 30.0,

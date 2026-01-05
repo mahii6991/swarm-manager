@@ -2,7 +2,7 @@
 
 # Drone Swarm System
 
-### Military-Grade Autonomous Drone Swarm Communication & Intelligence
+### Industrial-Grade Autonomous Drone Swarm Communication & Intelligence
 
 [![Rust](https://img.shields.io/badge/Rust-1.70%2B-orange?style=flat-square&logo=rust)](https://www.rust-lang.org/)
 [![Build](https://img.shields.io/github/actions/workflow/status/mahii6991/drone-swarm-system/ci.yml?branch=main&style=flat-square)](https://github.com/mahii6991/drone-swarm-system/actions)
@@ -39,7 +39,7 @@
 
 | | Feature | Description |
 |:---:|:---|:---|
-| :shield: | **Military-Grade Security** | ChaCha20-Poly1305 encryption, Ed25519 signatures, Byzantine fault tolerance |
+| :shield: | **Enterprise-Grade Security** | ChaCha20-Poly1305 encryption, Ed25519 signatures, Byzantine fault tolerance |
 | :globe_with_meridians: | **Mesh Networking** | Adaptive multi-hop routing supporting 100+ drones with self-healing topology |
 | :brain: | **Swarm Intelligence** | PSO, ACO, GWO, WOA bio-inspired optimization for collective decision making |
 | :handshake: | **Distributed Consensus** | SwarmRaft protocol with Merkle tree verification for tamper-evident logging |
@@ -270,7 +270,7 @@ drone-swarm-system/
 | Industry | Use Cases |
 |:---------|:----------|
 | **Drone Manufacturers** | Integrate swarm intelligence into your UAV product line |
-| **Defense & Dual-Use** | Tactical reconnaissance, perimeter security, ISR missions |
+| **Civilian & Enterprise** | Tactical reconnaissance, perimeter security, ISR missions |
 | **Security & Surveillance** | Automated patrol, crowd monitoring, critical infrastructure |
 | **Inspection & Mapping** | Solar farms, pipelines, power lines, agricultural surveys |
 | **Research Labs** | Academic research, algorithm development, swarm behavior studies |

@@ -85,13 +85,13 @@ fn main() {
         if step == 2 * STEPS / 3 {
             println!("\n[PHASE 3] 🎯 TARGET ACQUIRED: High-speed chase!");
             // Moving target
-            controller.set_target(Some(Position { x: 500.0, y: 500.0, z: 50.0 }));
+            controller.set_destination(Some(Position { x: 500.0, y: 500.0, z: 50.0 }));
         }
 
         // Update target position if tracking (simulating moving target)
         if step > 2 * STEPS / 3 {
             let t = (step as f32) * TIME_STEP;
-            controller.set_target(Some(Position { 
+            controller.set_destination(Some(Position { 
                 x: 500.0 + 10.0 * t.sin(), 
                 y: 500.0 + 10.0 * t.cos(), 
                 z: 50.0 

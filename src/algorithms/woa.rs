@@ -5,7 +5,7 @@
 //!
 //! Features:
 //! - Encircling prey (Exploitation)
-//! - Bubble-net attacking (Exploitation)
+//! - Bubble-net feeding (Exploitation)
 //! - Search for prey (Exploration)
 //!
 //! Suitable for:
@@ -178,7 +178,7 @@ impl WhaleOptimizer {
                     new_pos.z = rand_whale_pos.z - coeff_a * dz;
                 }
             } else {
-                // Bubble-net attacking method (Spiral updating position)
+                // Bubble-net feeding method (Spiral updating position)
                 // D' = |X_best - X(t)|
                 let dx = fabsf(best_pos.x - current_pos.x);
                 let dy = fabsf(best_pos.y - current_pos.y);

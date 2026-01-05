@@ -6,11 +6,11 @@
 //! - X25519 for key exchange
 //! - BLAKE3 for fast hashing
 //! - SHA3 for security-critical hashing
-//! - Replay attack protection via nonces
+//! - Replay protection via nonces
 //! - Perfect forward secrecy
 
 use crate::types::*;
-use crate::KEY_SIZE;
+use crate::types::KEY_SIZE;
 use aead::{AeadInPlace, KeyInit};
 use blake3::Hasher as Blake3Hasher;
 use chacha20poly1305::{ChaCha20Poly1305, Nonce, Tag};
@@ -274,7 +274,7 @@ impl Default for KeyStore {
     }
 }
 
-/// Replay attack protection via nonce tracking
+/// Replay protection via nonce tracking
 pub struct NonceTracker {
     /// Seen nonces (using sliding window)
     seen_nonces: heapless::FnvIndexMap<u64, u64, 1024>,
@@ -292,7 +292,7 @@ impl NonceTracker {
     pub fn check_nonce(&mut self, drone_id: DroneId, nonce: u64) -> Result<()> {
         let last_nonce = self.seen_nonces.get(&drone_id.as_u64()).unwrap_or(&0);
 
-        // Reject if nonce is not strictly increasing (replay attack)
+        // Reject if nonce is not strictly increasing (replay attempt)
         if nonce <= *last_nonce {
             return Err(SwarmError::AuthenticationFailed);
         }

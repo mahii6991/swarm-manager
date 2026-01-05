@@ -13,7 +13,7 @@
 
 use std::time::Instant;
 
-use drone_swarm_system::collision_avoidance::{AvoidanceConfig, AvoidanceAlgorithm, CollisionAvoidance};
+use drone_swarm_system::control::collision::{AvoidanceConfig, AvoidanceAlgorithm, CollisionAvoidance};
 
 /// Number of drones in simulation
 const NUM_DRONES: usize = 8;

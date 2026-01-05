@@ -5,14 +5,14 @@
 
 #![cfg(test)]
 
-use drone_swarm_system::consensus::*;
-use drone_swarm_system::crypto::*;
-use drone_swarm_system::fault_tolerance::*;
-use drone_swarm_system::federated::*;
-use drone_swarm_system::network::*;
-use drone_swarm_system::pso::*;
-use drone_swarm_system::security::*;
-use drone_swarm_system::swarm::*;
+use drone_swarm_system::consensus::raft::*;
+use drone_swarm_system::safety::crypto::*;
+use drone_swarm_system::safety::fault_tolerance::*;
+use drone_swarm_system::ml::federated::*;
+use drone_swarm_system::network::core::{MeshNetwork, NetworkMessage, MAX_NEIGHBORS};
+use drone_swarm_system::algorithms::pso::basic::*;
+use drone_swarm_system::safety::security::*;
+use drone_swarm_system::control::swarm::*;
 use drone_swarm_system::*;
 
 // ═══════════════════════════════════════════════════════════════════════════
@@ -626,7 +626,7 @@ fn stress_swarm_extreme_positions() {
     ];
 
     for (name, target) in test_positions {
-        let vel = controller.compute_target_velocity(target, 10.0);
+        let vel = controller.compute_destination_velocity(target, 10.0);
         let distance = controller.local_state().position.distance_to(&target);
         println!(
             "  {}: distance={:.2}, vel=({:.2}, {:.2}, {:.2})",

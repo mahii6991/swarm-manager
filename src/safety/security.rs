@@ -4,7 +4,7 @@
 use crate::types::*;
 use heapless::{FnvIndexMap, Vec};
 
-/// Security monitor for detecting and preventing attacks
+/// Security monitor for detecting and preventing threats
 pub struct SecurityMonitor {
     /// Anomaly detection threshold
     anomaly_threshold: u32,
@@ -79,7 +79,7 @@ impl Default for SecurityMonitor {
     }
 }
 
-/// Rate limiter to prevent DoS attacks
+/// Rate limiter to prevent DoS incidents
 pub struct RateLimiter {
     /// Maximum messages per window
     max_messages: u32,
@@ -183,7 +183,7 @@ impl IntrusionDetectionSystem {
             suspicious = true;
         }
 
-        // Check for repeated patterns (possible attack)
+        // Check for repeated patterns (possible anomaly)
         if Self::has_repetitive_pattern(message) {
             suspicious = true;
         }
@@ -196,7 +196,7 @@ impl IntrusionDetectionSystem {
                     *o.get()
                 }
                 Entry::Vacant(v) => {
-                    // If we can't track suspicious activity, treat as an attack
+                    // If we can't track suspicious activity, treat as a threat
                     // Security-safe default: fail closed
                     v.insert(1).map_err(|_| SwarmError::ResourceExhausted)?;
                     1

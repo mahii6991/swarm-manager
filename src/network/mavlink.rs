@@ -610,6 +610,7 @@ mod tests {
     use super::*;
 
     #[test]
+    #[cfg(feature = "simulation")]
     fn test_flight_mode_to_px4() {
         assert_eq!(FlightMode::Manual.to_px4_mode(), 1);
         assert_eq!(FlightMode::Offboard.to_px4_mode(), 6);

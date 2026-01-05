@@ -291,12 +291,12 @@ mod swarm_controller_tests {
     }
 
     #[test]
-    fn test_compute_target_velocity() {
+    fn test_compute_destination_velocity() {
         let pos = create_position(0.0, 0.0, 10.0);
         let controller = SwarmController::new(DroneId::new(1), pos);
 
         let target = create_position(100.0, 0.0, 10.0);
-        let vel = controller.compute_target_velocity(target, 5.0);
+        let vel = controller.compute_destination_velocity(target, 5.0);
 
         // Should move towards target (positive x)
         assert!(vel.vx > 0.0);
@@ -304,12 +304,12 @@ mod swarm_controller_tests {
     }
 
     #[test]
-    fn test_compute_target_velocity_at_target() {
+    fn test_compute_destination_velocity_at_target() {
         let pos = create_position(10.0, 10.0, 10.0);
         let controller = SwarmController::new(DroneId::new(1), pos);
 
         let target = create_position(10.0, 10.0, 10.0); // Same position
-        let vel = controller.compute_target_velocity(target, 5.0);
+        let vel = controller.compute_destination_velocity(target, 5.0);
 
         // Should be zero (already at target)
         assert_eq!(vel.vx, 0.0);
@@ -337,7 +337,7 @@ mod swarm_controller_tests {
 
         let task = SwarmTask {
             task_id: 1,
-            target: create_position(50.0, 50.0, 10.0),
+            destination: create_position(50.0, 50.0, 10.0),
             priority: TaskPriority::High,
             assigned_drones: heapless::Vec::new(),
             completed: false,
@@ -353,7 +353,7 @@ mod swarm_controller_tests {
 
         let task = SwarmTask {
             task_id: 1,
-            target: create_position(50.0, 50.0, 10.0),
+            destination: create_position(50.0, 50.0, 10.0),
             priority: TaskPriority::High,
             assigned_drones: heapless::Vec::new(),
             completed: false,
@@ -370,11 +370,11 @@ mod swarm_controller_tests {
     }
 
     #[test]
-    fn test_set_target() {
+    fn test_set_destination() {
         let pos = create_position(0.0, 0.0, 10.0);
         let mut controller = SwarmController::new(DroneId::new(1), pos);
 
-        controller.set_target(Some(create_position(100.0, 100.0, 50.0)));
+        controller.set_destination(Some(create_position(100.0, 100.0, 50.0)));
         // Just verify no panic
     }
 
@@ -459,7 +459,7 @@ mod task_allocator_tests {
 
         let task = SwarmTask {
             task_id: 1,
-            target: create_position(50.0, 50.0, 10.0),
+            destination: create_position(50.0, 50.0, 10.0),
             priority: TaskPriority::High,
             assigned_drones: heapless::Vec::new(),
             completed: false,
@@ -474,7 +474,7 @@ mod task_allocator_tests {
 
         let task = SwarmTask {
             task_id: 1,
-            target: create_position(50.0, 50.0, 10.0),
+            destination: create_position(50.0, 50.0, 10.0),
             priority: TaskPriority::High,
             assigned_drones: heapless::Vec::new(),
             completed: false,
@@ -499,7 +499,7 @@ mod task_allocator_tests {
 
         let task = SwarmTask {
             task_id: 1,
-            target: create_position(50.0, 50.0, 10.0),
+            destination: create_position(50.0, 50.0, 10.0),
             priority: TaskPriority::High,
             assigned_drones: heapless::Vec::new(),
             completed: false,
@@ -529,7 +529,7 @@ mod task_allocator_tests {
         // Add low priority task first
         let task_low = SwarmTask {
             task_id: 1,
-            target: create_position(10.0, 10.0, 10.0),
+            destination: create_position(10.0, 10.0, 10.0),
             priority: TaskPriority::Low,
             assigned_drones: heapless::Vec::new(),
             completed: false,
@@ -539,7 +539,7 @@ mod task_allocator_tests {
         // Add high priority task
         let task_high = SwarmTask {
             task_id: 2,
-            target: create_position(20.0, 20.0, 10.0),
+            destination: create_position(20.0, 20.0, 10.0),
             priority: TaskPriority::Critical,
             assigned_drones: heapless::Vec::new(),
             completed: false,

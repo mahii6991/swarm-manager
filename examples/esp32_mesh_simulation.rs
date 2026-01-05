@@ -17,8 +17,8 @@
 use std::collections::HashMap;
 use std::time::Instant;
 
-use drone_swarm_system::esp32_mesh::{MeshNode, ProcessResult};
-use drone_swarm_system::mesh_protocol::{
+use drone_swarm_system::network::esp32::{MeshNode, ProcessResult};
+use drone_swarm_system::network::mesh::{
     CommandAction, CommandTarget, EmergencyType, MeshMessage, MeshNodeId,
 };
 

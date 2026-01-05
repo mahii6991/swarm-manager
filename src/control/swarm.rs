@@ -9,7 +9,7 @@
 
 // Consensus, federated, and network types available for integration
 use crate::types::*;
-use crate::collision_avoidance::{CollisionAvoidance, AvoidanceConfig};
+use crate::control::collision::{CollisionAvoidance, AvoidanceConfig};
 use heapless::{FnvIndexMap, Vec};
 
 /// Swarm formation types
@@ -58,8 +58,8 @@ pub struct SwarmController {
     behavior: BehaviorMode,
     /// Task queue
     tasks: Vec<SwarmTask, 100>,
-    /// Target position (if any)
-    target_position: Option<Position>,
+    /// Destination (if any)
+    destination: Option<Position>,
     /// Collision avoidance system
     collision_avoidance: CollisionAvoidance,
 }
@@ -84,7 +84,7 @@ impl SwarmController {
             formation: Formation::Random,
             behavior: BehaviorMode::Exploration,
             tasks: Vec::new(),
-            target_position: None,
+            destination: None,
             collision_avoidance: CollisionAvoidance::new(AvoidanceConfig::default()),
         }
     }
@@ -232,11 +232,11 @@ impl SwarmController {
         }
     }
 
-    /// Compute desired velocity to reach target
-    pub fn compute_target_velocity(&self, target: Position, max_speed: f32) -> Velocity {
-        let dx = target.x - self.local_state.position.x;
-        let dy = target.y - self.local_state.position.y;
-        let dz = target.z - self.local_state.position.z;
+    /// Compute desired velocity to reach destination
+    pub fn compute_destination_velocity(&self, destination: Position, max_speed: f32) -> Velocity {
+        let dx = destination.x - self.local_state.position.x;
+        let dy = destination.y - self.local_state.position.y;
+        let dz = destination.z - self.local_state.position.z;
 
         let distance = libm::sqrtf(dx * dx + dy * dy + dz * dz);
 
@@ -267,11 +267,11 @@ impl SwarmController {
         let formation_pos = self.compute_formation_position();
 
         // Attraction to formation position
-        let formation_vel = self.compute_target_velocity(formation_pos, max_speed);
+        let formation_vel = self.compute_destination_velocity(formation_pos, max_speed);
 
-        // Target tracking (if target exists)
-        let target_vel = if let Some(target) = self.target_position {
-            self.compute_target_velocity(target, max_speed)
+        // Destination tracking (if destination exists)
+        let destination_vel = if let Some(destination) = self.destination {
+            self.compute_destination_velocity(destination, max_speed)
         } else {
             Velocity {
                 vx: 0.0,
@@ -281,10 +281,10 @@ impl SwarmController {
         };
 
         // Combine desired velocities
-        // Prioritize formation and target
-        let desired_vx = (formation_vel.vx + target_vel.vx).clamp(-max_speed, max_speed);
-        let desired_vy = (formation_vel.vy + target_vel.vy).clamp(-max_speed, max_speed);
-        let desired_vz = (formation_vel.vz + target_vel.vz).clamp(-max_speed, max_speed);
+        // Prioritize formation and destination
+        let desired_vx = (formation_vel.vx + destination_vel.vx).clamp(-max_speed, max_speed);
+        let desired_vy = (formation_vel.vy + destination_vel.vy).clamp(-max_speed, max_speed);
+        let desired_vz = (formation_vel.vz + destination_vel.vz).clamp(-max_speed, max_speed);
 
         let current_pos = [
             self.local_state.position.x,
@@ -334,9 +334,9 @@ impl SwarmController {
         }
     }
 
-    /// Set target position
-    pub fn set_target(&mut self, target: Option<Position>) {
-        self.target_position = target;
+    /// Set destination
+    pub fn set_destination(&mut self, destination: Option<Position>) {
+        self.destination = destination;
     }
 
     /// Get swarm size
@@ -386,7 +386,7 @@ impl SwarmController {
 }
 
 // Re-export TaskAllocator which was moved to task_allocation module
-pub use crate::task_allocation::TaskAllocator;
+pub use crate::control::task::TaskAllocator;
 
 #[cfg(test)]
 mod tests {

@@ -40,9 +40,9 @@ impl TaskAllocator {
         let task_count = self.tasks.len();
         for i in 0..task_count {
             if !self.tasks[i].completed {
-                let target = self.tasks[i].target;
+                let destination = self.tasks[i].destination;
                 let task_id = self.tasks[i].task_id;
-                let nearest = self.find_nearest_drone(&target, drone_states);
+                let nearest = self.find_nearest_drone(&destination, drone_states);
                 if let Some(drone_id) = nearest {
                     self.tasks[i].assigned_drones.clear();
                     // Propagate errors - task assignment is mission-critical
@@ -61,11 +61,11 @@ impl TaskAllocator {
     }
 
     /// Find nearest drone to a position
-    fn find_nearest_drone(&self, target: &Position, drones: &[DroneState]) -> Option<DroneId> {
+    fn find_nearest_drone(&self, location: &Position, drones: &[DroneState]) -> Option<DroneId> {
         let mut nearest: Option<(DroneId, f32)> = None;
 
         for drone in drones {
-            let distance = drone.position.distance_to(target);
+            let distance = drone.position.distance_to(location);
             if let Some((_, min_dist)) = nearest {
                 if distance < min_dist {
                     nearest = Some((drone.id, distance));

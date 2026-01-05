@@ -9,8 +9,8 @@
 //! - Quality-aware route selection
 //! - Seamless route switching
 
-use crate::link_predictor::{LinkHealthStatus, LinkPredictor, LinkPredictorConfig, LinkTrend};
-use crate::trajectory_predictor::{KalmanConfig, TrajectoryPredictor};
+use crate::network::routing::predictor::{LinkHealthStatus, LinkPredictor, LinkPredictorConfig, LinkTrend};
+use crate::control::prediction::{KalmanConfig, TrajectoryPredictor};
 use crate::types::{DroneId, Position, Result, SwarmError, Velocity};
 use heapless::{FnvIndexMap, Vec};
 use serde::{Deserialize, Serialize};

@@ -1,7 +1,7 @@
 //! Comprehensive tests for the PSO Advanced module
 
-use drone_swarm_system::pso::*;
-use drone_swarm_system::pso_advanced::*;
+use drone_swarm_system::algorithms::pso::basic::*;
+use drone_swarm_system::algorithms::pso::advanced::*;
 
 // ═══════════════════════════════════════════════════════════════════════════
 // TopologyManager Tests

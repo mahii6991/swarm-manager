@@ -8,7 +8,7 @@
 //! - Emergency detection
 //! - Edge cases and boundary conditions
 
-use drone_swarm_system::collision_avoidance::{
+use drone_swarm_system::control::collision::{
     AvoidanceAlgorithm, AvoidanceConfig, CollisionAvoidance, Geofence, Obstacle,
     MAX_GEOFENCE_VERTICES, MAX_OBSTACLES,
 };

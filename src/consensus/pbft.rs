@@ -8,7 +8,7 @@
 //! - Three phases: Pre-Prepare, Prepare, Commit
 //! - View change for leader failure recovery
 
-use crate::hierarchy_types::{
+use crate::system::hierarchy::{
     HierarchyCommand, HierarchyDecision, HierarchyProposal, PBFTState, RegionId,
 };
 use crate::types::{DroneId, Result, SwarmError};

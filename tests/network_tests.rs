@@ -2,7 +2,10 @@
 //!
 //! Tests network message handling, neighbor discovery, routing, and link quality
 
-use drone_swarm_system::network::*;
+use drone_swarm_system::network::core::{
+    MeshNetwork, NetworkMessage, NetworkStats, Neighbor,
+    MAX_NEIGHBORS, MAX_ROUTES, MAX_NETWORK_HOPS,
+};
 use drone_swarm_system::types::*;
 use heapless::Vec;
 
@@ -242,7 +245,7 @@ mod network_message_tests {
 
     #[test]
     fn test_network_message_link_state_update() {
-        let mut neighbors: Vec<(DroneId, f32), MAX_NEIGHBORS> = Vec::new();
+        let mut neighbors: Vec<(DroneId, f32), { MAX_NEIGHBORS }> = Vec::new();
         neighbors.push((DroneId::new(2), 0.9)).unwrap();
         neighbors.push((DroneId::new(3), 0.8)).unwrap();
 
