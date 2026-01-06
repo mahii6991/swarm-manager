@@ -3,7 +3,7 @@ title: "Drone Swarm Communication System"
 description: "Ultra-secure drone swarm communication system with military-grade security, consensus algorithms, and federated learning"
 author: "Mahendra Singh Rajpoot"
 email: "m.s.rajpoot20@gmail.com"
-baseurl: "/drone-swarm-system"
+baseurl: "/swarm-manager"
 url: "https://mahii6991.github.io"
 
 # Theme (using remote_theme for GitHub Pages compatibility)
@@ -11,12 +11,12 @@ remote_theme: just-the-docs/just-the-docs
 color_scheme: dark
 
 # Repository
-repository: mahii6991/drone-swarm-system
+repository: mahii6991/swarm-manager
 github_username: mahii6991
 
 # Social links
 social_links:
-  github: mahii6991/drone-swarm-system
+  github: mahii6991/swarm-manager
 
 # Build settings
 markdown: kramdown
@@ -45,9 +45,9 @@ footer_content: "Copyright &copy; 2025 Mahendra Singh Rajpoot. Distributed under
 # Aux links (top right)
 aux_links:
   "View on GitHub":
-    - "https://github.com/mahii6991/drone-swarm-system"
+    - "https://github.com/mahii6991/swarm-manager"
   "Download":
-    - "https://github.com/mahii6991/drone-swarm-system/archive/refs/heads/main.zip"
+    - "https://github.com/mahii6991/swarm-manager/archive/refs/heads/main.zip"
 
 # Plugins
 plugins:
