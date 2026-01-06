@@ -1,10 +1,10 @@
 site_name: Drone Swarm System
 site_description: Industrial-Grade Autonomous Drone Swarm Communication & Intelligence
 site_author: Mahendra Singh Rajpoot
-site_url: https://mahii6991.github.io/drone-swarm-system/
+site_url: https://mahii6991.github.io/swarm-manager/
 
 repo_name: mahii6991/drone-swarm-system
-repo_url: https://github.com/mahii6991/drone-swarm-system
+repo_url: https://github.com/mahii6991/swarm-manager
 
 theme:
   name: material
