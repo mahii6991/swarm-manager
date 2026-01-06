@@ -96,7 +96,7 @@ knowledge base/
 # Exception: README.md and docs/ are allowed
 *.md
 !README.md
-!docs/*.md
+!docs/**/*.md
 
 # Shell scripts (keep locally)
 *.sh
