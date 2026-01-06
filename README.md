@@ -1,6 +1,6 @@
 <div align="center">
 
-# Drone Swarm System
+# Swarm Manager
 
 ### Industrial-Grade Autonomous Drone Swarm Communication & Intelligence
 
