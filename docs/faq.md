@@ -159,7 +159,7 @@ cargo build --example simple_swarm --features std
 **Solution**: Disable default features and enable `no_std` feature:
 ```toml
 [dependencies]
-drone-swarm-system = { version = "0.1", default-features = false, features = ["no_std"] }
+swarm-manager = { version = "0.1", default-features = false, features = ["no_std"] }
 ```
 
 ### Linker error: "undefined reference to `_Unwind_Resume`"
@@ -460,7 +460,7 @@ let target = swarm.get_target_position_cached()?;  // No recomputation
 2. **Disable unused features**:
    ```toml
    [dependencies]
-   drone-swarm-system = { version = "0.1", default-features = false, features = ["swarm", "pso"] }
+   swarm-manager = { version = "0.1", default-features = false, features = ["swarm", "pso"] }
    ```
 
 3. **Use release mode**:
@@ -670,7 +670,7 @@ We follow **responsible disclosure**:
 
 ## Still Have Questions?
 
-- [Join GitHub Discussions](https://github.com/mahii6991/drone-swarm-system/discussions)
+- [Join GitHub Discussions](https://github.com/mahii6991/swarm-manager/discussions)
 - [Read the Full Documentation](index.md)
 - [Check Examples](examples.md)
 - [Review API Reference](api-reference.md)

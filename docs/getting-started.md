@@ -48,8 +48,8 @@ This guide will help you get the Drone Swarm Communication System up and running
 ### 1. Clone the Repository
 
 ```bash
-git clone https://github.com/mahii6991/drone-swarm-system.git
-cd drone-swarm-system
+git clone https://github.com/mahii6991/swarm-manager.git
+cd swarm-manager
 ```
 
 ### 2. Build the Project
@@ -370,15 +370,15 @@ Now that you have the basics working:
 1. **Read the [Architecture Guide](architecture.md)** - Understand the system design
 2. **Explore the [API Reference](api-reference.md)** - Learn about all available modules
 3. **Review [Security Best Practices](security.md)** - Secure your deployment
-4. **Check out [Examples](https://github.com/mahii6991/drone-swarm-system/tree/main/examples)** - See real-world usage
+4. **Check out [Examples](https://github.com/mahii6991/swarm-manager/tree/main/examples)** - See real-world usage
 
 ## Getting Help
 
 If you run into issues:
 
 - Check the [FAQ](faq.md)
-- Search [GitHub Issues](https://github.com/mahii6991/drone-swarm-system/issues)
-- Ask in [GitHub Discussions](https://github.com/mahii6991/drone-swarm-system/discussions)
+- Search [GitHub Issues](https://github.com/mahii6991/swarm-manager/issues)
+- Ask in [GitHub Discussions](https://github.com/mahii6991/swarm-manager/discussions)
 
 ## Embedded Deployment
 
@@ -392,11 +392,11 @@ rustup target add thumbv7em-none-eabihf
 cargo build --release --target thumbv7em-none-eabihf --no-default-features
 
 # Flash to device
-probe-rs run --chip STM32F407VGTx target/thumbv7em-none-eabihf/release/drone-swarm-system
+probe-rs run --chip STM32F407VGTx target/thumbv7em-none-eabihf/release/swarm-manager
 ```
 
 See the hardware guides ([ESP32](hardware-esp32.md), [STM32](hardware-stm32.md), [PX4](hardware-px4.md)) for detailed instructions.
 
 ---
 
-**Ready to build your swarm?** Check out the [Examples](https://github.com/mahii6991/drone-swarm-system/tree/main/examples) directory for more advanced use cases!
+**Ready to build your swarm?** Check out the [Examples](https://github.com/mahii6991/swarm-manager/tree/main/examples) directory for more advanced use cases!

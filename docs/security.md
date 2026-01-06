@@ -511,7 +511,7 @@ pub fn handle_security_incident(incident: SecurityIncident) {
 If you discover a security vulnerability:
 
 1. **DO NOT** open a public issue
-2. Email: security@drone-swarm-system.example.com
+2. Email: security@swarm-manager.example.com
 3. Use PGP encryption (key on website)
 4. Include: description, reproduction steps, impact assessment
 5. Wait for acknowledgment before public disclosure

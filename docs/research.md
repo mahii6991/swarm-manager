@@ -358,7 +358,7 @@ We welcome research collaborations in:
 - Formal verification of swarm algorithms
 - Hardware acceleration for embedded AI
 
-**Contact**: [Join our research mailing list](https://github.com/mahii6991/drone-swarm-system/discussions)
+**Contact**: [Join our research mailing list](https://github.com/mahii6991/swarm-manager/discussions)
 
 ---
 
@@ -375,7 +375,7 @@ As an open-source project, we track academic citations:
   author = {Mahii Si Raj and Contributors},
   title = {Drone Swarm System: Rust-Based Autonomous Swarm Intelligence},
   year = {2025},
-  url = {https://github.com/mahii6991/drone-swarm-system},
+  url = {https://github.com/mahii6991/swarm-manager},
   version = {0.1.0}
 }
 ```
@@ -423,7 +423,7 @@ We plan to submit to:
 
 ## Stay Updated
 
-- [GitHub Discussions](https://github.com/mahii6991/drone-swarm-system/discussions) - Research announcements
+- [GitHub Discussions](https://github.com/mahii6991/swarm-manager/discussions) - Research announcements
 - [arXiv Feed](https://arxiv.org/search/?query=drone+swarm+rust&searchtype=all) - Latest papers
 - [Google Scholar Alerts](https://scholar.google.com/scholar_alerts) - Citation tracking
 

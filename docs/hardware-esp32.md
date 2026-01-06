@@ -107,7 +107,7 @@ version = "0.1.0"
 edition = "2021"
 
 [dependencies]
-drone-swarm-system = { version = "0.1", features = ["std"] }
+swarm-manager = { version = "0.1", features = ["std"] }
 esp-idf-svc = { version = "0.49", features = ["binstart"] }
 esp-idf-hal = "0.44"
 embedded-svc = "0.28"
@@ -662,7 +662,7 @@ Common issues:
 
 ### Complete ESP32 Swarm Node
 
-[`examples/esp32_mesh_node.rs`](https://github.com/mahii6991/drone-swarm-system/tree/main/examples) - Full implementation with:
+[`examples/esp32_mesh_node.rs`](https://github.com/mahii6991/swarm-manager/tree/main/examples) - Full implementation with:
 - Dual-core network + control
 - IMU + GPS sensor fusion
 - OTA update support
@@ -671,7 +671,7 @@ Common issues:
 
 ### ESP32 Ground Control Station
 
-[`examples/esp32_gcs.rs`](https://github.com/mahii6991/drone-swarm-system/tree/main/examples) - Web-based GCS:
+[`examples/esp32_gcs.rs`](https://github.com/mahii6991/swarm-manager/tree/main/examples) - Web-based GCS:
 - WiFi AP mode for laptop connection
 - REST API for commands
 - WebSocket for telemetry
@@ -686,4 +686,4 @@ Common issues:
 
 ---
 
-**Need help with ESP32?** [Join the discussion](https://github.com/mahii6991/drone-swarm-system/discussions)
+**Need help with ESP32?** [Join the discussion](https://github.com/mahii6991/swarm-manager/discussions)

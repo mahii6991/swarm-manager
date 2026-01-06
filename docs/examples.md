@@ -436,7 +436,7 @@ cargo test --example pso_optimization -- --nocapture
 - [Read the Architecture Guide](architecture.md) to understand system internals
 - [Check out Tutorials](tutorials.md) for step-by-step guides
 - [Review API Reference](api-reference.md) for detailed documentation
-- [Join the Community](https://github.com/mahii6991/drone-swarm-system/discussions) to ask questions
+- [Join the Community](https://github.com/mahii6991/swarm-manager/discussions) to ask questions
 
 ---
 

@@ -2,13 +2,13 @@
 
 ![Rust](https://img.shields.io/badge/rust-1.70%2B-orange.svg)
 ![License](https://img.shields.io/badge/license-Apache%202.0-blue.svg)
-![Build Status](https://img.shields.io/github/actions/workflow/status/mahii6991/drone-swarm-system/ci.yml?branch=main)
+![Build Status](https://img.shields.io/github/actions/workflow/status/mahii6991/swarm-manager/ci.yml?branch=main)
 
 A world-class, safety-critical drone swarm communication system written in **Rust**, featuring military-grade security, consensus algorithms, and federated learning for autonomous swarm coordination.
 
 ## Quick Links
 
-- [GitHub Repository](https://github.com/mahii6991/drone-swarm-system)
+- [GitHub Repository](https://github.com/mahii6991/swarm-manager)
 - [Getting Started](getting-started.md)
 - [Architecture](architecture.md)
 - [API Reference](api-reference.md)
@@ -98,8 +98,8 @@ Disaster area assessment, communication relay networks, and resource coordinatio
 
 ```bash
 # Clone the repository
-git clone https://github.com/mahii6991/drone-swarm-system.git
-cd drone-swarm-system
+git clone https://github.com/mahii6991/swarm-manager.git
+cd swarm-manager
 
 # Build the project
 cargo build --release
@@ -182,7 +182,7 @@ cargo run --example simple_swarm
 | Core algorithms (PSO, ACO, GWO, WOA, etc.) | Apache 2.0 (Open Source) |
 | Enterprise features | Commercial license available |
 
-This project is licensed under the Apache License 2.0 - see [LICENSE](https://github.com/mahii6991/drone-swarm-system/blob/main/LICENSE) for details.
+This project is licensed under the Apache License 2.0 - see [LICENSE](https://github.com/mahii6991/swarm-manager/blob/main/LICENSE) for details.
 
 **Enterprise Licensing:** For commercial deployments requiring dedicated support, custom integrations, or proprietary features, contact: **m.s.rajpoot20@gmail.com**
 
@@ -196,7 +196,7 @@ If you use this project in your research, please cite:
   title = {Ultra-Secure Drone Swarm Communication System},
   year = {2025},
   publisher = {GitHub},
-  url = {https://github.com/mahii6991/drone-swarm-system}
+  url = {https://github.com/mahii6991/swarm-manager}
 }
 ```
 

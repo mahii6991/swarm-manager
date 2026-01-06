@@ -5,7 +5,7 @@ Step-by-step guides to help you build real-world drone swarm applications.
 ## Getting Started Tutorials
 
 ### Your First Swarm
-Create a simple 3-drone swarm with formation control and mesh networking in under 10 minutes. See the [examples](https://github.com/mahii6991/drone-swarm-system/tree/main/examples) directory.
+Create a simple 3-drone swarm with formation control and mesh networking in under 10 minutes. See the [examples](https://github.com/mahii6991/swarm-manager/tree/main/examples) directory.
 
 ### Path Planning with PSO
 Implement particle swarm optimization for efficient multi-waypoint navigation. Run `cargo run --example pso_optimization`.
@@ -37,7 +37,7 @@ Fine-tune GWO parameters for multi-objective swarm coordination. Run `cargo run 
 
 ## Example Projects
 
-Check out the [examples directory](https://github.com/mahii6991/drone-swarm-system/tree/main/examples) for runnable demonstrations:
+Check out the [examples directory](https://github.com/mahii6991/swarm-manager/tree/main/examples) for runnable demonstrations:
 
 - `simple_swarm.rs` - Basic swarm initialization
 - `pso_optimization.rs` - Particle swarm optimization
@@ -48,4 +48,4 @@ Check out the [examples directory](https://github.com/mahii6991/drone-swarm-syst
 
 ---
 
-Need help? [Ask on GitHub Discussions](https://github.com/mahii6991/drone-swarm-system/discussions).
+Need help? [Ask on GitHub Discussions](https://github.com/mahii6991/swarm-manager/discussions).

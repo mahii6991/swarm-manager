@@ -149,7 +149,7 @@ mavproxy.py --master=/dev/ttyACM0 --baudrate=921600
 
 ```toml
 [dependencies]
-drone-swarm-system = "0.1"
+swarm-manager = "0.1"
 mavlink = { version = "0.13", features = ["default", "common", "uavionix"] }
 serialport = "4.0"
 tokio = { version = "1", features = ["full"] }
@@ -740,14 +740,14 @@ fn main() -> Result<()> {
 
 ## Example Projects
 
-### [`examples/px4_formation_flight.rs`](https://github.com/mahii6991/drone-swarm-system/tree/main/examples)
+### [`examples/px4_formation_flight.rs`](https://github.com/mahii6991/swarm-manager/tree/main/examples)
 Complete formation flight with:
 - MAVLink communication
 - Position control
 - Formation transitions
 - Emergency landing
 
-### [`examples/ardupilot_swarm.rs`](https://github.com/mahii6991/drone-swarm-system/tree/main/examples)
+### [`examples/ardupilot_swarm.rs`](https://github.com/mahii6991/swarm-manager/tree/main/examples)
 ArduPilot-specific example with mission upload.
 
 ---
@@ -759,4 +759,4 @@ ArduPilot-specific example with mission upload.
 
 ---
 
-**Questions?** [Ask on GitHub Discussions](https://github.com/mahii6991/drone-swarm-system/discussions)
+**Questions?** [Ask on GitHub Discussions](https://github.com/mahii6991/swarm-manager/discussions)

@@ -379,7 +379,7 @@ See `benches/` directory for example benchmark code.
 
 We track performance regression with every commit:
 
-- [View CI Benchmark Results](https://github.com/mahii6991/drone-swarm-system/actions)
+- [View CI Benchmark Results](https://github.com/mahii6991/swarm-manager/actions)
 
 ---
 

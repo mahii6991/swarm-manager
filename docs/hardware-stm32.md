@@ -81,7 +81,7 @@ cd stm32_drone_swarm
 cat >> Cargo.toml << 'EOF'
 
 [dependencies]
-drone-swarm-system = { version = "0.1", default-features = false, features = ["no_std"] }
+swarm-manager = { version = "0.1", default-features = false, features = ["no_std"] }
 cortex-m = "0.7"
 cortex-m-rt = "0.7"
 panic-halt = "0.2"
@@ -523,7 +523,7 @@ loop {
 
 ### Complete STM32F7 Drone Controller
 
-See [`examples/stm32_deployment.rs`](https://github.com/mahii6991/drone-swarm-system/blob/main/examples/stm32_deployment.rs) for:
+See [`examples/stm32_deployment.rs`](https://github.com/mahii6991/swarm-manager/blob/main/examples/stm32_deployment.rs) for:
 - Full initialization sequence
 - Sensor fusion (IMU + GPS)
 - Motor control (PWM output)
@@ -532,7 +532,7 @@ See [`examples/stm32_deployment.rs`](https://github.com/mahii6991/drone-swarm-sy
 
 ### Bootloader for OTA Updates
 
-See [`examples/stm32_bootloader.rs`](https://github.com/mahii6991/drone-swarm-system/blob/main/examples/stm32_bootloader.rs)
+See [`examples/stm32_bootloader.rs`](https://github.com/mahii6991/swarm-manager/blob/main/examples/stm32_bootloader.rs)
 
 ---
 
@@ -562,4 +562,4 @@ st-flash --reset --connect-under-reset erase
 
 ---
 
-**Hardware support questions?** [Ask on GitHub Discussions](https://github.com/mahii6991/drone-swarm-system/discussions)
+**Hardware support questions?** [Ask on GitHub Discussions](https://github.com/mahii6991/swarm-manager/discussions)
