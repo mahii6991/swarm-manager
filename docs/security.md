@@ -1,9 +1,3 @@
----
-layout: default
-title: Security Best Practices
-nav_order: 5
----
-
 # Security Best Practices
 
 This guide covers security best practices for deploying and operating the Drone Swarm Communication System.
@@ -536,4 +530,4 @@ We follow a 90-day disclosure policy:
 
 **Security is everyone's responsibility. Stay vigilant!**
 
-[Back to Documentation Home](./index.html)
+[Back to Documentation Home](index.md)

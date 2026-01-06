@@ -62,7 +62,11 @@ __pycache__/
 *$py.class
 .Python
 venv/
+.venv/
 env/
+
+# MkDocs
+site/
 
 # MacOS
 .AppleDouble

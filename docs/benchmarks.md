@@ -1,9 +1,3 @@
----
-layout: default
-title: Benchmarks & Performance
-nav_order: 7
----
-
 # Performance Benchmarks
 
 Real-world performance metrics and comparisons for the drone swarm system.

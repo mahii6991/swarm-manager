@@ -1,9 +1,3 @@
----
-layout: default
-title: Home
-nav_order: 1
----
-
 # Ultra-Secure Drone Swarm Communication System
 
 ![Rust](https://img.shields.io/badge/rust-1.70%2B-orange.svg)
@@ -14,11 +8,11 @@ A world-class, safety-critical drone swarm communication system written in **Rus
 
 ## Quick Links
 
-- [GitHub Repository](https://github.com/mahii6991/swarm-manager)
-- [Getting Started](./getting-started.html)
-- [Architecture](./architecture.html)
-- [API Reference](./api-reference.html)
-- [Security Guide](./security.html)
+- [GitHub Repository](https://github.com/mahii6991/drone-swarm-system)
+- [Getting Started](getting-started.md)
+- [Architecture](architecture.md)
+- [API Reference](api-reference.md)
+- [Security Guide](security.md)
 
 ## Why This Project?
 
@@ -104,8 +98,8 @@ Disaster area assessment, communication relay networks, and resource coordinatio
 
 ```bash
 # Clone the repository
-git clone https://github.com/mahii6991/swarm-manager.git
-cd swarm-manager
+git clone https://github.com/mahii6991/drone-swarm-system.git
+cd drone-swarm-system
 
 # Build the project
 cargo build --release
@@ -117,7 +111,7 @@ cargo test
 cargo run --example simple_swarm
 ```
 
-[Read the full Getting Started guide →](./getting-started.html)
+[Read the full Getting Started guide →](getting-started.md)
 
 ## Community
 

@@ -1,0 +1,69 @@
+site_name: Drone Swarm System
+site_description: Industrial-Grade Autonomous Drone Swarm Communication & Intelligence
+site_author: Mahendra Singh Rajpoot
+site_url: https://mahii6991.github.io/drone-swarm-system/
+
+repo_name: mahii6991/drone-swarm-system
+repo_url: https://github.com/mahii6991/drone-swarm-system
+
+theme:
+  name: material
+  palette:
+    # Palette toggle for light mode
+    - media: "(prefers-color-scheme: light)"
+      scheme: default
+      primary: indigo
+      accent: indigo
+      toggle:
+        icon: material/brightness-7
+        name: Switch to dark mode
+
+    # Palette toggle for dark mode
+    - media: "(prefers-color-scheme: dark)"
+      scheme: slate
+      primary: blue
+      accent: blue
+      toggle:
+        icon: material/brightness-4
+        name: Switch to light mode
+  features:
+    - navigation.tabs
+    - navigation.sections
+    - navigation.top
+    - navigation.tracking
+    - search.suggest
+    - search.highlight
+    - content.code.copy
+    - content.action.edit
+
+markdown_extensions:
+  - admonition
+  - pymdownx.details
+  - pymdownx.superfences
+  - pymdownx.highlight:
+      anchor_linenums: true
+  - pymdownx.inlinehilite
+  - pymdownx.snippets
+  - pymdownx.tabbed:
+      alternate_style: true
+  - tables
+  - toc:
+      permalink: true
+
+nav:
+  - Home: index.md
+  - Getting Started: getting-started.md
+  - Architecture: architecture.md
+  - Hardware:
+    - ESP32 Setup: hardware-esp32.md
+    - PX4 Integration: hardware-px4.md
+    - STM32 Support: hardware-stm32.md
+  - Guides:
+    - Tutorials: tutorials.md
+    - Examples: examples.md
+    - Security: security.md
+  - Reference:
+    - API Reference: api-reference.md
+    - Benchmarks: benchmarks.md
+    - Research: research.md
+  - FAQ: faq.md

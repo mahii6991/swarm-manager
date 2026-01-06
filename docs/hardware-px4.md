@@ -1,10 +1,3 @@
----
-layout: default
-title: PX4/ArduPilot Integration
-parent: Tutorials
-nav_order: 3
----
-
 # PX4 and ArduPilot Integration Guide
 
 Integrate the drone swarm system with popular flight controllers using MAVLink protocol.
@@ -761,9 +754,8 @@ ArduPilot-specific example with mission upload.
 
 ## Next Steps
 
-- [Gazebo Simulation Tutorial](./tutorial-simulation.html) - Test in realistic 3D environment
-- [Performance Optimization](./tutorial-performance.html) - Reduce latency
-- [Security Hardening](./tutorial-security-hardening.html) - Secure MAVLink
+- [ESP32 WiFi Mesh](hardware-esp32.md) - Cost-effective communication
+- [STM32 Deployment](hardware-stm32.md) - Lower power alternative
 
 ---
 

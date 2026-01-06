@@ -1,9 +1,3 @@
----
-layout: default
-title: FAQ & Troubleshooting
-nav_order: 9
----
-
 # Frequently Asked Questions
 
 Common questions and troubleshooting guide for the drone swarm system.
@@ -35,7 +29,7 @@ The library is **hardware-agnostic** and works with any drone platform via integ
 - **Companion computers**: Raspberry Pi, Jetson Nano, ODROID
 - **Simulators**: Gazebo, AirSim, JMAVSim
 
-See [Hardware Integration Guide](./hardware-stm32.html) for details.
+See [Hardware Integration Guide](hardware-stm32.md) for details.
 
 ### Is this production-ready?
 
@@ -676,10 +670,10 @@ We follow **responsible disclosure**:
 
 ## Still Have Questions?
 
-- [Join GitHub Discussions](https://github.com/mahii6991/swarm-manager/discussions)
-- [Read the Full Documentation](./index.html)
-- [Check Examples](./examples.html)
-- [Review API Reference](./api-reference.html)
+- [Join GitHub Discussions](https://github.com/mahii6991/drone-swarm-system/discussions)
+- [Read the Full Documentation](index.md)
+- [Check Examples](examples.md)
+- [Review API Reference](api-reference.md)
 
 ---
 

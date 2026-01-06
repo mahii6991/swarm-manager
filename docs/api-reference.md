@@ -1,9 +1,3 @@
----
-layout: default
-title: API Reference
-nav_order: 4
----
-
 # API Reference
 
 Complete reference for all public APIs in the Drone Swarm Communication System.
@@ -556,4 +550,4 @@ This will generate and open the full documentation in your browser, including:
 
 ---
 
-[Back to Documentation Home](./index.html)
+[Back to Documentation Home](index.md)

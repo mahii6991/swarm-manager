@@ -1,9 +1,3 @@
----
-layout: default
-title: Architecture
-nav_order: 3
----
-
 # System Architecture
 
 This document provides a comprehensive overview of the Drone Swarm Communication System architecture.
@@ -603,4 +597,4 @@ Multiple security layers:
 
 ---
 
-For implementation details, see the [API Reference](./api-reference.html).
+For implementation details, see the [API Reference](api-reference.md).

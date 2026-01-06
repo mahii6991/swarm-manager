@@ -1,9 +1,3 @@
----
-layout: default
-title: Examples
-nav_order: 4
----
-
 # Code Examples
 
 Complete, runnable examples demonstrating key features of the drone swarm system.
@@ -439,9 +433,9 @@ cargo test --example pso_optimization -- --nocapture
 
 ## Next Steps
 
-- [Read the Architecture Guide](./architecture.html) to understand system internals
-- [Check out Tutorials](./tutorials.html) for step-by-step guides
-- [Review API Reference](./api-reference.html) for detailed documentation
+- [Read the Architecture Guide](architecture.md) to understand system internals
+- [Check out Tutorials](tutorials.md) for step-by-step guides
+- [Review API Reference](api-reference.md) for detailed documentation
 - [Join the Community](https://github.com/mahii6991/drone-swarm-system/discussions) to ask questions
 
 ---

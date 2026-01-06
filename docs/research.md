@@ -1,9 +1,3 @@
----
-layout: default
-title: Research & Publications
-nav_order: 8
----
-
 # Research Foundation
 
 Academic research and publications that inform the drone swarm system architecture.

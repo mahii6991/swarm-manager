@@ -1,10 +1,3 @@
----
-layout: default
-title: ESP32 WiFi Mesh
-parent: Tutorials
-nav_order: 2
----
-
 # ESP32 WiFi Mesh Integration Guide
 
 Build cost-effective drone swarm communication using ESP32 WiFi mesh networking.
@@ -688,9 +681,8 @@ Common issues:
 
 ## Next Steps
 
-- [STM32 Integration](./hardware-stm32.html) - Lower power alternative
-- [PX4 Integration](./hardware-px4.html) - Flight controller integration
-- [Network Optimization](./tutorial-performance.html) - Maximize throughput
+- [STM32 Integration](hardware-stm32.md) - Lower power alternative
+- [PX4 Integration](hardware-px4.md) - Flight controller integration
 
 ---
 

@@ -1,9 +1,3 @@
----
-layout: default
-title: Getting Started
-nav_order: 2
----
-
 # Getting Started
 
 This guide will help you get the Drone Swarm Communication System up and running on your machine.
@@ -373,16 +367,16 @@ cargo test --release
 
 Now that you have the basics working:
 
-1. **Read the [Architecture Guide](./architecture.html)** - Understand the system design
-2. **Explore the [API Reference](./api-reference.html)** - Learn about all available modules
-3. **Review [Security Best Practices](./security.html)** - Secure your deployment
+1. **Read the [Architecture Guide](architecture.md)** - Understand the system design
+2. **Explore the [API Reference](api-reference.md)** - Learn about all available modules
+3. **Review [Security Best Practices](security.md)** - Secure your deployment
 4. **Check out [Examples](https://github.com/mahii6991/drone-swarm-system/tree/main/examples)** - See real-world usage
 
 ## Getting Help
 
 If you run into issues:
 
-- Check the [FAQ](./faq.html)
+- Check the [FAQ](faq.md)
 - Search [GitHub Issues](https://github.com/mahii6991/drone-swarm-system/issues)
 - Ask in [GitHub Discussions](https://github.com/mahii6991/drone-swarm-system/discussions)
 
@@ -401,7 +395,7 @@ cargo build --release --target thumbv7em-none-eabihf --no-default-features
 probe-rs run --chip STM32F407VGTx target/thumbv7em-none-eabihf/release/drone-swarm-system
 ```
 
-See the [Embedded Guide](./embedded.html) for detailed instructions.
+See the hardware guides ([ESP32](hardware-esp32.md), [STM32](hardware-stm32.md), [PX4](hardware-px4.md)) for detailed instructions.
 
 ---
 

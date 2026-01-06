@@ -1,10 +1,3 @@
----
-layout: default
-title: STM32 Deployment
-parent: Tutorials
-nav_order: 1
----
-
 # STM32 Bare-Metal Deployment Guide
 
 Complete guide to deploying the drone swarm system on STM32 microcontrollers.
@@ -564,9 +557,8 @@ st-flash --reset --connect-under-reset erase
 
 ## Next Steps
 
-- [ESP32 WiFi Mesh Guide](./hardware-esp32.html) - Cost-effective communication
-- [PX4 Integration](./hardware-px4.html) - Flight controller integration
-- [Performance Tuning](./tutorial-performance.html) - Optimize for your hardware
+- [ESP32 WiFi Mesh Guide](hardware-esp32.md) - Cost-effective communication
+- [PX4 Integration](hardware-px4.md) - Flight controller integration
 
 ---
 
