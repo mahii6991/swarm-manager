@@ -3,7 +3,7 @@ site_description: Industrial-Grade Autonomous Drone Swarm Communication & Intell
 site_author: Mahendra Singh Rajpoot
 site_url: https://mahii6991.github.io/swarm-manager/
 
-repo_name: mahii6991/drone-swarm-system
+repo_name: mahii6991/swarm-manager
 repo_url: https://github.com/mahii6991/swarm-manager
 
 theme:
