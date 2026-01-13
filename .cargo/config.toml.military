@@ -1,0 +1,28 @@
+# =============================================================================
+# Military Extensions Configuration Template
+# =============================================================================
+#
+# INSTRUCTIONS:
+# 1. Copy this file to .cargo/config.toml
+# 2. Update YOUR_ORG with your organization name
+# 3. Ensure you have SSH access to the private repository
+# 4. Build with: cargo build --features military
+#
+# NOTE: .cargo/config.toml is gitignored to prevent accidental commits
+# =============================================================================
+
+[alias]
+# Convenient aliases for military builds
+build-mil = "build --features military"
+test-mil = "test --features military"
+check-mil = "check --features military"
+
+# =============================================================================
+# UNCOMMENT THE SECTION BELOW TO ENABLE MILITARY EXTENSIONS
+# =============================================================================
+
+# [dependencies]
+# swarm-manager-military = { git = "ssh://git@github.com/YOUR_ORG/swarm-manager-military.git", branch = "main" }
+
+# Alternative: Use path dependency if you have the repo locally
+# swarm-manager-military = { path = "../swarm-manager-military" }

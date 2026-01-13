@@ -1,0 +1,6 @@
+# This directory is a placeholder for the military submodule.
+#
+# To initialize the military extensions:
+#   git submodule add git@github.com:YOUR_ORG/swarm-manager-military.git military
+#
+# For authorized users only. Requires SSH access to the private repository.

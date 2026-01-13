@@ -85,6 +85,9 @@ secrets/
 *.crt
 credentials.json
 
+# Cargo local config (may contain military repo credentials)
+.cargo/config.toml
+
 # Internal documentation (allow public docs, ignore internal)
 Documentation/
 docs/internal/
@@ -98,5 +101,6 @@ knowledge base/
 !README.md
 !docs/**/*.md
 
-# Shell scripts (keep locally)
+# Shell scripts (keep locally, allow scripts/ directory)
 *.sh
+!scripts/**/*.sh

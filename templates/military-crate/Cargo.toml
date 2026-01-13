@@ -1,0 +1,57 @@
+# =============================================================================
+# swarm-manager-military - Private Military Extensions
+# =============================================================================
+# This is a template for the private military extensions crate.
+# Copy this directory to create your private repository.
+#
+# IMPORTANT: This crate should NEVER be published to crates.io
+# =============================================================================
+
+[package]
+name = "swarm-manager-military"
+version = "0.1.0"
+edition = "2021"
+authors = ["Your Organization"]
+description = "Military-grade extensions for Swarm Manager (RESTRICTED)"
+license = "Proprietary"
+publish = false  # NEVER publish to crates.io
+
+[dependencies]
+# Public swarm-manager crate (provides extension traits)
+drone-swarm-system = { git = "https://github.com/YOUR_ORG/swarm-manager.git", branch = "main" }
+
+# Core dependencies
+heapless = { version = "0.8", features = ["serde"] }
+serde = { version = "1.0", default-features = false, features = ["derive"] }
+
+# Post-quantum cryptography (uncomment as needed)
+# pqcrypto-kyber = "0.8"           # Key encapsulation
+# pqcrypto-dilithium = "0.5"       # Digital signatures
+# pqcrypto-sphincsplus = "0.7"     # Hash-based signatures
+
+# Additional military-specific dependencies
+# Add your classified dependencies here
+
+[features]
+default = ["std"]
+std = []
+no_std = []
+
+# Post-quantum cryptography
+post-quantum = []
+
+# Hardware security module support
+hsm = []
+
+# Tactical algorithms
+tactical-advanced = []
+
+[dev-dependencies]
+proptest = "1.4"
+
+[profile.release]
+opt-level = "z"
+lto = true
+codegen-units = 1
+strip = true
+panic = "abort"

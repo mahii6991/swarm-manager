@@ -20,6 +20,7 @@ pub mod control;
 pub mod safety;
 pub mod ml;
 pub mod system;
+pub mod extensions;
 
 // Re-exports for convenience (optional, but helps with backward compatibility)
 // We might want to be selective here to encourage using the new structure.
@@ -56,6 +57,13 @@ pub use ml::federated;
 // System
 pub use system::{
     config, telemetry, time, clustering, hierarchy,
+};
+
+// Extensions (commercial/military separation)
+pub use extensions::{
+    CryptoProvider, TacticalProvider, SecureCommProvider,
+    DefaultCryptoProvider, DefaultTacticalProvider,
+    ExtensionRegistry,
 };
 
 // Feature-gated modules

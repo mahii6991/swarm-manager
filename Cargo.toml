@@ -101,6 +101,25 @@ hybrid_metaheuristic = []
 # Deep reinforcement learning for algorithm selection (Q-learning)
 deep_rl = ["hybrid_metaheuristic"]
 
+# =============================================================================
+# MILITARY EXTENSIONS (Private Repository)
+# =============================================================================
+# Enable military-grade extensions from private repository.
+# Requires access to: git@github.com:YOUR_ORG/swarm-manager-military.git
+#
+# To enable military extensions:
+#   1. Ensure you have SSH access to the private repository
+#   2. Create a .cargo/config.toml with the military dependency (see below)
+#   3. Build with: cargo build --features military
+#
+# Add to .cargo/config.toml:
+# [patch.crates-io]
+# swarm-manager-military = { git = "ssh://git@github.com/YOUR_ORG/swarm-manager-military.git" }
+#
+# WARNING: This feature is export-controlled. Ensure compliance with
+# ITAR/EAR regulations before enabling in any deployment.
+military = []
+
 # MAVLink protocol support (optional, requires std)
 [dependencies.mavlink]
 version = "0.13"
