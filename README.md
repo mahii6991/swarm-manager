@@ -140,6 +140,16 @@ let mut network = MeshNetwork::new(drone_id);
 │  │                      Federated Learning                          │   │
 │  │              Privacy-Preserving ML Training Across Swarm         │   │
 │  └─────────────────────────────────────────────────────────────────┘   │
+│  ┌─────────────────────────────────────────────────────────────────┐   │
+│  │                     Extension System                             │   │
+│  │         Pluggable Crypto, Tactical & Communication Providers     │   │
+│  └─────────────────────────────────────────────────────────────────┘   │
+└─────────────────────────────────────────────────────────────────────────┘
+                                    │
+                                    ▼ (Optional)
+┌─────────────────────────────────────────────────────────────────────────┐
+│                    MILITARY EXTENSIONS (Private)                        │
+│         Post-Quantum Crypto │ Advanced Tactical │ Secure Comms          │
 └─────────────────────────────────────────────────────────────────────────┘
 ```
 
@@ -206,6 +216,69 @@ The codebase is organized into logical module groups:
 | `telemetry` | Health monitoring, alerts & status |
 | `time` | Hardware-agnostic time abstraction |
 | `clustering` | Drone cluster management |
+
+### `extensions/` - Pluggable Providers
+| Module | Description |
+|:-------|:------------|
+| `CryptoProvider` | Trait for pluggable cryptography implementations |
+| `TacticalProvider` | Trait for tactical algorithm implementations |
+| `SecureCommProvider` | Trait for secure communication implementations |
+| `ExtensionRegistry` | Runtime provider management |
+
+---
+
+## Extension System
+
+Swarm Manager uses a **trait-based extension architecture** that separates commercial (open-source) and military (private) implementations:
+
+```
+┌────────────────────────────────────────┐
+│        PUBLIC (This Repository)        │
+│  • Core algorithms & infrastructure    │
+│  • Extension trait definitions         │
+│  • Default implementations             │
+│    - DefaultCryptoProvider (ChaCha20)  │
+│    - DefaultTacticalProvider           │
+└────────────────────────────────────────┘
+                    │
+                    ▼ (Optional Private Dependency)
+┌────────────────────────────────────────┐
+│   PRIVATE (swarm-manager-military)     │
+│  • Post-quantum cryptography           │
+│  • Advanced tactical algorithms        │
+│  • Military secure communications      │
+└────────────────────────────────────────┘
+```
+
+### Using Extensions
+
+```rust
+use drone_swarm_system::{
+    ExtensionRegistry,
+    DefaultCryptoProvider,
+    CryptoProvider,
+};
+
+// Use default (commercial) providers
+let registry = ExtensionRegistry::new();
+let crypto = registry.crypto();
+println!("Provider: {}", crypto.provider_name());
+// Output: "DefaultCrypto (ChaCha20-Poly1305 + Ed25519)"
+```
+
+### For Military Extensions
+
+Authorized users with access to the private repository can enable military-grade implementations:
+
+```bash
+# Setup military extensions (requires SSH access)
+./scripts/setup-military.sh
+
+# Build with military features
+cargo build --features military
+```
+
+See [Military Integration Guide](docs/MILITARY_INTEGRATION.md) for detailed instructions.
 
 ---
 
@@ -290,12 +363,16 @@ drone-swarm-system/
 │   │   ├── config.rs       # Configuration
 │   │   ├── telemetry.rs    # Health monitoring
 │   │   └── time.rs         # Time abstraction
+│   ├── extensions/         # Extension system
+│   │   └── mod.rs          # Pluggable provider traits
 │   ├── lib.rs              # Library root
 │   └── types.rs            # Core types
 ├── visualization/          # Interactive GUI
 ├── examples/               # Usage examples
 ├── tests/                  # Comprehensive tests
 ├── fuzz/                   # Security fuzzing
+├── scripts/                # Utility scripts
+├── military/               # Military submodule (private)
 └── docs/                   # Documentation
 ```
 
@@ -364,9 +441,13 @@ drone-swarm-system/
 | Component | License |
 |:----------|:--------|
 | Core algorithms (PSO, ACO, GWO, WOA, etc.) | Apache 2.0 (Open Source) |
+| Extension system & default providers | Apache 2.0 (Open Source) |
+| Military extensions (private repo) | Proprietary / Restricted |
 | Enterprise features | Commercial license available |
 
 **Core Library:** Licensed under the [Apache License 2.0](LICENSE) - free for personal and commercial use.
+
+**Military Extensions:** The private `swarm-manager-military` repository is restricted. Access requires authorization and compliance with applicable export control regulations.
 
 **Enterprise Licensing:** For commercial deployments requiring dedicated support, custom integrations, or proprietary features, contact: **m.s.rajpoot20@gmail.com**
 
