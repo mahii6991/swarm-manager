@@ -105,7 +105,7 @@ deep_rl = ["hybrid_metaheuristic"]
 # MILITARY EXTENSIONS (Private Repository)
 # =============================================================================
 # Enable military-grade extensions from private repository.
-# Requires access to: git@github.com:YOUR_ORG/swarm-manager-military.git
+# Requires access to: git@github.com:mahii6991/swarm-manager-military.git
 #
 # To enable military extensions:
 #   1. Ensure you have SSH access to the private repository
@@ -114,7 +114,7 @@ deep_rl = ["hybrid_metaheuristic"]
 #
 # Add to .cargo/config.toml:
 # [patch.crates-io]
-# swarm-manager-military = { git = "ssh://git@github.com/YOUR_ORG/swarm-manager-military.git" }
+# swarm-manager-military = { git = "ssh://git@github.com/mahii6991/swarm-manager-military.git" }
 #
 # WARNING: This feature is export-controlled. Ensure compliance with
 # ITAR/EAR regulations before enabling in any deployment.

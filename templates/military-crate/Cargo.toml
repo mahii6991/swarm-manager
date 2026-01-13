@@ -18,7 +18,7 @@ publish = false  # NEVER publish to crates.io
 
 [dependencies]
 # Public swarm-manager crate (provides extension traits)
-drone-swarm-system = { git = "https://github.com/YOUR_ORG/swarm-manager.git", branch = "main" }
+drone-swarm-system = { git = "https://github.com/mahii6991/swarm-manager.git", branch = "main" }
 
 # Core dependencies
 heapless = { version = "0.8", features = ["serde"] }

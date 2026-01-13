@@ -16,7 +16,7 @@
 
 set -e
 
-MILITARY_REPO="git@github.com:YOUR_ORG/swarm-manager-military.git"
+MILITARY_REPO="git@github.com:mahii6991/swarm-manager-military.git"
 MILITARY_DIR="military"
 
 echo "==========================================="

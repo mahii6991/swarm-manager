@@ -7,7 +7,7 @@ This document describes the architecture for separating commercial (open-source)
 ```
 ┌─────────────────────────────────────────────────────────────────────────┐
 │                    PUBLIC REPOSITORY (Open Source)                       │
-│                    github.com/YOUR_ORG/swarm-manager                     │
+│                    github.com/mahii6991/swarm-manager                     │
 │  ┌───────────────────────────────────────────────────────────────────┐  │
 │  │                        Core Modules                                │  │
 │  │  • algorithms/    - PSO, ACO, GWO, WOA, Hybrid                    │  │
@@ -31,7 +31,7 @@ This document describes the architecture for separating commercial (open-source)
                                     ▼
 ┌─────────────────────────────────────────────────────────────────────────┐
 │                   PRIVATE REPOSITORY (Restricted Access)                 │
-│                github.com/YOUR_ORG/swarm-manager-military                │
+│                github.com/mahii6991/swarm-manager-military                │
 │  ┌───────────────────────────────────────────────────────────────────┐  │
 │  │                    Military Extensions                             │  │
 │  │  • Post-quantum cryptography (Kyber, Dilithium, SPHINCS+)         │  │
@@ -49,7 +49,7 @@ Commercial users clone the public repository and use the default implementations
 
 ```bash
 # Clone public repository
-git clone https://github.com/YOUR_ORG/swarm-manager.git
+git clone https://github.com/mahii6991/swarm-manager.git
 cd swarm-manager
 
 # Build with default features
@@ -84,14 +84,14 @@ Authorized users with access to the private repository:
 
 ```bash
 # Clone public repository
-git clone https://github.com/YOUR_ORG/swarm-manager.git
+git clone https://github.com/mahii6991/swarm-manager.git
 cd swarm-manager
 
 # Run military setup script (requires SSH access to private repo)
 ./scripts/setup-military.sh
 
 # Or manually add submodule
-git submodule add git@github.com:YOUR_ORG/swarm-manager-military.git military
+git submodule add git@github.com:mahii6991/swarm-manager-military.git military
 ```
 
 ### Building with Military Extensions
@@ -228,7 +228,7 @@ edition = "2021"
 publish = false  # Never publish to crates.io
 
 [dependencies]
-drone-swarm-system = { git = "https://github.com/YOUR_ORG/swarm-manager.git" }
+drone-swarm-system = { git = "https://github.com/mahii6991/swarm-manager.git" }
 
 # Post-quantum cryptography
 pqcrypto-kyber = "0.8"
