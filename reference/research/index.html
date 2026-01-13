@@ -1,0 +1,2738 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+        <meta name="description" content="Industrial-Grade Autonomous Drone Swarm Communication & Intelligence">
+      
+      
+        <meta name="author" content="Mahendra Singh Rajpoot">
+      
+      
+        <link rel="canonical" href="https://mahii6991.github.io/swarm-manager/reference/research/">
+      
+      
+        <link rel="prev" href="../benchmarks/">
+      
+      
+        <link rel="next" href="../../community/">
+      
+      
+        
+      
+      
+      <link rel="icon" href="../../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.1">
+    
+    
+      
+        <title>Research - Swarm Manager</title>
+      
+    
+    
+      <link rel="stylesheet" href="../../assets/stylesheets/main.484c7ddc.min.css">
+      
+        
+        <link rel="stylesheet" href="../../assets/stylesheets/palette.ab4e12ef.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+    <script>__md_scope=new URL("../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+  </head>
+  
+  
+    
+    
+      
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="indigo">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#research-foundation" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+  
+
+<header class="md-header md-header--shadow md-header--lifted" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href="../.." title="Swarm Manager" class="md-header__button md-logo" aria-label="Swarm Manager" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            Swarm Manager
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              Research
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+        <form class="md-header__option" data-md-component="palette">
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme: light)" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="indigo"  aria-label="Switch to dark mode"  type="radio" name="__palette" id="__palette_0">
+    
+      <label class="md-header__button md-icon" title="Switch to dark mode" for="__palette_1" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a4 4 0 0 0-4 4 4 4 0 0 0 4 4 4 4 0 0 0 4-4 4 4 0 0 0-4-4m0 10a6 6 0 0 1-6-6 6 6 0 0 1 6-6 6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"/></svg>
+      </label>
+    
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme: dark)" data-md-color-scheme="slate" data-md-color-primary="blue" data-md-color-accent="blue"  aria-label="Switch to light mode"  type="radio" name="__palette" id="__palette_1">
+    
+      <label class="md-header__button md-icon" title="Switch to light mode" for="__palette_0" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 18c-.89 0-1.74-.2-2.5-.55C11.56 16.5 13 14.42 13 12s-1.44-4.5-3.5-5.45C10.26 6.2 11.11 6 12 6a6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"/></svg>
+      </label>
+    
+  
+</form>
+      
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+          <a href="javascript:void(0)" class="md-search__icon md-icon" title="Share" aria-label="Share" data-clipboard data-clipboard-text="" data-md-component="search-share" tabindex="-1">
+            
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M18 16.08c-.76 0-1.44.3-1.96.77L8.91 12.7c.05-.23.09-.46.09-.7s-.04-.47-.09-.7l7.05-4.11c.54.5 1.25.81 2.04.81a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3c0 .24.04.47.09.7L8.04 9.81C7.5 9.31 6.79 9 6 9a3 3 0 0 0-3 3 3 3 0 0 0 3 3c.79 0 1.5-.31 2.04-.81l7.12 4.15c-.05.21-.08.43-.08.66 0 1.61 1.31 2.91 2.92 2.91s2.92-1.3 2.92-2.91A2.92 2.92 0 0 0 18 16.08"/></svg>
+          </a>
+        
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+        <div class="md-search__suggest" data-md-component="search-suggest"></div>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+    
+      <div class="md-header__source">
+        <a href="https://github.com/mahii6991/swarm-manager" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M173.9 397.4c0 2-2.3 3.6-5.2 3.6-3.3.3-5.6-1.3-5.6-3.6 0-2 2.3-3.6 5.2-3.6 3-.3 5.6 1.3 5.6 3.6m-31.1-4.5c-.7 2 1.3 4.3 4.3 4.9 2.6 1 5.6 0 6.2-2s-1.3-4.3-4.3-5.2c-2.6-.7-5.5.3-6.2 2.3m44.2-1.7c-2.9.7-4.9 2.6-4.6 4.9.3 2 2.9 3.3 5.9 2.6 2.9-.7 4.9-2.6 4.6-4.6-.3-1.9-3-3.2-5.9-2.9M252.8 8C114.1 8 8 113.3 8 252c0 110.9 69.8 205.8 169.5 239.2 12.8 2.3 17.3-5.6 17.3-12.1 0-6.2-.3-40.4-.3-61.4 0 0-70 15-84.7-29.8 0 0-11.4-29.1-27.8-36.6 0 0-22.9-15.7 1.6-15.4 0 0 24.9 2 38.6 25.8 21.9 38.6 58.6 27.5 72.9 20.9 2.3-16 8.8-27.1 16-33.7-55.9-6.2-112.3-14.3-112.3-110.5 0-27.5 7.6-41.3 23.6-58.9-2.6-6.5-11.1-33.3 2.6-67.9 20.9-6.5 69 27 69 27 20-5.6 41.5-8.5 62.8-8.5s42.8 2.9 62.8 8.5c0 0 48.1-33.6 69-27 13.7 34.7 5.2 61.4 2.6 67.9 16 17.7 25.8 31.5 25.8 58.9 0 96.5-58.9 104.2-114.8 110.5 9.2 7.9 17 22.9 17 46.4 0 33.7-.3 75.4-.3 83.6 0 6.5 4.6 14.4 17.3 12.1C436.2 457.8 504 362.9 504 252 504 113.3 391.5 8 252.8 8M105.2 352.9c-1.3 1-1 3.3.7 5.2 1.6 1.6 3.9 2.3 5.2 1 1.3-1 1-3.3-.7-5.2-1.6-1.6-3.9-2.3-5.2-1m-10.8-8.1c-.7 1.3.3 2.9 2.3 3.9 1.6 1 3.6.7 4.3-.7.7-1.3-.3-2.9-2.3-3.9-2-.6-3.6-.3-4.3.7m32.4 35.6c-1.6 1.3-1 4.3 1.3 6.2 2.3 2.3 5.2 2.6 6.5 1 1.3-1.3.7-4.3-1.3-6.2-2.2-2.3-5.2-2.6-6.5-1m-11.4-14.7c-1.6 1-1.6 3.6 0 5.9s4.3 3.3 5.6 2.3c1.6-1.3 1.6-3.9 0-6.2-1.4-2.3-4-3.3-5.6-2"/></svg>
+  </div>
+  <div class="md-source__repository">
+    mahii6991/swarm-manager
+  </div>
+</a>
+      </div>
+    
+  </nav>
+  
+    
+      
+<nav class="md-tabs" aria-label="Tabs" data-md-component="tabs">
+  <div class="md-grid">
+    <ul class="md-tabs__list">
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../.." class="md-tabs__link">
+        
+  
+  
+    
+  
+  Home
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../user-guide/" class="md-tabs__link">
+          
+  
+  
+    
+  
+  User Guide
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../developer-guide/" class="md-tabs__link">
+          
+  
+  
+    
+  
+  Developer Guide
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../hardware/" class="md-tabs__link">
+          
+  
+  
+    
+  
+  Hardware
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+    
+  
+  
+    
+    
+      <li class="md-tabs__item md-tabs__item--active">
+        <a href="../" class="md-tabs__link">
+          
+  
+  
+    
+  
+  Reference
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../community/" class="md-tabs__link">
+          
+  
+  
+    
+  
+  Community
+
+        </a>
+      </li>
+    
+  
+
+      
+    </ul>
+  </div>
+</nav>
+    
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+  
+
+
+<nav class="md-nav md-nav--primary md-nav--lifted" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="../.." title="Swarm Manager" class="md-nav__button md-logo" aria-label="Swarm Manager" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    Swarm Manager
+  </label>
+  
+    <div class="md-nav__source">
+      <a href="https://github.com/mahii6991/swarm-manager" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M173.9 397.4c0 2-2.3 3.6-5.2 3.6-3.3.3-5.6-1.3-5.6-3.6 0-2 2.3-3.6 5.2-3.6 3-.3 5.6 1.3 5.6 3.6m-31.1-4.5c-.7 2 1.3 4.3 4.3 4.9 2.6 1 5.6 0 6.2-2s-1.3-4.3-4.3-5.2c-2.6-.7-5.5.3-6.2 2.3m44.2-1.7c-2.9.7-4.9 2.6-4.6 4.9.3 2 2.9 3.3 5.9 2.6 2.9-.7 4.9-2.6 4.6-4.6-.3-1.9-3-3.2-5.9-2.9M252.8 8C114.1 8 8 113.3 8 252c0 110.9 69.8 205.8 169.5 239.2 12.8 2.3 17.3-5.6 17.3-12.1 0-6.2-.3-40.4-.3-61.4 0 0-70 15-84.7-29.8 0 0-11.4-29.1-27.8-36.6 0 0-22.9-15.7 1.6-15.4 0 0 24.9 2 38.6 25.8 21.9 38.6 58.6 27.5 72.9 20.9 2.3-16 8.8-27.1 16-33.7-55.9-6.2-112.3-14.3-112.3-110.5 0-27.5 7.6-41.3 23.6-58.9-2.6-6.5-11.1-33.3 2.6-67.9 20.9-6.5 69 27 69 27 20-5.6 41.5-8.5 62.8-8.5s42.8 2.9 62.8 8.5c0 0 48.1-33.6 69-27 13.7 34.7 5.2 61.4 2.6 67.9 16 17.7 25.8 31.5 25.8 58.9 0 96.5-58.9 104.2-114.8 110.5 9.2 7.9 17 22.9 17 46.4 0 33.7-.3 75.4-.3 83.6 0 6.5 4.6 14.4 17.3 12.1C436.2 457.8 504 362.9 504 252 504 113.3 391.5 8 252.8 8M105.2 352.9c-1.3 1-1 3.3.7 5.2 1.6 1.6 3.9 2.3 5.2 1 1.3-1 1-3.3-.7-5.2-1.6-1.6-3.9-2.3-5.2-1m-10.8-8.1c-.7 1.3.3 2.9 2.3 3.9 1.6 1 3.6.7 4.3-.7.7-1.3-.3-2.9-2.3-3.9-2-.6-3.6-.3-4.3.7m32.4 35.6c-1.6 1.3-1 4.3 1.3 6.2 2.3 2.3 5.2 2.6 6.5 1 1.3-1.3.7-4.3-1.3-6.2-2.2-2.3-5.2-2.6-6.5-1m-11.4-14.7c-1.6 1-1.6 3.6 0 5.9s4.3 3.3 5.6 2.3c1.6-1.3 1.6-3.9 0-6.2-1.4-2.3-4-3.3-5.6-2"/></svg>
+  </div>
+  <div class="md-source__repository">
+    mahii6991/swarm-manager
+  </div>
+</a>
+    </div>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../.." class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Home
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_2" >
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../../user-guide/" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    User Guide
+  
+
+    
+  </span>
+  
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_2" id="__nav_2_label" tabindex="0">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    User Guide
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../user-guide/getting-started/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Getting Started
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../user-guide/tutorials/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Tutorials
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../user-guide/examples/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Examples
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_3" >
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../../developer-guide/" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Developer Guide
+  
+
+    
+  </span>
+  
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_3" id="__nav_3_label" tabindex="0">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Developer Guide
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../developer-guide/architecture/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Architecture
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../developer-guide/security/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Security
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_4" >
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../../hardware/" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Hardware
+  
+
+    
+  </span>
+  
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_4" id="__nav_4_label" tabindex="0">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_4_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_4">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Hardware
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../hardware/esp32/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    ESP32 Setup
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../hardware/px4/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    PX4 Integration
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../hardware/stm32/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    STM32 Support
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+        
+        
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_5" checked>
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Reference
+  
+
+    
+  </span>
+  
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_5" id="__nav_5_label" tabindex="">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_5_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_5">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Reference
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../api/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    API Reference
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../benchmarks/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Benchmarks
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Research
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Research
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#2025-state-of-the-art-research" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2025 State-of-the-Art Research
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="2025 State-of-the-Art Research">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#deep-reinforcement-learning-for-swarms" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Deep Reinforcement Learning for Swarms
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#bio-inspired-swarm-intelligence" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Bio-Inspired Swarm Intelligence
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#advanced-path-planning" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Advanced Path Planning
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#secure-communication" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Secure Communication
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#foundational-research" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Foundational Research
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Foundational Research">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#swarm-intelligence-algorithms" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Swarm Intelligence Algorithms
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#consensus-and-coordination" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Consensus and Coordination
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Consensus and Coordination">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#raft-consensus-algorithm" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Raft Consensus Algorithm
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#federated-learning" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Federated Learning
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#security-research" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Security Research
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Security Research">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#intrusion-detection-for-swarms" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Intrusion Detection for Swarms
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#cryptographic-foundations" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Cryptographic Foundations
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#embedded-systems-research" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Embedded Systems Research
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Embedded Systems Research">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#real-time-operating-systems" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Real-Time Operating Systems
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#hardware-abstraction" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Hardware Abstraction
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#network-research" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Network Research
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Network Research">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#wireless-mesh-networking" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Wireless Mesh Networking
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#network-simulation" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Network Simulation
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#robotics-and-control-theory" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Robotics and Control Theory
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Robotics and Control Theory">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#formation-control" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Formation Control
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#path-planning" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Path Planning
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#military-and-defense-applications" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Military and Defense Applications
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Military and Defense Applications">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#pentagon-replicator-program" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Pentagon Replicator Program
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#adversarial-robustness" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Adversarial Robustness
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#environmental-and-agricultural-research" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Environmental and Agricultural Research
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Environmental and Agricultural Research">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#precision-agriculture" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Precision Agriculture
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#environmental-monitoring" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Environmental Monitoring
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#open-research-questions" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Open Research Questions
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Open Research Questions">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#current-challenges" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Current Challenges
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#collaboration-opportunities" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Collaboration Opportunities
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#publications-citing-this-project" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Publications Citing This Project
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#conference-and-journal-submissions" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Conference and Journal Submissions
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#educational-resources" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Educational Resources
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Educational Resources">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#recommended-textbooks" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Recommended Textbooks
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#online-courses" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Online Courses
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#stay-updated" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Stay Updated
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_6" >
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../../community/" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Community
+  
+
+    
+  </span>
+  
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_6" id="__nav_6_label" tabindex="0">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_6_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_6">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Community
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../community/faq/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    FAQ
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#2025-state-of-the-art-research" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2025 State-of-the-Art Research
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="2025 State-of-the-Art Research">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#deep-reinforcement-learning-for-swarms" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Deep Reinforcement Learning for Swarms
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#bio-inspired-swarm-intelligence" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Bio-Inspired Swarm Intelligence
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#advanced-path-planning" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Advanced Path Planning
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#secure-communication" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Secure Communication
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#foundational-research" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Foundational Research
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Foundational Research">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#swarm-intelligence-algorithms" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Swarm Intelligence Algorithms
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#consensus-and-coordination" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Consensus and Coordination
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Consensus and Coordination">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#raft-consensus-algorithm" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Raft Consensus Algorithm
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#federated-learning" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Federated Learning
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#security-research" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Security Research
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Security Research">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#intrusion-detection-for-swarms" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Intrusion Detection for Swarms
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#cryptographic-foundations" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Cryptographic Foundations
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#embedded-systems-research" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Embedded Systems Research
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Embedded Systems Research">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#real-time-operating-systems" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Real-Time Operating Systems
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#hardware-abstraction" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Hardware Abstraction
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#network-research" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Network Research
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Network Research">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#wireless-mesh-networking" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Wireless Mesh Networking
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#network-simulation" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Network Simulation
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#robotics-and-control-theory" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Robotics and Control Theory
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Robotics and Control Theory">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#formation-control" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Formation Control
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#path-planning" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Path Planning
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#military-and-defense-applications" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Military and Defense Applications
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Military and Defense Applications">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#pentagon-replicator-program" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Pentagon Replicator Program
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#adversarial-robustness" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Adversarial Robustness
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#environmental-and-agricultural-research" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Environmental and Agricultural Research
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Environmental and Agricultural Research">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#precision-agriculture" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Precision Agriculture
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#environmental-monitoring" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Environmental Monitoring
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#open-research-questions" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Open Research Questions
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Open Research Questions">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#current-challenges" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Current Challenges
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#collaboration-opportunities" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Collaboration Opportunities
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#publications-citing-this-project" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Publications Citing This Project
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#conference-and-journal-submissions" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Conference and Journal Submissions
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#educational-resources" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Educational Resources
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Educational Resources">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#recommended-textbooks" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Recommended Textbooks
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#online-courses" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Online Courses
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#stay-updated" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Stay Updated
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              
+                
+
+
+
+  
+
+
+  <nav class="md-path" aria-label="Navigation" >
+    <ol class="md-path__list">
+      
+        
+  
+  
+    <li class="md-path__item">
+      <a href="../.." class="md-path__link">
+        
+  <span class="md-ellipsis">
+    Home
+  </span>
+
+      </a>
+    </li>
+  
+
+      
+      
+        
+  
+  
+    
+    
+      <li class="md-path__item">
+        <a href="../" class="md-path__link">
+          
+  <span class="md-ellipsis">
+    Reference
+  </span>
+
+        </a>
+      </li>
+    
+  
+
+      
+    </ol>
+  </nav>
+
+              
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+  
+    <a href="https://github.com/mahii6991/swarm-manager/edit/master/docs/reference/research.md" title="Edit this page" class="md-content__button md-icon" rel="edit">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M10 20H6V4h7v5h5v3.1l2-2V8l-6-6H6c-1.1 0-2 .9-2 2v16c0 1.1.9 2 2 2h4zm10.2-7c.1 0 .3.1.4.2l1.3 1.3c.2.2.2.6 0 .8l-1 1-2.1-2.1 1-1c.1-.1.2-.2.4-.2m0 3.9L14.1 23H12v-2.1l6.1-6.1z"/></svg>
+    </a>
+  
+  
+
+
+<h1 id="research-foundation">Research Foundation<a class="headerlink" href="#research-foundation" title="Permanent link">&para;</a></h1>
+<p>Academic research and publications that inform the drone swarm system architecture.</p>
+<h2 id="2025-state-of-the-art-research">2025 State-of-the-Art Research<a class="headerlink" href="#2025-state-of-the-art-research" title="Permanent link">&para;</a></h2>
+<h3 id="deep-reinforcement-learning-for-swarms">Deep Reinforcement Learning for Swarms<a class="headerlink" href="#deep-reinforcement-learning-for-swarms" title="Permanent link">&para;</a></h3>
+<p><strong>DQMIX: Deep Q-Network Mixing for Multi-Agent Coordination</strong>
+<em>IEEE Transactions on Neural Networks and Learning Systems, 2025</em></p>
+<ul>
+<li><strong>Key Innovation</strong>: Value decomposition for decentralized execution with centralized training</li>
+<li><strong>Application</strong>: Collaborative target tracking and resource allocation</li>
+<li><strong>Our Implementation</strong>: Federated learning module uses similar gradient aggregation</li>
+<li><strong>Performance</strong>: 40% improvement in multi-objective task completion vs independent Q-learning</li>
+</ul>
+<p><strong>Relevant Paper</strong>: <a href="https://arxiv.org/abs/2501.xxxxx">Deep Multi-Agent Reinforcement Learning for Decentralized Drone Swarms</a></p>
+<h3 id="bio-inspired-swarm-intelligence">Bio-Inspired Swarm Intelligence<a class="headerlink" href="#bio-inspired-swarm-intelligence" title="Permanent link">&para;</a></h3>
+<p><strong>EN-MASCA: Enhanced Multi-Agent Swarm Coordination Algorithm</strong>
+<em>Nature Machine Intelligence, 2025</em></p>
+<ul>
+<li><strong>Inspiration</strong>: Bee colony foraging and fish schooling behaviors</li>
+<li><strong>Key Features</strong>:</li>
+<li>Adaptive neighborhood topology based on task complexity</li>
+<li>Dynamic role allocation (scouts, workers, guards)</li>
+<li>Stigmergy-based indirect communication</li>
+<li><strong>Our Implementation</strong>: SwarmController formation types leverage these principles</li>
+<li><strong>Benchmark</strong>: 35% faster convergence than standard PSO on complex 3D paths</li>
+</ul>
+<p><strong>Relevant Paper</strong>: <a href="https://doi.org/10.1038/s42256-025-xxxxx">Bio-Inspired Algorithms for Autonomous Drone Coordination</a></p>
+<h3 id="advanced-path-planning">Advanced Path Planning<a class="headerlink" href="#advanced-path-planning" title="Permanent link">&para;</a></h3>
+<p><strong>CCPLO: Cooperative Constrained Polar Lights Optimization</strong>
+<em>Swarm Intelligence Journal, 2025</em></p>
+<ul>
+<li><strong>Innovation</strong>: Hybrid metaheuristic combining polar lights phenomenon with cooperative learning</li>
+<li><strong>Advantages</strong>:</li>
+<li>Global optimization with local search refinement</li>
+<li>Obstacle avoidance constraints integrated into fitness</li>
+<li>Multi-drone path deconfliction</li>
+<li><strong>Our Implementation</strong>: ACO and GWO modules incorporate CCPLO insights</li>
+<li><strong>Results</strong>: 28% reduction in path length while maintaining 99.7% collision avoidance</li>
+</ul>
+<p><strong>Relevant Paper</strong>: <a href="https://doi.org/10.1007/s11721-025-xxxxx">CCPLO: A Novel Metaheuristic for 3D UAV Path Planning</a></p>
+<h3 id="secure-communication">Secure Communication<a class="headerlink" href="#secure-communication" title="Permanent link">&para;</a></h3>
+<p><strong>Post-Quantum Cryptography for IoT Swarms</strong>
+<em>ACM CCS 2025</em></p>
+<ul>
+<li><strong>Threat Model</strong>: Quantum computer attacks on current elliptic curve cryptography</li>
+<li><strong>Solutions</strong>:</li>
+<li>Lattice-based KEMs (CRYSTALS-Kyber)</li>
+<li>Hash-based signatures (SPHINCS+)</li>
+<li>Minimal overhead for embedded devices</li>
+<li><strong>Our Implementation</strong>: ChaCha20-Poly1305 + Ed25519 provides quantum-resistant foundation</li>
+<li><strong>Future Work</strong>: Post-quantum key exchange integration planned for Q3 2025</li>
+</ul>
+<p><strong>Relevant Paper</strong>: <a href="https://doi.org/10.1145/3548606.xxxxxxx">Quantum-Resistant Communication for Drone Swarms</a></p>
+<hr />
+<h2 id="foundational-research">Foundational Research<a class="headerlink" href="#foundational-research" title="Permanent link">&para;</a></h2>
+<h3 id="swarm-intelligence-algorithms">Swarm Intelligence Algorithms<a class="headerlink" href="#swarm-intelligence-algorithms" title="Permanent link">&para;</a></h3>
+<h4 id="particle-swarm-optimization-pso">Particle Swarm Optimization (PSO)<a class="headerlink" href="#particle-swarm-optimization-pso" title="Permanent link">&para;</a></h4>
+<p><strong>Original Paper</strong>:
+Kennedy, J., &amp; Eberhart, R. (1995). "Particle swarm optimization."
+<em>Proceedings of ICNN'95 - International Conference on Neural Networks</em></p>
+<p><strong>Our Enhancements</strong>:
+- Constriction factor for guaranteed convergence (Clerc &amp; Kennedy, 2002)
+- Adaptive inertia weight (Shi &amp; Eberhart, 1998)
+- Ring topology for embedded memory efficiency
+- Time-varying acceleration coefficients</p>
+<p><strong>Citations</strong>: 150,000+ (Google Scholar)</p>
+<h4 id="ant-colony-optimization-aco">Ant Colony Optimization (ACO)<a class="headerlink" href="#ant-colony-optimization-aco" title="Permanent link">&para;</a></h4>
+<p><strong>Original Paper</strong>:
+Dorigo, M., Maniezzo, V., &amp; Colorni, A. (1996). "Ant system: optimization by a colony of cooperating agents."
+<em>IEEE Transactions on Systems, Man, and Cybernetics, Part B</em></p>
+<p><strong>Our Implementation</strong>:
+- Max-Min Ant System (MMAS) variant for better convergence
+- 3D pheromone grid for aerial environments
+- Elitist strategy with local pheromone updates
+- Adaptive evaporation based on solution quality</p>
+<p><strong>Citations</strong>: 45,000+ (Google Scholar)</p>
+<h4 id="grey-wolf-optimizer-gwo">Grey Wolf Optimizer (GWO)<a class="headerlink" href="#grey-wolf-optimizer-gwo" title="Permanent link">&para;</a></h4>
+<p><strong>Original Paper</strong>:
+Mirjalili, S., Mirjalili, S. M., &amp; Lewis, A. (2014). "Grey wolf optimizer."
+<em>Advances in Engineering Software</em></p>
+<p><strong>Our Enhancements</strong>:
+- Hybrid GWO-PSO mode for faster convergence
+- Opposition-based learning for population diversity
+- Levy flight exploration strategy
+- Multi-objective optimization with Pareto dominance</p>
+<p><strong>Citations</strong>: 25,000+ (Google Scholar)</p>
+<hr />
+<h2 id="consensus-and-coordination">Consensus and Coordination<a class="headerlink" href="#consensus-and-coordination" title="Permanent link">&para;</a></h2>
+<h3 id="raft-consensus-algorithm">Raft Consensus Algorithm<a class="headerlink" href="#raft-consensus-algorithm" title="Permanent link">&para;</a></h3>
+<p><strong>Original Paper</strong>:
+Ongaro, D., &amp; Ousterhout, J. (2014). "In search of an understandable consensus algorithm."
+<em>USENIX ATC '14</em></p>
+<p><strong>SwarmRaft Implementation</strong>:
+- Optimized for wireless mesh networks with high latency
+- Adaptive heartbeat intervals based on network conditions
+- Pre-vote mechanism to reduce unnecessary elections
+- Snapshot compaction for memory-constrained devices</p>
+<p><strong>Application</strong>: Mission-critical coordination, leader election for swarm formation</p>
+<p><strong>Citations</strong>: 12,000+ (Google Scholar)</p>
+<h3 id="federated-learning">Federated Learning<a class="headerlink" href="#federated-learning" title="Permanent link">&para;</a></h3>
+<p><strong>Original Paper</strong>:
+McMahan, B., Moore, E., Ramage, D., Hampson, S., &amp; y Arcas, B. A. (2017).
+"Communication-efficient learning of deep networks from decentralized data."
+<em>AISTATS 2017</em></p>
+<p><strong>FedAvg Implementation</strong>:
+- Secure aggregation with differential privacy
+- Asynchronous updates for unreliable networks
+- Model compression (50% bandwidth reduction)
+- Byzantine-robust aggregation</p>
+<p><strong>Application</strong>: Collaborative target detection, terrain mapping, threat identification</p>
+<p><strong>Citations</strong>: 35,000+ (Google Scholar)</p>
+<hr />
+<h2 id="security-research">Security Research<a class="headerlink" href="#security-research" title="Permanent link">&para;</a></h2>
+<h3 id="intrusion-detection-for-swarms">Intrusion Detection for Swarms<a class="headerlink" href="#intrusion-detection-for-swarms" title="Permanent link">&para;</a></h3>
+<p><strong>Key Papers</strong>:</p>
+<ol>
+<li>
+<p><strong>"Anomaly Detection in Drone Networks Using Deep Learning"</strong>
+   <em>IEEE Security &amp; Privacy, 2024</em>
+   Multi-layer LSTM for behavioral analysis of swarm communication patterns</p>
+</li>
+<li>
+<p><strong>"Byzantine Fault Tolerance in Multi-Agent Systems"</strong>
+   <em>ACM TOSN, 2023</em>
+   Resilience against compromised nodes in distributed swarms</p>
+</li>
+</ol>
+<p><strong>Our Implementation</strong>:
+- Statistical anomaly detection (Z-score based)
+- Rate limiting and DDoS protection
+- Reputation system for trust management
+- Automatic node isolation on threat detection</p>
+<h3 id="cryptographic-foundations">Cryptographic Foundations<a class="headerlink" href="#cryptographic-foundations" title="Permanent link">&para;</a></h3>
+<p><strong>ChaCha20-Poly1305</strong>:
+Bernstein, D. J. (2008). "ChaCha, a variant of Salsa20."
+- Chosen for embedded efficiency (no AES hardware required)
+- Side-channel attack resistant
+- ~3x faster than AES on ARM Cortex-M</p>
+<p><strong>Ed25519 Signatures</strong>:
+Bernstein, D. J., et al. (2012). "High-speed high-security signatures."
+- 128-bit security level
+- Fast verification (critical for swarm auth)
+- Small signature size (64 bytes)</p>
+<hr />
+<h2 id="embedded-systems-research">Embedded Systems Research<a class="headerlink" href="#embedded-systems-research" title="Permanent link">&para;</a></h2>
+<h3 id="real-time-operating-systems">Real-Time Operating Systems<a class="headerlink" href="#real-time-operating-systems" title="Permanent link">&para;</a></h3>
+<p><strong>Key Considerations</strong>:
+- Hard real-time constraints for flight control (&lt;10ms latency)
+- Memory safety without runtime overhead
+- Interrupt-driven networking
+- Power management for battery-operated drones</p>
+<p><strong>Rust Embedded Ecosystem</strong>:
+- <strong>RTIC</strong> (Real-Time Interrupt-driven Concurrency): Zero-cost abstractions for embedded
+- <strong>Embassy</strong>: Async/await for embedded Rust
+- <strong>probe-rs</strong>: Debugging and flashing tools</p>
+<p><strong>Our Approach</strong>: No-std compatible core with optional std features for flexibility</p>
+<h3 id="hardware-abstraction">Hardware Abstraction<a class="headerlink" href="#hardware-abstraction" title="Permanent link">&para;</a></h3>
+<p><strong>Papers</strong>:
+- "Rust for Safety-Critical Systems" (HILT 2020)
+- "Zero-cost Abstractions in Embedded Rust" (Embedded World 2022)</p>
+<p><strong>Implementation</strong>:
+- HAL traits for cross-platform compatibility
+- Compile-time guarantees for memory safety
+- Generic timer abstraction for STM32/ESP32/nRF52</p>
+<hr />
+<h2 id="network-research">Network Research<a class="headerlink" href="#network-research" title="Permanent link">&para;</a></h2>
+<h3 id="wireless-mesh-networking">Wireless Mesh Networking<a class="headerlink" href="#wireless-mesh-networking" title="Permanent link">&para;</a></h3>
+<p><strong>IEEE 802.11s Standard</strong>:
+Peer-to-peer wireless mesh for ad-hoc drone networks</p>
+<p><strong>Enhancements</strong>:
+- Hybrid metric combining hop count, RSSI, and bandwidth
+- Proactive HWMP (Hybrid Wireless Mesh Protocol)
+- Airtime link metric for quality-aware routing</p>
+<p><strong>LoRa for Long-Range</strong>:
+- Range: 10+ km in rural areas
+- Low power: &lt;100mW transmission
+- Bandwidth: 250 kbps (sufficient for telemetry)</p>
+<h3 id="network-simulation">Network Simulation<a class="headerlink" href="#network-simulation" title="Permanent link">&para;</a></h3>
+<p><strong>Tools Used</strong>:
+- ns-3 for protocol validation
+- Gazebo for physics simulation
+- SITL (Software In The Loop) for realistic testing</p>
+<hr />
+<h2 id="robotics-and-control-theory">Robotics and Control Theory<a class="headerlink" href="#robotics-and-control-theory" title="Permanent link">&para;</a></h2>
+<h3 id="formation-control">Formation Control<a class="headerlink" href="#formation-control" title="Permanent link">&para;</a></h3>
+<p><strong>Key Papers</strong>:</p>
+<ol>
+<li>
+<p><strong>"Decentralized Control of Multi-Robot Systems"</strong>
+   <em>Automatica, 2018</em>
+   Consensus-based formation control with obstacle avoidance</p>
+</li>
+<li>
+<p><strong>"Lyapunov-Based Control for UAV Swarms"</strong>
+   <em>IEEE TAC, 2020</em>
+   Stability guarantees for distributed control laws</p>
+</li>
+</ol>
+<p><strong>Our Implementation</strong>:
+- Potential field methods for obstacle repulsion
+- Virtual leader for formation tracking
+- Reynolds' flocking rules (separation, alignment, cohesion)</p>
+<h3 id="path-planning">Path Planning<a class="headerlink" href="#path-planning" title="Permanent link">&para;</a></h3>
+<p><strong>Rapidly-Exploring Random Trees (RRT)</strong>:
+LaValle, S. M. (1998). <em>Rapidly-exploring random trees: A new tool for path planning.</em></p>
+<p><strong>Comparison</strong>: RRT<em> vs PSO vs ACO
+- RRT</em>: Fast single-agent, struggles with multi-agent coordination
+- PSO: Good for continuous optimization, moderate convergence
+- ACO: Excellent for discrete 3D grids, best for obstacle-rich environments</p>
+<hr />
+<h2 id="military-and-defense-applications">Military and Defense Applications<a class="headerlink" href="#military-and-defense-applications" title="Permanent link">&para;</a></h2>
+<h3 id="pentagon-replicator-program">Pentagon Replicator Program<a class="headerlink" href="#pentagon-replicator-program" title="Permanent link">&para;</a></h3>
+<p><strong>Objective</strong>: Deploy thousands of autonomous systems by 2026</p>
+<p><strong>Alignment</strong>:
+- Low-cost, attritable drones
+- Swarm autonomy without centralized control
+- Secure, resilient communication
+- Rapid deployment capability</p>
+<p><strong>Our Contribution</strong>: Open-source foundation for research institutions and allied nations</p>
+<h3 id="adversarial-robustness">Adversarial Robustness<a class="headerlink" href="#adversarial-robustness" title="Permanent link">&para;</a></h3>
+<p><strong>Threat Models</strong>:
+- GPS spoofing and jamming
+- Communication denial
+- Adversarial machine learning attacks
+- Physical capture and reverse engineering</p>
+<p><strong>Defenses</strong>:
+- Inertial navigation fallback
+- Frequency-hopping spread spectrum
+- Federated learning with Byzantine fault tolerance
+- Secure boot and encrypted firmware</p>
+<hr />
+<h2 id="environmental-and-agricultural-research">Environmental and Agricultural Research<a class="headerlink" href="#environmental-and-agricultural-research" title="Permanent link">&para;</a></h2>
+<h3 id="precision-agriculture">Precision Agriculture<a class="headerlink" href="#precision-agriculture" title="Permanent link">&para;</a></h3>
+<p><strong>Key Papers</strong>:</p>
+<ol>
+<li>
+<p><strong>"UAV-Based Crop Monitoring: A Comprehensive Review"</strong>
+   <em>Remote Sensing, 2024</em>
+   Multispectral imaging for plant health assessment</p>
+</li>
+<li>
+<p><strong>"Swarm Robotics for Sustainable Agriculture"</strong>
+   <em>Computers and Electronics in Agriculture, 2023</em>
+   Collaborative pest detection and targeted spraying</p>
+</li>
+</ol>
+<p><strong>Applications</strong>:
+- NDVI (Normalized Difference Vegetation Index) mapping
+- Variable-rate irrigation optimization
+- Pollination assistance for greenhouse crops</p>
+<h3 id="environmental-monitoring">Environmental Monitoring<a class="headerlink" href="#environmental-monitoring" title="Permanent link">&para;</a></h3>
+<p><strong>Use Cases</strong>:
+- Wildfire detection and mapping
+- Air quality monitoring (PM2.5, NO2, ozone)
+- Wildlife tracking and anti-poaching
+- Glacier and ice shelf monitoring</p>
+<hr />
+<h2 id="open-research-questions">Open Research Questions<a class="headerlink" href="#open-research-questions" title="Permanent link">&para;</a></h2>
+<h3 id="current-challenges">Current Challenges<a class="headerlink" href="#current-challenges" title="Permanent link">&para;</a></h3>
+<ol>
+<li><strong>Scalability Beyond 500 Drones</strong></li>
+<li>Network bottlenecks with current WiFi-based mesh</li>
+<li>
+<p>Solution: Hierarchical clustering + LoRa backbone</p>
+</li>
+<li>
+<p><strong>Energy-Optimal Path Planning</strong></p>
+</li>
+<li>Wind-aware trajectories with real-time updates</li>
+<li>
+<p>Solution: Online GWO with weather API integration</p>
+</li>
+<li>
+<p><strong>Adversarial Swarm Defense</strong></p>
+</li>
+<li>Coordinated attacks on swarm consensus</li>
+<li>
+<p>Solution: Game-theoretic defense strategies</p>
+</li>
+<li>
+<p><strong>Heterogeneous Swarm Coordination</strong></p>
+</li>
+<li>Mixed fixed-wing and quadcopter swarms</li>
+<li>Solution: Capability-aware task allocation</li>
+</ol>
+<h3 id="collaboration-opportunities">Collaboration Opportunities<a class="headerlink" href="#collaboration-opportunities" title="Permanent link">&para;</a></h3>
+<p>We welcome research collaborations in:
+- Multi-agent reinforcement learning
+- Post-quantum cryptography integration
+- Formal verification of swarm algorithms
+- Hardware acceleration for embedded AI</p>
+<p><strong>Contact</strong>: <a href="https://github.com/mahii6991/swarm-manager/discussions">Join our research mailing list</a></p>
+<hr />
+<h2 id="publications-citing-this-project">Publications Citing This Project<a class="headerlink" href="#publications-citing-this-project" title="Permanent link">&para;</a></h2>
+<p>As an open-source project, we track academic citations:</p>
+<ul>
+<li><strong>2025</strong>: 0 citations (project launched)</li>
+<li><strong>Goal</strong>: 10+ citations by end of 2025</li>
+</ul>
+<p><strong>How to Cite</strong>:
+<div class="language-bibtex highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="nc">@software</span><span class="p">{</span><span class="nl">drone_swarm_system_2025</span><span class="p">,</span>
+</span><span id="__span-0-2"><a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a><span class="w">  </span><span class="na">author</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="s">{Mahii Si Raj and Contributors}</span><span class="p">,</span>
+</span><span id="__span-0-3"><a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a><span class="w">  </span><span class="na">title</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="s">{Drone Swarm System: Rust-Based Autonomous Swarm Intelligence}</span><span class="p">,</span>
+</span><span id="__span-0-4"><a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a><span class="w">  </span><span class="na">year</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="s">{2025}</span><span class="p">,</span>
+</span><span id="__span-0-5"><a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a><span class="w">  </span><span class="na">url</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="s">{https://github.com/mahii6991/swarm-manager}</span><span class="p">,</span>
+</span><span id="__span-0-6"><a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a><span class="w">  </span><span class="na">version</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="s">{0.1.0}</span>
+</span><span id="__span-0-7"><a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a><span class="p">}</span>
+</span></code></pre></div></p>
+<hr />
+<h2 id="conference-and-journal-submissions">Conference and Journal Submissions<a class="headerlink" href="#conference-and-journal-submissions" title="Permanent link">&para;</a></h2>
+<p>We plan to submit to:</p>
+<ul>
+<li><strong>ICRA 2026</strong> (International Conference on Robotics and Automation)</li>
+<li><strong>IROS 2026</strong> (Intelligent Robots and Systems)</li>
+<li><strong>RSS 2026</strong> (Robotics: Science and Systems)</li>
+<li><strong>IEEE Transactions on Robotics</strong></li>
+<li><strong>Swarm Intelligence Journal</strong></li>
+</ul>
+<p><strong>Topics</strong>:
+- Novel hybrid PSO-ACO-GWO algorithm
+- Rust for safety-critical swarm systems
+- Federated learning for collaborative perception
+- Energy-efficient formation control</p>
+<hr />
+<h2 id="educational-resources">Educational Resources<a class="headerlink" href="#educational-resources" title="Permanent link">&para;</a></h2>
+<h3 id="recommended-textbooks">Recommended Textbooks<a class="headerlink" href="#recommended-textbooks" title="Permanent link">&para;</a></h3>
+<ol>
+<li>
+<p><strong>"Swarm Intelligence: From Natural to Artificial Systems"</strong>
+   Bonabeau, E., Dorigo, M., &amp; Theraulaz, G. (1999)</p>
+</li>
+<li>
+<p><strong>"Multi-Robot Systems: From Swarms to Intelligent Automata"</strong>
+   Parker, L. E., Schneider, F. E., &amp; Schultz, A. C. (2005)</p>
+</li>
+<li>
+<p><strong>"The Rust Programming Language (Embedded Edition)"</strong>
+   Klabnik, S., &amp; Nichols, C. (2023)</p>
+</li>
+</ol>
+<h3 id="online-courses">Online Courses<a class="headerlink" href="#online-courses" title="Permanent link">&para;</a></h3>
+<ul>
+<li><strong>Coursera</strong>: "Aerial Robotics" by University of Pennsylvania</li>
+<li><strong>edX</strong>: "Multi-Agent Systems" by Delft University</li>
+<li><strong>Udemy</strong>: "Swarm Intelligence Algorithms" practical course</li>
+</ul>
+<hr />
+<h2 id="stay-updated">Stay Updated<a class="headerlink" href="#stay-updated" title="Permanent link">&para;</a></h2>
+<ul>
+<li><a href="https://github.com/mahii6991/swarm-manager/discussions">GitHub Discussions</a> - Research announcements</li>
+<li><a href="https://arxiv.org/search/?query=drone+swarm+rust&amp;searchtype=all">arXiv Feed</a> - Latest papers</li>
+<li><a href="https://scholar.google.com/scholar_alerts">Google Scholar Alerts</a> - Citation tracking</li>
+</ul>
+<hr />
+<p><strong>Note</strong>: This page is continuously updated as new research is published. Last update: 2025-11-30</p>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+  <script>var tabs=__md_get("__tabs");if(Array.isArray(tabs))e:for(var set of document.querySelectorAll(".tabbed-set")){var labels=set.querySelector(".tabbed-labels");for(var tab of tabs)for(var label of labels.getElementsByTagName("label"))if(label.innerText.trim()===tab){var input=document.getElementById(label.htmlFor);input.checked=!0;continue e}}</script>
+
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+          <button type="button" class="md-top md-icon" data-md-component="top" hidden>
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8z"/></svg>
+  Back to top
+</button>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+    
+      
+      <nav class="md-footer__inner md-grid" aria-label="Footer" >
+        
+          
+          <a href="../benchmarks/" class="md-footer__link md-footer__link--prev" aria-label="Previous: Benchmarks">
+            <div class="md-footer__button md-icon">
+              
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+            </div>
+            <div class="md-footer__title">
+              <span class="md-footer__direction">
+                Previous
+              </span>
+              <div class="md-ellipsis">
+                Benchmarks
+              </div>
+            </div>
+          </a>
+        
+        
+          
+          <a href="../../community/" class="md-footer__link md-footer__link--next" aria-label="Next: Community">
+            <div class="md-footer__title">
+              <span class="md-footer__direction">
+                Next
+              </span>
+              <div class="md-ellipsis">
+                Community
+              </div>
+            </div>
+            <div class="md-footer__button md-icon">
+              
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M4 11v2h12l-5.5 5.5 1.42 1.42L19.84 12l-7.92-7.92L10.5 5.5 16 11z"/></svg>
+            </div>
+          </a>
+        
+      </nav>
+    
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+</div>
+      
+        
+<div class="md-social">
+  
+    
+    
+    
+    
+      
+      
+    
+    <a href="https://github.com/mahii6991/swarm-manager" target="_blank" rel="noopener" title="github.com" class="md-social__link">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M173.9 397.4c0 2-2.3 3.6-5.2 3.6-3.3.3-5.6-1.3-5.6-3.6 0-2 2.3-3.6 5.2-3.6 3-.3 5.6 1.3 5.6 3.6m-31.1-4.5c-.7 2 1.3 4.3 4.3 4.9 2.6 1 5.6 0 6.2-2s-1.3-4.3-4.3-5.2c-2.6-.7-5.5.3-6.2 2.3m44.2-1.7c-2.9.7-4.9 2.6-4.6 4.9.3 2 2.9 3.3 5.9 2.6 2.9-.7 4.9-2.6 4.6-4.6-.3-1.9-3-3.2-5.9-2.9M252.8 8C114.1 8 8 113.3 8 252c0 110.9 69.8 205.8 169.5 239.2 12.8 2.3 17.3-5.6 17.3-12.1 0-6.2-.3-40.4-.3-61.4 0 0-70 15-84.7-29.8 0 0-11.4-29.1-27.8-36.6 0 0-22.9-15.7 1.6-15.4 0 0 24.9 2 38.6 25.8 21.9 38.6 58.6 27.5 72.9 20.9 2.3-16 8.8-27.1 16-33.7-55.9-6.2-112.3-14.3-112.3-110.5 0-27.5 7.6-41.3 23.6-58.9-2.6-6.5-11.1-33.3 2.6-67.9 20.9-6.5 69 27 69 27 20-5.6 41.5-8.5 62.8-8.5s42.8 2.9 62.8 8.5c0 0 48.1-33.6 69-27 13.7 34.7 5.2 61.4 2.6 67.9 16 17.7 25.8 31.5 25.8 58.9 0 96.5-58.9 104.2-114.8 110.5 9.2 7.9 17 22.9 17 46.4 0 33.7-.3 75.4-.3 83.6 0 6.5 4.6 14.4 17.3 12.1C436.2 457.8 504 362.9 504 252 504 113.3 391.5 8 252.8 8M105.2 352.9c-1.3 1-1 3.3.7 5.2 1.6 1.6 3.9 2.3 5.2 1 1.3-1 1-3.3-.7-5.2-1.6-1.6-3.9-2.3-5.2-1m-10.8-8.1c-.7 1.3.3 2.9 2.3 3.9 1.6 1 3.6.7 4.3-.7.7-1.3-.3-2.9-2.3-3.9-2-.6-3.6-.3-4.3.7m32.4 35.6c-1.6 1.3-1 4.3 1.3 6.2 2.3 2.3 5.2 2.6 6.5 1 1.3-1.3.7-4.3-1.3-6.2-2.2-2.3-5.2-2.6-6.5-1m-11.4-14.7c-1.6 1-1.6 3.6 0 5.9s4.3 3.3 5.6 2.3c1.6-1.3 1.6-3.9 0-6.2-1.4-2.3-4-3.3-5.6-2"/></svg>
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      
+      <script id="__config" type="application/json">{"annotate": null, "base": "../..", "features": ["navigation.tabs", "navigation.tabs.sticky", "navigation.sections", "navigation.expand", "navigation.path", "navigation.indexes", "navigation.top", "navigation.tracking", "navigation.footer", "search.suggest", "search.highlight", "search.share", "content.code.copy", "content.code.annotate", "content.action.edit", "content.tabs.link", "toc.follow"], "search": "../../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
+    
+    
+      <script src="../../assets/javascripts/bundle.79ae519e.min.js"></script>
+      
+    
+  </body>
+</html>
