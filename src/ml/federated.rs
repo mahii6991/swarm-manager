@@ -304,56 +304,413 @@ impl FederatedCoordinator {
     }
 }
 
-/// Local model trainer (simplified interface)
+/// Loss function types for training
+#[derive(Debug, Clone, Copy, PartialEq)]
+pub enum LossFunction {
+    /// Mean Squared Error - for regression
+    MSE,
+    /// Binary Cross-Entropy - for binary classification
+    BinaryCrossEntropy,
+    /// Categorical Cross-Entropy - for multi-class classification
+    CategoricalCrossEntropy,
+    /// Huber loss - robust to outliers
+    Huber { delta: f32 },
+}
+
+/// Training configuration
+#[derive(Debug, Clone)]
+pub struct TrainingConfig {
+    /// Learning rate
+    pub learning_rate: f32,
+    /// Momentum coefficient (0 = no momentum)
+    pub momentum: f32,
+    /// L2 regularization coefficient (weight decay)
+    pub weight_decay: f32,
+    /// Mini-batch size
+    pub batch_size: usize,
+    /// Loss function to use
+    pub loss_function: LossFunction,
+    /// Gradient clipping threshold (0 = no clipping)
+    pub gradient_clip: f32,
+}
+
+impl Default for TrainingConfig {
+    fn default() -> Self {
+        Self {
+            learning_rate: 0.01,
+            momentum: 0.9,
+            weight_decay: 0.0001,
+            batch_size: 32,
+            loss_function: LossFunction::MSE,
+            gradient_clip: 1.0,
+        }
+    }
+}
+
+/// Maximum training samples to cache
+pub const MAX_TRAINING_SAMPLES: usize = 256;
+
+/// Training sample (input-output pair)
+#[derive(Debug, Clone)]
+pub struct TrainingSample {
+    /// Input features
+    pub input: Vec<f32, 64>,
+    /// Target output
+    pub target: Vec<f32, 16>,
+}
+
+/// Local model trainer with proper gradient computation
 pub struct LocalTrainer {
     /// Drone ID
     drone_id: DroneId,
-    /// Current model parameters
+    /// Current model parameters (weights)
     parameters: Vec<f32, MAX_MODEL_PARAMS>,
-    /// Training data count
+    /// Momentum velocities for SGD with momentum
+    velocities: Vec<f32, MAX_MODEL_PARAMS>,
+    /// Accumulated gradients for current batch
+    gradients: Vec<f32, MAX_MODEL_PARAMS>,
+    /// Training configuration
+    config: TrainingConfig,
+    /// Training data buffer
+    training_data: Vec<TrainingSample, MAX_TRAINING_SAMPLES>,
+    /// Number of samples processed this round
     sample_count: u32,
+    /// Current batch index
+    batch_index: usize,
+    /// Running loss for current epoch
+    epoch_loss: f32,
+    /// Number of batches in current epoch
+    batch_count: u32,
 }
 
 impl LocalTrainer {
     /// Create a new local trainer
     pub fn new(drone_id: DroneId, initial_params: Vec<f32, MAX_MODEL_PARAMS>) -> Self {
+        let param_len = initial_params.len();
+        let mut velocities = Vec::new();
+        let mut gradients = Vec::new();
+
+        for _ in 0..param_len {
+            let _ = velocities.push(0.0);
+            let _ = gradients.push(0.0);
+        }
+
         Self {
             drone_id,
             parameters: initial_params,
+            velocities,
+            gradients,
+            config: TrainingConfig::default(),
+            training_data: Vec::new(),
             sample_count: 0,
+            batch_index: 0,
+            epoch_loss: 0.0,
+            batch_count: 0,
         }
     }
 
-    /// Train on local data (simplified)
-    pub fn train_step(&mut self, learning_rate: f32) -> Result<f32> {
-        // Simplified training: apply random gradient update
-        // In production, this would be actual ML training
+    /// Create a new local trainer with custom configuration
+    pub fn with_config(
+        drone_id: DroneId,
+        initial_params: Vec<f32, MAX_MODEL_PARAMS>,
+        config: TrainingConfig,
+    ) -> Self {
+        let mut trainer = Self::new(drone_id, initial_params);
+        trainer.config = config;
+        trainer
+    }
 
-        for param in &mut self.parameters {
-            let gradient = Self::compute_gradient(*param);
-            *param -= learning_rate * gradient;
+    /// Add training sample to the local dataset
+    pub fn add_sample(&mut self, sample: TrainingSample) -> Result<()> {
+        self.training_data
+            .push(sample)
+            .map_err(|_| SwarmError::BufferFull)
+    }
+
+    /// Clear training data
+    pub fn clear_training_data(&mut self) {
+        self.training_data.clear();
+        self.batch_index = 0;
+    }
+
+    /// Train one mini-batch using SGD with momentum
+    pub fn train_batch(&mut self) -> Result<f32> {
+        if self.training_data.is_empty() {
+            return Err(SwarmError::InvalidParameter);
         }
 
-        self.sample_count += 1;
+        let batch_size = self.config.batch_size.min(self.training_data.len());
+        let start_idx = self.batch_index % self.training_data.len();
+        let end_idx = (start_idx + batch_size).min(self.training_data.len());
 
-        // Return loss (simplified)
-        Ok(self.compute_loss())
+        // Zero gradients
+        for grad in &mut self.gradients {
+            *grad = 0.0;
+        }
+
+        // Compute gradients for mini-batch
+        let mut batch_loss = 0.0f32;
+        let actual_batch_size = end_idx - start_idx;
+
+        for i in start_idx..end_idx {
+            // Clone input to avoid borrow conflict with backward()
+            let input = self.training_data[i].input.clone();
+            let target = self.training_data[i].target.clone();
+
+            // Forward pass (simple linear model: y = Wx)
+            let prediction = self.forward(&input);
+
+            // Compute loss and gradients
+            let (loss, output_grad) = self.compute_loss_and_gradient(&prediction, &target);
+            batch_loss += loss;
+
+            // Backward pass (accumulate gradients)
+            self.backward(&input, &output_grad)?;
+        }
+
+        // Average gradients over batch
+        if actual_batch_size > 0 {
+            batch_loss /= actual_batch_size as f32;
+            for grad in &mut self.gradients {
+                *grad /= actual_batch_size as f32;
+            }
+        }
+
+        // Apply gradient clipping
+        if self.config.gradient_clip > 0.0 {
+            self.clip_gradients();
+        }
+
+        // Update parameters using SGD with momentum
+        self.update_parameters();
+
+        // Update tracking
+        self.batch_index = end_idx;
+        if self.batch_index >= self.training_data.len() {
+            self.batch_index = 0;
+        }
+        self.sample_count += actual_batch_size as u32;
+        self.epoch_loss += batch_loss;
+        self.batch_count += 1;
+
+        Ok(batch_loss)
     }
 
-    /// Compute gradient (placeholder)
-    fn compute_gradient(param: f32) -> f32 {
-        // Simplified: gradient = param * 0.1
-        param * 0.1
+    /// Train for a full epoch (all samples)
+    pub fn train_epoch(&mut self) -> Result<f32> {
+        self.epoch_loss = 0.0;
+        self.batch_count = 0;
+        self.batch_index = 0;
+
+        let total_batches = (self.training_data.len() + self.config.batch_size - 1)
+            / self.config.batch_size;
+
+        for _ in 0..total_batches {
+            self.train_batch()?;
+        }
+
+        if self.batch_count > 0 {
+            Ok(self.epoch_loss / self.batch_count as f32)
+        } else {
+            Ok(0.0)
+        }
     }
 
-    /// Compute loss (placeholder)
-    fn compute_loss(&self) -> f32 {
-        // Simplified loss calculation
+    /// Forward pass - simple linear model
+    fn forward(&self, input: &Vec<f32, 64>) -> Vec<f32, 16> {
+        let mut output = Vec::new();
+        let input_size = input.len();
+        let output_size = 16.min(self.parameters.len() / input_size.max(1));
+
+        for o in 0..output_size {
+            let mut sum = 0.0f32;
+            for (i, &x) in input.iter().enumerate() {
+                let weight_idx = o * input_size + i;
+                if let Some(&w) = self.parameters.get(weight_idx) {
+                    sum += w * x;
+                }
+            }
+            // Bias (stored after weights)
+            let bias_idx = output_size * input_size + o;
+            if let Some(&b) = self.parameters.get(bias_idx) {
+                sum += b;
+            }
+            let _ = output.push(sum);
+        }
+
+        output
+    }
+
+    /// Compute loss and output gradient
+    fn compute_loss_and_gradient(
+        &self,
+        prediction: &Vec<f32, 16>,
+        target: &Vec<f32, 16>,
+    ) -> (f32, Vec<f32, 16>) {
         let mut loss = 0.0f32;
-        for &param in &self.parameters {
-            loss += param * param;
+        let mut gradient = Vec::new();
+
+        match self.config.loss_function {
+            LossFunction::MSE => {
+                // Mean Squared Error: L = (1/n) * Σ(y - ŷ)²
+                // Gradient: dL/dŷ = 2(ŷ - y) / n
+                for (pred, tar) in prediction.iter().zip(target.iter()) {
+                    let diff = pred - tar;
+                    loss += diff * diff;
+                    let _ = gradient.push(2.0 * diff / prediction.len() as f32);
+                }
+                loss /= prediction.len() as f32;
+            }
+
+            LossFunction::BinaryCrossEntropy => {
+                // Binary Cross-Entropy: L = -[y*log(ŷ) + (1-y)*log(1-ŷ)]
+                // Gradient: dL/dŷ = (ŷ - y) / (ŷ * (1 - ŷ))
+                let epsilon = 1e-7f32;
+                for (pred, tar) in prediction.iter().zip(target.iter()) {
+                    // Apply sigmoid for probability
+                    let p = 1.0 / (1.0 + libm::expf(-pred));
+                    let p_clipped = p.max(epsilon).min(1.0 - epsilon);
+
+                    loss -= tar * libm::logf(p_clipped)
+                        + (1.0 - tar) * libm::logf(1.0 - p_clipped);
+
+                    // Gradient through sigmoid
+                    let _ = gradient.push(p - tar);
+                }
+                loss /= prediction.len() as f32;
+            }
+
+            LossFunction::CategoricalCrossEntropy => {
+                // Softmax + Cross-Entropy
+                // First apply softmax
+                let mut max_val = f32::NEG_INFINITY;
+                for &p in prediction.iter() {
+                    if p > max_val {
+                        max_val = p;
+                    }
+                }
+
+                let mut exp_sum = 0.0f32;
+                let mut softmax = Vec::<f32, 16>::new();
+                for &p in prediction.iter() {
+                    let exp_p = libm::expf(p - max_val);
+                    let _ = softmax.push(exp_p);
+                    exp_sum += exp_p;
+                }
+
+                let epsilon = 1e-7f32;
+                for i in 0..softmax.len() {
+                    softmax[i] /= exp_sum;
+                    let s = softmax[i].max(epsilon);
+                    if let Some(&t) = target.get(i) {
+                        loss -= t * libm::logf(s);
+                        // Gradient of softmax + cross-entropy: softmax - target
+                        let _ = gradient.push(softmax[i] - t);
+                    }
+                }
+            }
+
+            LossFunction::Huber { delta } => {
+                // Huber loss: quadratic for small errors, linear for large
+                for (pred, tar) in prediction.iter().zip(target.iter()) {
+                    let diff = pred - tar;
+                    let abs_diff = libm::fabsf(diff);
+
+                    if abs_diff <= delta {
+                        loss += 0.5 * diff * diff;
+                        let _ = gradient.push(diff / prediction.len() as f32);
+                    } else {
+                        loss += delta * (abs_diff - 0.5 * delta);
+                        let grad = if diff > 0.0 { delta } else { -delta };
+                        let _ = gradient.push(grad / prediction.len() as f32);
+                    }
+                }
+                loss /= prediction.len() as f32;
+            }
         }
-        loss / self.parameters.len() as f32
+
+        (loss, gradient)
+    }
+
+    /// Backward pass - compute parameter gradients
+    fn backward(&mut self, input: &Vec<f32, 64>, output_grad: &Vec<f32, 16>) -> Result<()> {
+        let input_size = input.len();
+        let output_size = output_grad.len();
+
+        // Gradient for weights: dL/dW = dL/dY * X^T
+        for o in 0..output_size {
+            if let Some(&grad_o) = output_grad.get(o) {
+                for (i, &x) in input.iter().enumerate() {
+                    let weight_idx = o * input_size + i;
+                    if let Some(grad) = self.gradients.get_mut(weight_idx) {
+                        *grad += grad_o * x;
+                    }
+                }
+                // Gradient for bias
+                let bias_idx = output_size * input_size + o;
+                if let Some(grad) = self.gradients.get_mut(bias_idx) {
+                    *grad += grad_o;
+                }
+            }
+        }
+
+        Ok(())
+    }
+
+    /// Clip gradients to prevent exploding gradients
+    fn clip_gradients(&mut self) {
+        let mut grad_norm = 0.0f32;
+        for &g in &self.gradients {
+            grad_norm += g * g;
+        }
+        grad_norm = libm::sqrtf(grad_norm);
+
+        if grad_norm > self.config.gradient_clip {
+            let scale = self.config.gradient_clip / grad_norm;
+            for grad in &mut self.gradients {
+                *grad *= scale;
+            }
+        }
+    }
+
+    /// Update parameters using SGD with momentum and weight decay
+    fn update_parameters(&mut self) {
+        let lr = self.config.learning_rate;
+        let momentum = self.config.momentum;
+        let weight_decay = self.config.weight_decay;
+
+        for i in 0..self.parameters.len() {
+            if let (Some(param), Some(vel), Some(grad)) = (
+                self.parameters.get_mut(i),
+                self.velocities.get_mut(i),
+                self.gradients.get(i),
+            ) {
+                // Apply weight decay (L2 regularization)
+                let grad_with_decay = grad + weight_decay * *param;
+
+                // Update velocity with momentum
+                *vel = momentum * *vel + grad_with_decay;
+
+                // Update parameter
+                *param -= lr * *vel;
+            }
+        }
+    }
+
+    /// Compute current loss on training data
+    pub fn compute_training_loss(&self) -> f32 {
+        if self.training_data.is_empty() {
+            return 0.0;
+        }
+
+        let mut total_loss = 0.0f32;
+        for sample in &self.training_data {
+            let prediction = self.forward(&sample.input);
+            let (loss, _) = self.compute_loss_and_gradient(&prediction, &sample.target);
+            total_loss += loss;
+        }
+
+        total_loss / self.training_data.len() as f32
     }
 
     /// Create model update for submission
@@ -363,7 +720,7 @@ impl LocalTrainer {
             round,
             parameters: self.parameters.clone(),
             sample_count: self.sample_count,
-            loss: self.compute_loss(),
+            loss: self.compute_training_loss(),
             signature: [0u8; 64], // Should be computed using crypto module
         })
     }
@@ -371,11 +728,103 @@ impl LocalTrainer {
     /// Update local model with global parameters
     pub fn update_from_global(&mut self, global: &GlobalModel) {
         self.parameters = global.parameters.clone();
+
+        // Reset velocities for new global model
+        for vel in &mut self.velocities {
+            *vel = 0.0;
+        }
     }
 
     /// Get current parameters
     pub fn parameters(&self) -> &Vec<f32, MAX_MODEL_PARAMS> {
         &self.parameters
+    }
+
+    /// Get training configuration
+    pub fn config(&self) -> &TrainingConfig {
+        &self.config
+    }
+
+    /// Set training configuration
+    pub fn set_config(&mut self, config: TrainingConfig) {
+        self.config = config;
+    }
+
+    /// Get number of training samples
+    pub fn training_sample_count(&self) -> usize {
+        self.training_data.len()
+    }
+
+    /// Serialize model to bytes
+    pub fn serialize_model(&self) -> Result<Vec<u8, 4096>> {
+        let mut buffer = Vec::new();
+
+        // Write number of parameters
+        let param_count = self.parameters.len() as u32;
+        buffer
+            .extend_from_slice(&param_count.to_le_bytes())
+            .map_err(|_| SwarmError::BufferFull)?;
+
+        // Write parameters
+        for &param in &self.parameters {
+            buffer
+                .extend_from_slice(&param.to_le_bytes())
+                .map_err(|_| SwarmError::BufferFull)?;
+        }
+
+        Ok(buffer)
+    }
+
+    /// Deserialize model from bytes
+    pub fn deserialize_model(&mut self, data: &[u8]) -> Result<()> {
+        if data.len() < 4 {
+            return Err(SwarmError::InvalidMessage);
+        }
+
+        // Read number of parameters
+        let param_count =
+            u32::from_le_bytes(data[..4].try_into().map_err(|_| SwarmError::InvalidMessage)?)
+                as usize;
+
+        let expected_len = 4 + param_count * 4;
+        if data.len() < expected_len {
+            return Err(SwarmError::InvalidMessage);
+        }
+
+        // Read parameters
+        self.parameters.clear();
+        self.velocities.clear();
+        self.gradients.clear();
+
+        for i in 0..param_count {
+            let offset = 4 + i * 4;
+            let param = f32::from_le_bytes(
+                data[offset..offset + 4]
+                    .try_into()
+                    .map_err(|_| SwarmError::InvalidMessage)?,
+            );
+            self.parameters
+                .push(param)
+                .map_err(|_| SwarmError::BufferFull)?;
+            self.velocities
+                .push(0.0)
+                .map_err(|_| SwarmError::BufferFull)?;
+            self.gradients
+                .push(0.0)
+                .map_err(|_| SwarmError::BufferFull)?;
+        }
+
+        Ok(())
+    }
+
+    /// Reset training state for new round
+    pub fn reset_for_new_round(&mut self) {
+        self.sample_count = 0;
+        self.batch_index = 0;
+        self.epoch_loss = 0.0;
+        self.batch_count = 0;
+
+        // Keep velocities for momentum across rounds
     }
 }
 

@@ -710,9 +710,7 @@ impl HierarchicalConsensus {
 
     /// Get and clear outgoing messages
     pub fn drain_messages(&mut self) -> Vec<(DroneId, HierarchicalMessage), MAX_OUTGOING_MESSAGES> {
-        let messages = self.outgoing_messages.clone();
-        self.outgoing_messages.clear();
-        messages
+        core::mem::take(&mut self.outgoing_messages)
     }
 
     /// Check for and handle timeouts

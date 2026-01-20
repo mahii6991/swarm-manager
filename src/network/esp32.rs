@@ -33,6 +33,9 @@ pub const MAX_PENDING_MESSAGES: usize = 16;
 /// Maximum routes in routing table
 pub const MAX_ROUTES: usize = 64;
 
+/// Maximum number of group memberships per node
+pub const MAX_GROUP_MEMBERSHIPS: usize = 16;
+
 /// Mesh node state
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
 pub enum NodeState {
@@ -83,6 +86,55 @@ impl Default for MeshConfig {
     }
 }
 
+/// Group membership tracking for command targeting
+#[derive(Debug, Clone, Default)]
+pub struct GroupMembership {
+    /// Group IDs this node belongs to
+    groups: heapless::FnvIndexSet<u16, MAX_GROUP_MEMBERSHIPS>,
+}
+
+impl GroupMembership {
+    /// Create new empty group membership
+    pub fn new() -> Self {
+        Self {
+            groups: heapless::FnvIndexSet::new(),
+        }
+    }
+
+    /// Join a group
+    pub fn join(&mut self, group_id: u16) -> Result<()> {
+        self.groups
+            .insert(group_id)
+            .map_err(|_| SwarmError::BufferFull)?;
+        Ok(())
+    }
+
+    /// Leave a group
+    pub fn leave(&mut self, group_id: u16) -> bool {
+        self.groups.remove(&group_id)
+    }
+
+    /// Check if member of a group
+    pub fn is_member(&self, group_id: u16) -> bool {
+        self.groups.contains(&group_id)
+    }
+
+    /// Get all group memberships
+    pub fn groups(&self) -> impl Iterator<Item = &u16> {
+        self.groups.iter()
+    }
+
+    /// Get number of group memberships
+    pub fn count(&self) -> usize {
+        self.groups.len()
+    }
+
+    /// Clear all group memberships
+    pub fn clear(&mut self) {
+        self.groups.clear();
+    }
+}
+
 /// Mesh network node
 pub struct MeshNode {
     /// Configuration
@@ -111,6 +163,8 @@ pub struct MeshNode {
     last_heartbeat_ms: u64,
     /// Statistics
     stats: MeshStats,
+    /// Group memberships for command targeting
+    groups: GroupMembership,
 }
 
 /// Mesh network statistics
@@ -153,6 +207,7 @@ impl MeshNode {
             msg_sequence: 0,
             last_heartbeat_ms: 0,
             stats: MeshStats::default(),
+            groups: GroupMembership::new(),
         }
     }
 
@@ -171,6 +226,7 @@ impl MeshNode {
             msg_sequence: 0,
             last_heartbeat_ms: 0,
             stats: MeshStats::default(),
+            groups: GroupMembership::new(),
         }
     }
 
@@ -240,6 +296,41 @@ impl MeshNode {
     /// Get neighbor by ID
     pub fn get_neighbor(&self, node_id: MeshNodeId) -> Option<&MeshNeighbor> {
         self.neighbors.iter().find(|n| n.node_id == node_id)
+    }
+
+    /// Join a command group
+    ///
+    /// Groups allow targeting commands to multiple drones simultaneously.
+    /// A node can be a member of up to MAX_GROUP_MEMBERSHIPS groups.
+    pub fn join_group(&mut self, group_id: u16) -> Result<()> {
+        self.groups.join(group_id)
+    }
+
+    /// Leave a command group
+    ///
+    /// Returns true if the node was a member of the group.
+    pub fn leave_group(&mut self, group_id: u16) -> bool {
+        self.groups.leave(group_id)
+    }
+
+    /// Check if this node is a member of a specific group
+    pub fn is_group_member(&self, group_id: u16) -> bool {
+        self.groups.is_member(group_id)
+    }
+
+    /// Get all group memberships
+    pub fn get_groups(&self) -> impl Iterator<Item = &u16> {
+        self.groups.groups()
+    }
+
+    /// Get number of group memberships
+    pub fn group_count(&self) -> usize {
+        self.groups.count()
+    }
+
+    /// Clear all group memberships
+    pub fn leave_all_groups(&mut self) {
+        self.groups.clear();
     }
 
     /// Broadcast heartbeat message
@@ -408,7 +499,7 @@ impl MeshNode {
                 let applies_to_us = match target {
                     CommandTarget::Broadcast => true,
                     CommandTarget::Node(id) => *id == self.config.node_id,
-                    CommandTarget::Group(_) => false, // TODO: implement groups
+                    CommandTarget::Group(gid) => self.groups.is_member(*gid as u16),
                 };
 
                 if applies_to_us {
@@ -714,5 +805,81 @@ mod tests {
         assert!((center[0] - 3.33).abs() < 0.1);
         assert!((center[1] - 3.33).abs() < 0.1);
         assert_eq!(center[2], 10.0);
+    }
+
+    #[test]
+    fn test_group_membership() {
+        let mut node = MeshNode::new(MeshNodeId::new(1));
+
+        // Initially no groups
+        assert_eq!(node.group_count(), 0);
+        assert!(!node.is_group_member(1));
+
+        // Join groups
+        assert!(node.join_group(1).is_ok());
+        assert!(node.join_group(2).is_ok());
+        assert!(node.join_group(3).is_ok());
+
+        assert_eq!(node.group_count(), 3);
+        assert!(node.is_group_member(1));
+        assert!(node.is_group_member(2));
+        assert!(node.is_group_member(3));
+        assert!(!node.is_group_member(4));
+
+        // Leave a group
+        assert!(node.leave_group(2));
+        assert!(!node.is_group_member(2));
+        assert_eq!(node.group_count(), 2);
+
+        // Leaving a group we're not in returns false
+        assert!(!node.leave_group(99));
+    }
+
+    #[test]
+    fn test_group_command_processing() {
+        let mut node = MeshNode::new(MeshNodeId::new(1));
+
+        // Join group 5
+        node.join_group(5).unwrap();
+
+        // Command to group 5 should apply
+        let cmd_group5 = MeshMessage::command(
+            MeshNodeId::new(0),
+            CommandTarget::Group(5),
+            CommandAction::Arm,
+            1000,
+        );
+        let result = node.process_message(cmd_group5, -40, 1000).unwrap();
+        match result {
+            ProcessResult::Command(CommandAction::Arm) => {}
+            _ => panic!("Expected Arm command for group 5"),
+        }
+
+        // Command to group 6 should not apply (we're not in group 6)
+        let cmd_group6 = MeshMessage::command(
+            MeshNodeId::new(0),
+            CommandTarget::Group(6),
+            CommandAction::Disarm,
+            1001,
+        );
+        let result = node.process_message(cmd_group6, -40, 1001).unwrap();
+        match result {
+            ProcessResult::Processed => {}
+            _ => panic!("Expected Processed (ignored) for group 6"),
+        }
+    }
+
+    #[test]
+    fn test_leave_all_groups() {
+        let mut node = MeshNode::new(MeshNodeId::new(1));
+
+        node.join_group(1).unwrap();
+        node.join_group(2).unwrap();
+        node.join_group(3).unwrap();
+        assert_eq!(node.group_count(), 3);
+
+        node.leave_all_groups();
+        assert_eq!(node.group_count(), 0);
+        assert!(!node.is_group_member(1));
     }
 }

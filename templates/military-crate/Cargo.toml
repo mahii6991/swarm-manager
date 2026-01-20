@@ -24,13 +24,16 @@ drone-swarm-system = { git = "https://github.com/mahii6991/swarm-manager.git", b
 heapless = { version = "0.8", features = ["serde"] }
 serde = { version = "1.0", default-features = false, features = ["derive"] }
 
-# Post-quantum cryptography (uncomment as needed)
-# pqcrypto-kyber = "0.8"           # Key encapsulation
-# pqcrypto-dilithium = "0.5"       # Digital signatures
-# pqcrypto-sphincsplus = "0.7"     # Hash-based signatures
+# Post-quantum cryptography
+pqcrypto-kyber = "0.8"           # Key encapsulation
+pqcrypto-dilithium = "0.5"       # Digital signatures
+aes-gcm = "0.10"                 # AES-256-GCM encryption
+sha3 = "0.10"                    # SHA-3 for key derivation
+hkdf = "0.12"                    # HKDF key derivation
+rand_core = { version = "0.6", default-features = false }
 
 # Additional military-specific dependencies
-# Add your classified dependencies here
+zeroize = { version = "1.7", features = ["derive"] }  # Secure memory zeroing
 
 [features]
 default = ["std"]

@@ -103,6 +103,12 @@ pub enum CryptoError {
     ProviderError(&'static str),
 }
 
+impl From<CryptoError> for crate::types::SwarmError {
+    fn from(_err: CryptoError) -> Self {
+        crate::types::SwarmError::CryptoError
+    }
+}
+
 // ============================================================================
 // TACTICAL ALGORITHM EXTENSION TRAITS
 // ============================================================================
@@ -271,6 +277,12 @@ pub enum TacticalError {
     ProviderError(&'static str),
 }
 
+impl From<TacticalError> for crate::types::SwarmError {
+    fn from(_err: TacticalError) -> Self {
+        crate::types::SwarmError::TacticalError
+    }
+}
+
 // ============================================================================
 // COMMUNICATION EXTENSION TRAITS
 // ============================================================================
@@ -349,6 +361,12 @@ pub enum CommError {
     KeyRotationFailed,
     /// Provider-specific error.
     ProviderError(&'static str),
+}
+
+impl From<CommError> for crate::types::SwarmError {
+    fn from(_err: CommError) -> Self {
+        crate::types::SwarmError::CommError
+    }
 }
 
 // ============================================================================

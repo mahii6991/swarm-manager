@@ -11,7 +11,7 @@ use drone_swarm_system::config::SwarmConfig;
 use drone_swarm_system::consensus::ConsensusEngine;
 use drone_swarm_system::crypto::{CryptoContext, KeyStore};
 use drone_swarm_system::fault_tolerance::FaultTolerance;
-use drone_swarm_system::federated::{FederatedCoordinator, GlobalModel, LocalTrainer};
+use drone_swarm_system::federated::{FederatedCoordinator, GlobalModel, LocalTrainer, TrainingSample};
 use drone_swarm_system::network::MeshNetwork;
 use drone_swarm_system::security::SecurityMonitor;
 use drone_swarm_system::swarm::{Formation, SwarmController};
@@ -62,6 +62,13 @@ fn main() -> Result<()> {
     let key_store = KeyStore::new();
     let _fed_coordinator = FederatedCoordinator::new(drone_id, model.clone(), key_store);
     let mut trainer = LocalTrainer::new(drone_id, model.parameters.clone());
+
+    // Add some training samples for demonstration
+    for i in 0..5 {
+        let input = heapless::Vec::from_slice(&[i as f32 / 5.0; 100]).unwrap();
+        let target = heapless::Vec::from_slice(&[(i as f32 / 5.0) * 2.0; 100]).unwrap();
+        trainer.add_sample(TrainingSample { input, target }).ok();
+    }
     println!("✓ Federated learning system initialized");
     println!("  - Model parameters: {}", model.parameters.len());
 
@@ -115,7 +122,7 @@ fn main() -> Result<()> {
         );
 
         // 3. Perform local training
-        let loss = trainer.train_step(0.01)?;
+        let loss = trainer.train_batch()?;
         println!("  Training loss: {:.4}", loss);
 
         // 4. Check system health

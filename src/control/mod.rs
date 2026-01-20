@@ -4,6 +4,10 @@ pub mod mission;
 pub mod task;
 pub mod prediction;
 pub mod coordinator;
+pub mod state_manager;
+pub mod formation;
+pub mod velocity;
+pub mod motor;
 
 pub use swarm::*;
 pub use collision::*;
@@ -11,3 +15,7 @@ pub use mission::*;
 pub use task::*;
 pub use prediction::*;
 pub use coordinator::*;
+pub use state_manager::StateManager;
+pub use formation::{Formation, FormationCalculator};
+pub use velocity::VelocityController;
+pub use motor::{MotorController, MotorConfig, MotorState, MotorPosition, QuadMixer, SoftwareMotorController};

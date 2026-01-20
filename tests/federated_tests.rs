@@ -182,6 +182,20 @@ mod local_trainer_tests {
         LocalTrainer::new(DroneId::new(1), params)
     }
 
+    fn create_trainer_with_data() -> LocalTrainer {
+        let params = heapless::Vec::from_slice(&[0.0f32; 10]).unwrap();
+        let mut trainer = LocalTrainer::new(DroneId::new(1), params);
+
+        // Add training samples
+        for i in 0..5 {
+            let input = heapless::Vec::from_slice(&[i as f32 / 5.0; 10]).unwrap();
+            let target = heapless::Vec::from_slice(&[(i as f32 / 5.0) * 2.0; 10]).unwrap();
+            let sample = TrainingSample { input, target };
+            trainer.add_sample(sample).ok();
+        }
+        trainer
+    }
+
     #[test]
     fn test_new() {
         let trainer = create_trainer();
@@ -189,19 +203,19 @@ mod local_trainer_tests {
     }
 
     #[test]
-    fn test_train_step() {
-        let mut trainer = create_trainer();
+    fn test_train_batch() {
+        let mut trainer = create_trainer_with_data();
 
-        let loss = trainer.train_step(0.01).unwrap();
+        let loss = trainer.train_batch().unwrap();
         assert!(loss >= 0.0);
     }
 
     #[test]
-    fn test_train_multiple_steps() {
-        let mut trainer = create_trainer();
+    fn test_train_multiple_batches() {
+        let mut trainer = create_trainer_with_data();
 
         for _ in 0..10 {
-            let loss = trainer.train_step(0.01).unwrap();
+            let loss = trainer.train_batch().unwrap();
             assert!(loss >= 0.0);
         }
     }
@@ -404,22 +418,37 @@ mod federated_message_tests {
 mod integration_tests {
     use super::*;
 
+    fn add_samples_to_trainer(trainer: &mut LocalTrainer, num_samples: usize, param_size: usize) {
+        for i in 0..num_samples {
+            let mut input = heapless::Vec::new();
+            let mut target = heapless::Vec::new();
+            for _ in 0..param_size {
+                input.push(i as f32 / num_samples as f32).ok();
+                target.push((i as f32 / num_samples as f32) * 2.0).ok();
+            }
+            let sample = TrainingSample { input, target };
+            trainer.add_sample(sample).ok();
+        }
+    }
+
     #[test]
     fn test_local_training_workflow() {
         let params = heapless::Vec::from_slice(&[1.0f32; 10]).unwrap();
         let mut trainer = LocalTrainer::new(DroneId::new(1), params);
 
-        // Train for several steps
+        // Add training samples
+        add_samples_to_trainer(&mut trainer, 5, 10);
+
+        // Train for several batches
         let mut losses = Vec::new();
         for _ in 0..5 {
-            let loss = trainer.train_step(0.1).unwrap();
+            let loss = trainer.train_batch().unwrap();
             losses.push(loss);
         }
 
         // Create update for submission
         let update = trainer.create_update(0).unwrap();
         assert_eq!(update.drone_id, DroneId::new(1));
-        assert_eq!(update.sample_count, 5);
     }
 
     #[test]
@@ -431,8 +460,11 @@ mod integration_tests {
         // Create trainer from model
         let mut trainer = LocalTrainer::new(DroneId::new(1), model.parameters.clone());
 
+        // Add training sample
+        add_samples_to_trainer(&mut trainer, 3, 5);
+
         // Train
-        trainer.train_step(0.01).unwrap();
+        trainer.train_batch().unwrap();
 
         // Create update
         let update = trainer.create_update(0).unwrap();

@@ -132,6 +132,10 @@ pub enum SwarmError {
     InvalidParameter,
     /// Serialization/deserialization error
     SerializationError,
+    /// Tactical operation failed
+    TacticalError,
+    /// Communication operation failed
+    CommError,
 }
 
 impl fmt::Display for SwarmError {
@@ -152,7 +156,122 @@ impl fmt::Display for SwarmError {
             SwarmError::SwarmSizeExceeded => write!(f, "Swarm size exceeded"),
             SwarmError::InvalidParameter => write!(f, "Invalid parameter"),
             SwarmError::SerializationError => write!(f, "Serialization error"),
+            SwarmError::TacticalError => write!(f, "Tactical operation failed"),
+            SwarmError::CommError => write!(f, "Communication error"),
         }
+    }
+}
+
+// ============================================================================
+// ERROR CONVERSIONS FROM EXTENSION TYPES
+// ============================================================================
+
+/// Errors that can occur during cryptographic operations (mirror of extensions::CryptoError).
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub enum CryptoErrorKind {
+    /// Invalid key length provided.
+    InvalidKeyLength,
+    /// Encryption failed.
+    EncryptionFailed,
+    /// Decryption failed.
+    DecryptionFailed,
+    /// Signature verification failed.
+    VerificationFailed,
+    /// Key generation failed.
+    KeyGenerationFailed,
+    /// Key exchange failed.
+    KeyExchangeFailed,
+    /// Provider-specific error.
+    ProviderError,
+}
+
+/// Errors from tactical operations (mirror of extensions::TacticalError).
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub enum TacticalErrorKind {
+    /// Insufficient drones for requested formation.
+    InsufficientDrones,
+    /// Invalid objective parameters.
+    InvalidObjective,
+    /// Computation failed.
+    ComputationFailed,
+    /// Provider-specific error.
+    ProviderError,
+}
+
+/// Communication errors (mirror of extensions::CommError).
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub enum CommErrorKind {
+    /// Destination unreachable.
+    Unreachable,
+    /// Encryption failed.
+    EncryptionFailed,
+    /// Decryption failed.
+    DecryptionFailed,
+    /// Channel compromised.
+    ChannelCompromised,
+    /// Key rotation failed.
+    KeyRotationFailed,
+    /// Provider-specific error.
+    ProviderError,
+}
+
+impl From<CryptoErrorKind> for SwarmError {
+    fn from(_err: CryptoErrorKind) -> Self {
+        SwarmError::CryptoError
+    }
+}
+
+impl From<TacticalErrorKind> for SwarmError {
+    fn from(_err: TacticalErrorKind) -> Self {
+        SwarmError::TacticalError
+    }
+}
+
+impl From<CommErrorKind> for SwarmError {
+    fn from(_err: CommErrorKind) -> Self {
+        SwarmError::CommError
+    }
+}
+
+/// Macro for adding error context to operations.
+///
+/// # Example
+/// ```ignore
+/// use drone_swarm_system::{with_context, types::Result};
+///
+/// fn perform_operation() -> Result<()> {
+///     with_context!(encrypt_data(), "encrypting mission data")?;
+///     Ok(())
+/// }
+/// ```
+#[macro_export]
+macro_rules! with_context {
+    ($result:expr, $context:expr) => {
+        $result.map_err(|e| {
+            #[cfg(feature = "std")]
+            {
+                // Log error context in std environments
+                eprintln!("Error during {}: {:?}", $context, e);
+            }
+            e
+        })
+    };
+}
+
+/// Helper trait for converting Result types with error mapping.
+pub trait ResultExt<T, E> {
+    /// Convert error type using From trait.
+    fn map_swarm_err(self) -> Result<T>
+    where
+        E: Into<SwarmError>;
+}
+
+impl<T, E> ResultExt<T, E> for core::result::Result<T, E> {
+    fn map_swarm_err(self) -> Result<T>
+    where
+        E: Into<SwarmError>,
+    {
+        self.map_err(|e| e.into())
     }
 }
 

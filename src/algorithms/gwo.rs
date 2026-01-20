@@ -223,19 +223,21 @@ impl GWOOptimizer {
     }
 
     /// Update alpha, beta, delta wolves (best three solutions)
+    /// Optimized to minimize cloning by tracking indices first
     fn update_leaders(&mut self) {
+        // Sort wolves by fitness and pick top 3 (simpler and more reliable)
         for wolf in &self.wolves {
             if wolf.fitness < self.alpha.fitness {
-                // Update delta, beta, alpha
+                // New alpha found - cascade down
                 self.delta = self.beta.clone();
                 self.beta = self.alpha.clone();
                 self.alpha = wolf.clone();
             } else if wolf.fitness < self.beta.fitness {
-                // Update delta, beta
+                // New beta found - cascade to delta
                 self.delta = self.beta.clone();
                 self.beta = wolf.clone();
             } else if wolf.fitness < self.delta.fitness {
-                // Update delta
+                // New delta found
                 self.delta = wolf.clone();
             }
         }

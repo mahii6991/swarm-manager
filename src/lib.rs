@@ -21,6 +21,7 @@ pub mod safety;
 pub mod ml;
 pub mod system;
 pub mod extensions;
+pub mod hardware;
 
 // Re-exports for convenience (optional, but helps with backward compatibility)
 // We might want to be selective here to encourage using the new structure.
@@ -58,6 +59,9 @@ pub use ml::federated;
 pub use system::{
     config, telemetry, time, clustering, hierarchy,
 };
+
+// Hardware
+pub use hardware::{HardwareRng, RngSource};
 
 // Extensions (commercial/military separation)
 pub use extensions::{
