@@ -271,7 +271,7 @@ impl eframe::App for DroneSwarmApp {
                     ui.add_space(10.0);
                     ui.hyperlink_to(
                         "GitHub Repository",
-                        "https://github.com/mahii6991/drone-swarm-system",
+                        "https://github.com/mahii6991/swarm-manager",
                     );
                     ui.add_space(10.0);
                     if ui.button("Close").clicked() {

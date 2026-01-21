@@ -1,18 +1,18 @@
-# Ultra-Secure Drone Swarm Communication System
+# Swarm Manager
 
 ![Rust](https://img.shields.io/badge/rust-1.70%2B-orange.svg)
 ![License](https://img.shields.io/badge/license-Apache%202.0-blue.svg)
 ![Build Status](https://img.shields.io/github/actions/workflow/status/mahii6991/swarm-manager/ci.yml?branch=main)
 
-A world-class, safety-critical drone swarm communication system written in **Rust**, featuring military-grade security, consensus algorithms, and federated learning for autonomous swarm coordination.
+An industrial-grade autonomous drone swarm communication and intelligence system written in **Rust**, featuring military-grade security, consensus algorithms, and federated learning for autonomous swarm coordination.
 
 ## Quick Links
 
 - [GitHub Repository](https://github.com/mahii6991/swarm-manager)
-- [Getting Started](getting-started.md)
-- [Architecture](architecture.md)
-- [API Reference](api-reference.md)
-- [Security Guide](security.md)
+- [Getting Started](user-guide/getting-started.md)
+- [Architecture](developer-guide/architecture.md)
+- [API Reference](reference/api.md)
+- [Security Guide](developer-guide/security.md)
 
 ## Why This Project?
 
@@ -111,7 +111,7 @@ cargo test
 cargo run --example simple_swarm
 ```
 
-[Read the full Getting Started guide →](getting-started.md)
+[Read the full Getting Started guide →](user-guide/getting-started.md)
 
 ## Community
 
@@ -170,7 +170,7 @@ cargo run --example simple_swarm
 </p>
 
 <p align="center">
-<a href="mailto:m.s.rajpoot20@gmail.com?subject=Drone%20Swarm%20System%20Demo%20Request&body=Hi%2C%0A%0AI%27m%20interested%20in%20learning%20more%20about%20the%20Drone%20Swarm%20System%20for%20our%20organization.%0A%0ACompany%3A%20%0AUse%20Case%3A%20%0ATimeline%3A%20%0A%0APlease%20contact%20me%20to%20schedule%20a%20demo.%0A%0AThanks!">Schedule a Demo</a>
+<a href="mailto:m.s.rajpoot20@gmail.com?subject=Swarm%20Manager%20Demo%20Request&body=Hi%2C%0A%0AI%27m%20interested%20in%20learning%20more%20about%20Swarm%20Manager%20for%20our%20organization.%0A%0ACompany%3A%20%0AUse%20Case%3A%20%0ATimeline%3A%20%0A%0APlease%20contact%20me%20to%20schedule%20a%20demo.%0A%0AThanks!">Schedule a Demo</a>
 </p>
 
 ---
@@ -191,9 +191,9 @@ This project is licensed under the Apache License 2.0 - see [LICENSE](https://gi
 If you use this project in your research, please cite:
 
 ```bibtex
-@software{drone_swarm_system_2025,
+@software{swarm_manager_2025,
   author = {Rajpoot, Mahendra Singh},
-  title = {Ultra-Secure Drone Swarm Communication System},
+  title = {Swarm Manager: Industrial-Grade Autonomous Drone Swarm System},
   year = {2025},
   publisher = {GitHub},
   url = {https://github.com/mahii6991/swarm-manager}

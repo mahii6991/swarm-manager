@@ -695,17 +695,17 @@ mavlink = { version = "0.13", features = ["default", "common"], default-features
 
 ### Systemd Service (Auto-start on Boot)
 
-Create `/etc/systemd/system/drone-swarm.service`:
+Create `/etc/systemd/system/swarm-manager.service`:
 ```ini
 [Unit]
-Description=Drone Swarm Controller
+Description=Swarm Manager Controller
 After=network.target
 
 [Service]
 Type=simple
 User=pi
-WorkingDirectory=/home/pi/drone-swarm
-ExecStart=/home/pi/drone-swarm/target/release/swarm_controller --mavlink serial:/dev/ttyACM0:921600
+WorkingDirectory=/home/pi/swarm-manager
+ExecStart=/home/pi/swarm-manager/target/release/swarm_controller --mavlink serial:/dev/ttyACM0:921600
 Restart=always
 RestartSec=5
 
@@ -715,9 +715,9 @@ WantedBy=multi-user.target
 
 Enable and start:
 ```bash
-sudo systemctl enable drone-swarm
-sudo systemctl start drone-swarm
-sudo systemctl status drone-swarm
+sudo systemctl enable swarm-manager
+sudo systemctl start swarm-manager
+sudo systemctl status swarm-manager
 ```
 
 ### Logging

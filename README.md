@@ -5,9 +5,9 @@
 ### Industrial-Grade Autonomous Drone Swarm Communication & Intelligence
 
 [![Rust](https://img.shields.io/badge/Rust-1.70%2B-orange?style=flat-square&logo=rust)](https://www.rust-lang.org/)
-[![Build](https://img.shields.io/github/actions/workflow/status/mahii6991/drone-swarm-system/ci.yml?branch=main&style=flat-square)](https://github.com/mahii6991/swarm-manager/actions)
+[![Build](https://img.shields.io/github/actions/workflow/status/mahii6991/swarm-manager/ci.yml?branch=main&style=flat-square)](https://github.com/mahii6991/swarm-manager/actions)
 [![License](https://img.shields.io/badge/License-Apache%202.0-blue?style=flat-square)](LICENSE)
-[![Docs](https://img.shields.io/badge/Docs-GitHub%20Pages-green?style=flat-square)](https://mahii6991.github.io/drone-swarm-system/)
+[![Docs](https://img.shields.io/badge/Docs-GitHub%20Pages-green?style=flat-square)](https://mahii6991.github.io/swarm-manager/)
 
 ---
 
@@ -59,7 +59,7 @@
 ```bash
 # Clone the repository
 git clone https://github.com/mahii6991/swarm-manager.git
-cd drone-swarm-system
+cd swarm-manager
 
 # Build the project
 cargo build --release
@@ -88,7 +88,7 @@ cargo run --example gwo_swarm_optimization
 
 ```bash
 # Start the interactive GUI
-cargo run -p drone-swarm-visualization --release
+cargo run -p swarm-manager-visualization --release
 ```
 
 > **Keyboard Shortcuts:** `Space` = Play/Pause | `R` = Reset | `D` = Demo Mode | `Esc` = Deselect
@@ -295,7 +295,7 @@ The interactive GUI provides real-time visualization of:
 - **Telemetry Monitoring** - Battery levels, health status, alerts
 
 ```bash
-cargo run -p drone-swarm-visualization --release
+cargo run -p swarm-manager-visualization --release
 ```
 
 ---
@@ -317,18 +317,18 @@ cargo run -p drone-swarm-visualization --release
 
 ## Documentation
 
-- :book: [Getting Started](https://mahii6991.github.io/drone-swarm-system/getting-started)
-- :gear: [API Reference](https://mahii6991.github.io/drone-swarm-system/api-reference)
-- :building_construction: [Architecture](https://mahii6991.github.io/drone-swarm-system/architecture)
-- :test_tube: [Examples](https://mahii6991.github.io/drone-swarm-system/examples)
-- :lock: [Security](https://mahii6991.github.io/drone-swarm-system/security)
+- :book: [Getting Started](https://mahii6991.github.io/swarm-manager/user-guide/getting-started)
+- :gear: [API Reference](https://mahii6991.github.io/swarm-manager/reference/api)
+- :building_construction: [Architecture](https://mahii6991.github.io/swarm-manager/developer-guide/architecture)
+- :test_tube: [Examples](https://mahii6991.github.io/swarm-manager/user-guide/examples)
+- :lock: [Security](https://mahii6991.github.io/swarm-manager/developer-guide/security)
 
 ---
 
 ## Project Structure
 
 ```
-drone-swarm-system/
+swarm-manager/
 ├── src/
 │   ├── algorithms/         # Optimization algorithms
 │   │   ├── pso/            # Particle Swarm (basic + advanced)
@@ -457,6 +457,6 @@ drone-swarm-system/
 
 **Built with :heart: in Rust**
 
-[:star: Star this repo](https://github.com/mahii6991/swarm-manager) | [:book: Documentation](https://mahii6991.github.io/drone-swarm-system/) | [:bug: Report Issues](https://github.com/mahii6991/swarm-manager/issues)
+[:star: Star this repo](https://github.com/mahii6991/swarm-manager) | [:book: Documentation](https://mahii6991.github.io/swarm-manager/) | [:bug: Report Issues](https://github.com/mahii6991/swarm-manager/issues)
 
 </div>

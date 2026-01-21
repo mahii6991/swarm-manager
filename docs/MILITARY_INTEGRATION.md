@@ -228,7 +228,7 @@ edition = "2021"
 publish = false  # Never publish to crates.io
 
 [dependencies]
-drone-swarm-system = { git = "https://github.com/mahii6991/swarm-manager.git" }
+swarm-manager = { git = "https://github.com/mahii6991/swarm-manager.git" }
 
 # Post-quantum cryptography
 pqcrypto-kyber = "0.8"
